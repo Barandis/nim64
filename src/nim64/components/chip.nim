@@ -191,7 +191,9 @@ macro chip*(name, body: untyped): untyped =
   ## name of the new chip must be included before the first block begins, right after the
   ## `chip` identifier:
   ## 
-  ##     chip Ic7406:
+  ## ```
+  ## chip Ic7406:
+  ## ```
   ## 
   ## Inside this `chip` block there can be two others.
   ## 
