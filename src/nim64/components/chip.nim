@@ -4,10 +4,10 @@
 # https://opensource.org/licenses/MIT
 
 import tables
-import link
 import macros
 import sequtils
 import options
+import ./link
 
 type PinRepr = tuple
   ## A tuple of the information that can be gleaned about a pin from the macro input. This 
