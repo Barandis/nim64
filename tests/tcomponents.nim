@@ -6,5 +6,9 @@
 import ./components/pin
 import ./components/trace
 
-pinTests()
-traceTests()
+proc componentTests*() =
+  pinTests()
+  traceTests()
+
+when isMainModule:
+  componentTests()

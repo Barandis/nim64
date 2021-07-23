@@ -4,49 +4,32 @@
 # https://opensource.org/licenses/MIT
 
 import unittest
+import strformat
+import ../utils
 import ../../src/nim64/chips/ic7406
 import ../../src/nim64/components/link
 
-proc getTraces(chip: Ic7406): seq[Trace] =
-  result.add(nil)
-  for pin in chip:
-    let trace = newTrace(pin)
-    result.add(trace)
+proc setup(): (Ic7406, Traces) =
+  let chip = newIc7406()
+  result = (chip, deviceTraces(chip))
+
+proc initial7406*() =
+  let (_, traces) = setup()
+
+  for i in 1..6:
+    check traces[&"Y{i}"].high
 
 proc lowOnHighIn*() =
-  let chip = newIc7406()
-  let tr = getTraces(chip)
+  let (_, traces) = setup()
 
-  tr[A1].set()
-  tr[A2].set()
-  tr[A3].set()
-  tr[A4].set()
-  tr[A5].set()
-  tr[A6].set()
-
-  check:
-    tr[Y1].low
-    tr[Y2].low
-    tr[Y3].low
-    tr[Y4].low
-    tr[Y5].low
-    tr[Y6].low
+  for i in 1..6:
+    traces[&"A{i}"].set()
+    check traces[&"Y{i}"].low
 
 proc highOnLowIn*() =
-  let chip = newIc7406()
-  let tr = getTraces(chip)
+  let (_, traces) = setup()
 
-  tr[A1].clear()
-  tr[A2].clear()
-  tr[A3].clear()
-  tr[A4].clear()
-  tr[A5].clear()
-  tr[A6].clear()
-
-  check:
-    tr[Y1].high
-    tr[Y2].high
-    tr[Y3].high
-    tr[Y4].high
-    tr[Y5].high
-    tr[Y6].high
+  for i in 1..6:
+    # Set and then clear because the initial values for the Y pins are high already
+    traces[&"A{i}"].set().clear()
+    check traces[&"Y{i}"].high
