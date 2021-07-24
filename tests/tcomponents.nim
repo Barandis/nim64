@@ -6,7 +6,7 @@
 import ./components/pin
 import ./components/trace
 
-proc componentTests*() =
+proc componentTests* =
   pinTests()
   traceTests()
 

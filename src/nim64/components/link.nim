@@ -19,10 +19,49 @@
 ## and putting the two types together allow each of them to call updating functions that do
 ## not then have to be exported.
 ## 
-## Since this is the first file written in this project, there is some additional flexibilty
-## mixed in. Each pin or trace can be set or cleared with the function syntax (`set(pin)`),
-## the method syntax (`pin.set` or `pin.set()`), or an operator syntax (`+pin`). Which
-## syntax will be used in the rest of the project is unknown at the time of writing.
+## *(Since this is the first file written in this project, there is some additional
+## flexibilty mixed in. Each pin or trace can be set or cleared with the function syntax 
+## (`set(pin)`), the method syntax (`pin.set` or `pin.set()`), or an operator syntax 
+## (`+pin`). Which syntax will be used in the rest of the project is unknown at the time of 
+## writing.)*
+## 
+## A few days down the road and I've made up my mind. First of all, I felt the operators
+## just added noise and weren't clear in purpose, which is the hallmark of a frivolously
+## added operator. So I removed them. I also decided that the coding style for this project
+## is going to be...function syntax with no parentheses. This is appealing for speed of
+## typing and just for the way it reads. Note that I will use parentheses to group function
+## calls, but in a Haskell-y way: 
+## 
+## ```nim
+## # an example that became an accidental NOR gate
+## 
+## # this way is wrong; it doesn't know how to group nots and function calls
+## if not highp apin and not highp bpin: set ypin else: clear ypin
+## 
+## # so you could do it this way instead
+## if not highp(apin) and not highp(bpin): set ypin else: clear ypin
+## 
+## # but I prefer it this way
+## if not (highp apin) and not (highp bpin): set ypin else: clear ypin
+## ```
+## 
+## Speaking of that, what's with the `p` ending all those functions? Well, I have *never*
+## liked the `isSomething` syntax for predicate functions (functions which take one argument
+## and return a bool). In any language. It's ugly and it takes 3-4 extra keystrokes just to
+## say that it's a predicate. I do think it's important to be able to see that something's a
+## predicate at a glance, especially when those predicates are mixed in with other single-
+## argument functions that are not, like in the example above with `set` and `clear, but
+## `is` (or worse, `get`) just isn't the way I want to do it.
+## 
+## There are languages where `?` is a legal character (Lisp allows it, and Ruby allows it
+## as long as it's the last character in an identifier), and I think that's a fantastic way
+## to mark a predicate. But that method isn't available in Nim. So I have hearkened back to
+## the days of Lisp, where function names would be postfixed with `p` to indicate that
+## they're predicates. Not as good as `?`, but a lot better than `is`.
+## 
+## (The question of why Lisp used `p` when it *could* have used `?` is a good one that I
+## don't know the answer to. Probably something to do with the leyboards they were using in
+## 1958.)
 ## 
 ## Every exported mutation function in this module is chainable (they all return a `Pin` or
 ## a `Trace` as appropriate, and all of them are discardable). This is meant to make it more
