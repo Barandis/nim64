@@ -191,6 +191,12 @@ proc isNaN(n: float): bool {.inline.} =
   ## comparisons since `NaN != NaN`.
   n.classify == fcNaN
 
+proc equal(a, b: float): bool {.inline.} =
+  ## Equality, but with NaN equaling itself. Necessary to prevent infinite loops in places
+  ## where pins only update if their level changes (without this, NaN "changing" to NaN will
+  ## trigger an update).
+  result = (a.isNaN and b.isNaN) or (a == b)
+
 proc inputp*(mode: Mode): bool {.inline.} =
   ## Determines whether a mode is an input mode; i.e., whether it is `Input` or `Bidi`.
   mode == Input or mode == Bidi
@@ -260,7 +266,7 @@ proc update(pin: Pin) =
   ## its listeners will be invoked.
   if pin.connected:
     let normalized = pin.normalize(pin.trace.level)
-    if pin.level != normalized and pin.mode.inputp:
+    if not equal(pin.level, normalized) and pin.mode.inputp:
       pin.level = normalized
       for listener in pin.listeners: listener(pin)
 
