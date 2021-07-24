@@ -4,12 +4,24 @@
 # https://opensource.org/licenses/MIT
 
 import unittest
+import ./chips/ic4066
 import ./chips/ic7406
 import ./chips/ic7408
 import ./chips/ic74139
 import ./chips/ic74257
 import ./chips/ic74258
 import ./chips/ic74373
+
+proc ic4066Tests =
+  suite "4066 quad analog switch":
+    test "pass signals from A to B": passAtoB()
+    test "pass signals from B to A": passBtoA()
+    test "disconnect I/O on high X": disconOnHighX()
+    test "does not pass signals from A to B on high X": noPassAtoBOnHighX()
+    test "does not pass signals from B to A on high X": noPassBtoAOnHighX()
+    test "sets B to A if A was last set": lastSetA()
+    test "sets A to B if B was last set": lastSetB()
+    test "clears A and B if neither was last set": lastSetNone()
 
 proc ic7406Tests =
   suite "7406 hex inverter":
@@ -85,6 +97,7 @@ proc ic74373Tests =
     test "latching still happens when OE is high": latchOnOeHigh()
 
 proc chipTests* =
+  ic4066Tests()
   ic7406Tests()
   ic7408Tests()
   ic74139Tests()
