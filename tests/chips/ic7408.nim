@@ -9,88 +9,88 @@ import ../utils
 import ../../src/nim64/chips/ic7408
 import ../../src/nim64/components/link
 
-proc setup(): (Ic7408, Traces) =
+proc setup: (Ic7408, Traces) =
   let chip = newIc7408()
   result = (chip, deviceTraces(chip))
 
-proc initial7408*() =
+proc initial7408* =
   let(_, traces) = setup()
 
   for i in 1..4:
-    check traces[&"Y{i}"].low
+    check lowp traces[&"Y{i}"]
 
-proc gate1*() =
+proc gate1* =
   let (_, traces) = setup()
 
-  traces[A1].clear()
-  traces[B1].clear()
-  check traces[Y1].low
+  clear traces[A1]
+  clear traces[B1]
+  check lowp traces[Y1]
 
-  traces[A1].clear()
-  traces[B1].set()
-  check traces[Y1].low
+  clear traces[A1]
+  set traces[B1]
+  check lowp traces[Y1]
 
-  traces[A1].set()
-  traces[B1].clear()
-  check traces[Y1].low
+  set traces[A1]
+  clear traces[B1]
+  check lowp traces[Y1]
 
-  traces[A1].set()
-  traces[B1].set()
-  check traces[Y1].high
+  set traces[A1]
+  set traces[B1]
+  check highp traces[Y1]
 
-proc gate2*() =
+proc gate2* =
   let (_, traces) = setup()
 
-  traces[A2].clear()
-  traces[B2].clear()
-  check traces[Y2].low
+  clear traces[A2]
+  clear traces[B2]
+  check lowp traces[Y2]
 
-  traces[A2].clear()
-  traces[B2].set()
-  check traces[Y2].low
+  clear traces[A2]
+  set traces[B2]
+  check lowp traces[Y2]
 
-  traces[A2].set()
-  traces[B2].clear()
-  check traces[Y2].low
+  set traces[A2]
+  clear traces[B2]
+  check lowp traces[Y2]
 
-  traces[A2].set()
-  traces[B2].set()
-  check traces[Y2].high
+  set traces[A2]
+  set traces[B2]
+  check highp traces[Y2]
 
-proc gate3*() =
+proc gate3* =
   let (_, traces) = setup()
 
-  traces[A3].clear()
-  traces[B3].clear()
-  check traces[Y3].low
+  clear traces[A3]
+  clear traces[B3]
+  check lowp traces[Y3]
 
-  traces[A3].clear()
-  traces[B3].set()
-  check traces[Y3].low
+  clear traces[A3]
+  set traces[B3]
+  check lowp traces[Y3]
 
-  traces[A3].set()
-  traces[B3].clear()
-  check traces[Y3].low
+  set traces[A3]
+  clear traces[B3]
+  check lowp traces[Y3]
 
-  traces[A3].set()
-  traces[B3].set()
-  check traces[Y3].high
+  set traces[A3]
+  set traces[B3]
+  check highp traces[Y3]
 
-proc gate4*() =
+proc gate4* =
   let (_, traces) = setup()
 
-  traces[A4].clear()
-  traces[B4].clear()
-  check traces[Y4].low
+  clear traces[A4]
+  clear traces[B4]
+  check lowp traces[Y4]
 
-  traces[A4].clear()
-  traces[B4].set()
-  check traces[Y4].low
+  clear traces[A4]
+  set traces[B4]
+  check lowp traces[Y4]
 
-  traces[A4].set()
-  traces[B4].clear()
-  check traces[Y4].low
+  set traces[A4]
+  clear traces[B4]
+  check lowp traces[Y4]
 
-  traces[A4].set()
-  traces[B4].set()
-  check traces[Y4].high
+  set traces[A4]
+  set traces[B4]
+  check highp traces[Y4]

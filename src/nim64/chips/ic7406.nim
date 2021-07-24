@@ -66,17 +66,16 @@ chip Ic7406:
       GND: 7
   
   init:
-    +pins[Y1]
-    +pins[Y2]
-    +pins[Y3]
-    +pins[Y4]
-    +pins[Y5]
-    +pins[Y6]
+    set pins[Y1]
+    set pins[Y2]
+    set pins[Y3]
+    set pins[Y4]
+    set pins[Y5]
+    set pins[Y6]
 
     proc dataListener(gate: int): proc (pin: Pin) =
       let ypin = pins[&"Y{gate}"]
-      proc listener(pin: Pin) =
-        ypin.level = if pin.high: 0 else: 1
-      result = listener
+      result = proc (pin: Pin) =
+        if highp pin: clear ypin else: set ypin
 
     for i in 1..6: pins[&"A{i}"].addListener(dataListener(i))

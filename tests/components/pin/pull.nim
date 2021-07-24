@@ -8,111 +8,111 @@ import unittest
 
 proc upInitial* =
   let p = newPin(1, "A", Output).pullUp()
-  check high(p)
+  check highp(p)
 
 proc upUnconnected* =
   let p = newPin(1, "A", Unconnected).pullUp()
   clear(p)
-  check low(p)
+  check lowp(p)
   float(p)
-  check high(p)
+  check highp(p)
 
 proc upInput* =
   let p = newPin(1, "A", Input).pullUp()
   let t = newTrace(p)
 
   clear(t)
-  check low(p)
+  check lowp(p)
   float(t)
-  check high(p)
+  check highp(p)
 
 proc upOutput* =
   let p = newPin(1, "A", Output).pullUp()
   let t = newTrace(p)
 
   clear(p)
-  check low(t)
+  check lowp(t)
   float(p)
-  check high(t)
+  check highp(t)
 
 proc upBidi* =
   let p = newPin(1, "A", Bidi).pullUp()
   let t = newTrace(p)
 
   clear(p)
-  check low(t)
+  check lowp(t)
   float(p)
-  check high(t)
+  check highp(t)
 
 proc upAfter* =
   let p = newPin(1, "A")
-  check floating(p)
+  check floatp(p)
   pullUp(p)
-  check high(p)
+  check highp(p)
 
 proc downInitial* =
   let p = newPin(1, "A", Output).pullDown()
-  check low(p)
+  check lowp(p)
 
 proc downUnconnected* =
   let p = newPin(1, "A", Unconnected).pullDown()
   set(p)
-  check high(p)
+  check highp(p)
   float(p)
-  check low(p)
+  check lowp(p)
 
 proc downInput* =
   let p = newPin(1, "A", Input).pullDown()
   let t = newTrace(p)
 
   set(t)
-  check high(p)
+  check highp(p)
   float(t)
-  check low(p)
+  check lowp(p)
 
 proc downOutput* =
   let p = newPin(1, "A", Output).pullDown()
   let t = newTrace(p)
 
   set(p)
-  check high(t)
+  check highp(t)
   float(p)
-  check low(t)
+  check lowp(t)
 
 proc downBidi* =
   let p = newPin(1, "A", Bidi).pullDown()
   let t = newTrace(p)
 
   set(p)
-  check high(t)
+  check highp(t)
   float(p)
-  check low(t)
+  check lowp(t)
 
 proc downAfter* =
   let p = newPin(1, "A")
-  check floating(p)
+  check floatp(p)
   pullDown(p)
-  check low(p)
+  check lowp(p)
 
 proc offInitial* =
   let p = newPin(1, "A").pullOff()
-  check floating(p)
+  check floatp(p)
 
 proc offAfterUp* =
   let p = newPin(1, "A").pullUp()
   float(p)
-  check high(p)
+  check highp(p)
 
   pullOff(p)
   float(p)
-  check floating(p)
+  check floatp(p)
 
 
 proc offAfterDown* =
   let p = newPin(1, "A").pullDown()
   float(p)
-  check low(p)
+  check lowp(p)
 
   pullOff(p)
   float(p)
-  check floating(p)
+  check floatp(p)

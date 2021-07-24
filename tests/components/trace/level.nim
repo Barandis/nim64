@@ -10,21 +10,21 @@ proc directUnc* =
   let t = newTrace()
   set(t)
   check:
-    high(t)
-    not low(t)
-    not floating(t)
+    highp(t)
+    not lowp(t)
+    not floatp(t)
 
   clear(t)
   check:
-    not high(t)
-    low(t)
-    not floating(t)
+    not highp(t)
+    lowp(t)
+    not floatp(t)
   
   float(t)
   check:
-    not high(t)
-    not low(t)
-    floating(t)
+    not highp(t)
+    not lowp(t)
+    floatp(t)
   
   setLevel(t, -0.35)
   check level(t) == -0.35
@@ -34,11 +34,11 @@ proc directIn* =
   let t = newTrace(p)
 
   set(t)
-  check high(t)
+  check highp(t)
   clear(t)
-  check low(t)
+  check lowp(t)
   float(t)
-  check floating(t)
+  check floatp(t)
   setLevel(t, -0.35)
   check level(t) == -0.35
 
@@ -48,13 +48,13 @@ proc directOutHigh*() =
   let t = newTrace(p1, p2)
 
   set(t)
-  check high(t)
+  check highp(t)
   clear(t)
-  check high(t)
+  check highp(t)
   float(t)
-  check high(t)
+  check highp(t)
   setLevel(t, -0.35)
-  check high(t)
+  check highp(t)
 
 proc directOutLow* =
   let p1 = newPin(1, "A", Output).clear()
@@ -62,11 +62,11 @@ proc directOutLow* =
   let t = newTrace(p1, p2)
 
   set(t)
-  check low(t)
+  check lowp(t)
   clear(t)
-  check low(t)
+  check lowp(t)
   float(t)
-  check low(t)
+  check lowp(t)
   setLevel(t, -0.35)
   check level(t) == 0
 
@@ -76,11 +76,11 @@ proc directOutFloat* =
   let t = newTrace(p1, p2)
 
   set(t)
-  check high(t)
+  check highp(t)
   clear(t)
-  check low(t)
+  check lowp(t)
   float(t)
-  check floating(t)
+  check floatp(t)
   setLevel(t, -0.35)
   check level(t) == -0.35
 
@@ -90,8 +90,8 @@ proc indirectUnc* =
 
   set(p)
   check:
-    low(t)
-    high(p)
+    lowp(t)
+    highp(p)
 
 proc indirectIn* =
   let p = newPin(1, "A", Input)
@@ -99,8 +99,8 @@ proc indirectIn* =
 
   set(p)
   check:
-    low(t)
-    low(p)
+    lowp(t)
+    lowp(p)
 
 proc indirectOut* =
   let p = newPin(1, "A", Output)
@@ -108,8 +108,8 @@ proc indirectOut* =
 
   set(p)
   check:
-    high(t)
-    high(p)
+    highp(t)
+    highp(p)
 
 proc indirectBidi* =
   let p = newPin(1, "A", Bidi)
@@ -117,13 +117,13 @@ proc indirectBidi* =
 
   set(p)
   check:
-    high(t)
-    high(p)
+    highp(t)
+    highp(p)
   
   float(t)
   check:
-    floating(t)
-    floating(p)
+    floatp(t)
+    floatp(p)
 
 proc indirectOutHigh* =
   let p1 = newPin(1, "A", Output)
@@ -132,7 +132,7 @@ proc indirectOutHigh* =
   let t = newTrace(p1, p2, p3)
 
   clear(p1)
-  check high(t)
+  check highp(t)
 
 proc indirectOutLow* =
   let p1 = newPin(1, "A", Output)
@@ -141,4 +141,4 @@ proc indirectOutLow* =
   let t = newTrace(p1, p2, p3)
 
   clear(p1)
-  check low(t)
+  check lowp(t)

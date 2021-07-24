@@ -104,23 +104,18 @@ chip Ic7408:
       GND: 7
   
   init:
-    -pins[Y1]
-    -pins[Y2]
-    -pins[Y3]
-    -pins[Y4]
+    clear pins[Y1]
+    clear pins[Y2]
+    clear pins[Y3]
+    clear pins[Y4]
 
     proc dataListener(gate: int): proc (pin: Pin) =
       let apin = pins[&"A{gate}"]
       let bpin = pins[&"B{gate}"]
       let ypin = pins[&"Y{gate}"]
 
-      proc listener(pin: Pin) =
-        if apin.high and bpin.high:
-          ypin.set()
-        else:
-          ypin.clear()
-      
-      result = listener
+      result = proc (pin: Pin) =
+        if (highp apin) and (highp bpin): set ypin else: clear ypin
     
     for i in 1..4:
       let listener = dataListener(i)

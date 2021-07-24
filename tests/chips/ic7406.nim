@@ -9,27 +9,27 @@ import ../utils
 import ../../src/nim64/chips/ic7406
 import ../../src/nim64/components/link
 
-proc setup(): (Ic7406, Traces) =
+proc setup: (Ic7406, Traces) =
   let chip = newIc7406()
   result = (chip, deviceTraces(chip))
 
-proc initial7406*() =
+proc initial7406* =
   let (_, traces) = setup()
 
   for i in 1..6:
-    check traces[&"Y{i}"].high
+    check highp traces[&"Y{i}"]
 
-proc lowOnHighIn*() =
+proc lowOnHighIn* =
   let (_, traces) = setup()
 
   for i in 1..6:
-    traces[&"A{i}"].set()
-    check traces[&"Y{i}"].low
+    set traces[&"A{i}"]
+    check lowp traces[&"Y{i}"]
 
-proc highOnLowIn*() =
+proc highOnLowIn* =
   let (_, traces) = setup()
 
   for i in 1..6:
     # Set and then clear because the initial values for the Y pins are high already
-    traces[&"A{i}"].set().clear()
-    check traces[&"Y{i}"].high
+    clear (set traces[&"A{i}"])
+    check highp traces[&"Y{i}"]

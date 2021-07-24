@@ -8,186 +8,186 @@ import ../utils
 import ../../src/nim64/chips/ic74139
 import ../../src/nim64/components/link
 
-proc setup(): (Ic74139, Traces) =
+proc setup: (Ic74139, Traces) =
   let chip = newIc74139()
   result = (chip, deviceTraces(chip))
 
-proc demux1Initial*() =
+proc demux1Initial* =
   let (_, traces) = setup()
 
   check:
-    traces[Y01].low
-    traces[Y11].high
-    traces[Y21].high
-    traces[Y31].high
+    lowp traces[Y01]
+    highp traces[Y11]
+    highp traces[Y21]
+    highp traces[Y31]
 
-proc demux1HighG*() =
+proc demux1HighG* =
   let (_, traces) = setup()
 
-  +traces[G1]
-  -traces[A1]
-  -traces[B1]
+  set traces[G1]
+  clear traces[A1]
+  clear traces[B1]
   check:
-    traces[Y01].high
-    traces[Y11].high
-    traces[Y21].high
-    traces[Y31].high
+    highp traces[Y01]
+    highp traces[Y11]
+    highp traces[Y21]
+    highp traces[Y31]
   
-  +traces[A1]
+  set traces[A1]
   check:
-    traces[Y01].high
-    traces[Y11].high
-    traces[Y21].high
-    traces[Y31].high
+    highp traces[Y01]
+    highp traces[Y11]
+    highp traces[Y21]
+    highp traces[Y31]
   
-  +traces[B1]
+  set traces[B1]
   check:
-    traces[Y01].high
-    traces[Y11].high
-    traces[Y21].high
-    traces[Y31].high
+    highp traces[Y01]
+    highp traces[Y11]
+    highp traces[Y21]
+    highp traces[Y31]
   
-  -traces[A1]
+  clear traces[A1]
   check:
-    traces[Y01].high
-    traces[Y11].high
-    traces[Y21].high
-    traces[Y31].high
+    highp traces[Y01]
+    highp traces[Y11]
+    highp traces[Y21]
+    highp traces[Y31]
 
-proc demux1LL*() =
+proc demux1LL* =
   let (_, traces) = setup()
 
-  -traces[G1]
-  -traces[A1]
-  -traces[B1]
+  clear traces[G1]
+  clear traces[A1]
+  clear traces[B1]
   check:
-    traces[Y01].low
-    traces[Y11].high
-    traces[Y21].high
-    traces[Y31].high
+    lowp traces[Y01]
+    highp traces[Y11]
+    highp traces[Y21]
+    highp traces[Y31]
 
-proc demux1HL*() =
+proc demux1HL* =
   let (_, traces) = setup()
 
-  -traces[G1]
-  +traces[A1]
-  -traces[B1]
+  clear traces[G1]
+  set traces[A1]
+  clear traces[B1]
   check:
-    traces[Y01].high
-    traces[Y11].low
-    traces[Y21].high
-    traces[Y31].high
+    highp traces[Y01]
+    lowp traces[Y11]
+    highp traces[Y21]
+    highp traces[Y31]
 
-proc demux1LH*() =
+proc demux1LH* =
   let (_, traces) = setup()
 
-  -traces[G1]
-  -traces[A1]
-  +traces[B1]
+  clear traces[G1]
+  clear traces[A1]
+  set traces[B1]
   check:
-    traces[Y01].high
-    traces[Y11].high
-    traces[Y21].low
-    traces[Y31].high
+    highp traces[Y01]
+    highp traces[Y11]
+    lowp traces[Y21]
+    highp traces[Y31]
 
-proc demux1HH*() =
+proc demux1HH* =
   let (_, traces) = setup()
 
-  -traces[G1]
-  +traces[A1]
-  +traces[B1]
+  clear traces[G1]
+  set traces[A1]
+  set traces[B1]
   check:
-    traces[Y01].high
-    traces[Y11].high
-    traces[Y21].high
-    traces[Y31].low
+    highp traces[Y01]
+    highp traces[Y11]
+    highp traces[Y21]
+    lowp traces[Y31]
 
-proc demux2Initial*() =
+proc demux2Initial* =
   let (_, traces) = setup()
 
   check:
-    traces[Y02].low
-    traces[Y12].high
-    traces[Y22].high
-    traces[Y32].high
+    lowp traces[Y02]
+    highp traces[Y12]
+    highp traces[Y22]
+    highp traces[Y32]
 
-proc demux2HighG*() =
+proc demux2HighG* =
   let (_, traces) = setup()
 
-  +traces[G2]
-  -traces[A2]
-  -traces[B2]
+  set traces[G2]
+  clear traces[A2]
+  clear traces[B2]
   check:
-    traces[Y02].high
-    traces[Y12].high
-    traces[Y22].high
-    traces[Y32].high
+    highp traces[Y02]
+    highp traces[Y12]
+    highp traces[Y22]
+    highp traces[Y32]
   
-  +traces[A1]
+  set traces[A1]
   check:
-    traces[Y02].high
-    traces[Y12].high
-    traces[Y22].high
-    traces[Y32].high
+    highp traces[Y02]
+    highp traces[Y12]
+    highp traces[Y22]
+    highp traces[Y32]
   
-  +traces[B2]
+  set traces[B2]
   check:
-    traces[Y02].high
-    traces[Y12].high
-    traces[Y22].high
-    traces[Y32].high
+    highp traces[Y02]
+    highp traces[Y12]
+    highp traces[Y22]
+    highp traces[Y32]
   
-  -traces[A2]
+  clear traces[A2]
   check:
-    traces[Y02].high
-    traces[Y12].high
-    traces[Y22].high
-    traces[Y32].high
+    highp traces[Y02]
+    highp traces[Y12]
+    highp traces[Y22]
+    highp traces[Y32]
 
-proc demux2LL*() =
+proc demux2LL* =
   let (_, traces) = setup()
 
-  -traces[G2]
-  -traces[A2]
-  -traces[B2]
+  clear traces[G2]
+  clear traces[A2]
+  clear traces[B2]
   check:
-    traces[Y02].low
-    traces[Y12].high
-    traces[Y22].high
-    traces[Y32].high
+    lowp traces[Y02]
+    highp traces[Y12]
+    highp traces[Y22]
+    highp traces[Y32]
 
-proc demux2HL*() =
+proc demux2HL* =
   let (_, traces) = setup()
 
-  -traces[G2]
-  +traces[A2]
-  -traces[B2]
+  clear traces[G2]
+  set traces[A2]
+  clear traces[B2]
   check:
-    traces[Y02].high
-    traces[Y12].low
-    traces[Y22].high
-    traces[Y32].high
+    highp traces[Y02]
+    lowp traces[Y12]
+    highp traces[Y22]
+    highp traces[Y32]
 
-proc demux2LH*() =
+proc demux2LH* =
   let (_, traces) = setup()
 
-  -traces[G2]
-  -traces[A2]
-  +traces[B2]
+  clear traces[G2]
+  clear traces[A2]
+  set traces[B2]
   check:
-    traces[Y02].high
-    traces[Y12].high
-    traces[Y22].low
-    traces[Y32].high
+    highp traces[Y02]
+    highp traces[Y12]
+    lowp traces[Y22]
+    highp traces[Y32]
 
-proc demux2HH*() =
+proc demux2HH* =
   let (_, traces) = setup()
 
-  -traces[G2]
-  +traces[A2]
-  +traces[B2]
+  clear traces[G2]
+  set traces[A2]
+  set traces[B2]
   check:
-    traces[Y02].high
-    traces[Y12].high
-    traces[Y22].high
-    traces[Y32].low
+    highp traces[Y02]
+    highp traces[Y12]
+    highp traces[Y22]
+    lowp traces[Y32]

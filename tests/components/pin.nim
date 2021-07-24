@@ -25,7 +25,6 @@ proc levelTests =
   suite "components.pin.level":
     test "without trace, functions": functions()
     test "without trace, methods": methods()
-    test "without trace, operators": operators()
     test "unconnected pin": unconnected()
     test "input pin": input()
     test "output pin": output()

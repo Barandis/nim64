@@ -14,20 +14,20 @@ proc modeInitial* =
 
   check:
     mode(p1) == Unconnected
-    not isInput(p1)
-    not isOutput(p1)
+    not inputp(p1)
+    not outputp(p1)
 
     mode(p2) == Input
-    isInput(p2)
-    not isOutput(p2)
+    inputp(p2)
+    not outputp(p2)
 
     mode(p3) == Output
-    not isInput(p3)
-    isOutput(p3)
+    not inputp(p3)
+    outputp(p3)
 
     mode(p4) == Bidi
-    isInput(p4)
-    isOutput(p4)
+    inputp(p4)
+    outputp(p4)
 
 proc modeChange* =
   let p = newPin(1, "A")
@@ -44,52 +44,52 @@ proc modeOutToIn* =
   let t = newTrace(p, newPin(2, "B", Input))
 
   set(p)
-  check high(t)
+  check highp(t)
   setMode(p, Input)
-  check floating(t)
+  check floatp(t)
 
 proc modeBidiToIn* =
   let p = newPin(1, "A", Bidi)
   let t = newTrace(p, newPin(2, "B", Input))
 
   set(p)
-  check high(t)
+  check highp(t)
   setMode(p, Input)
-  check floating(t)
+  check floatp(t)
 
 proc modeUncToIn* =
   let p = newPin(1, "A")
   let t = newTrace(p, newPin(2, "B", Input))
 
   set(p)
-  check floating(t)
+  check floatp(t)
   setMode(p, Input)
-  check floating(t)
+  check floatp(t)
 
 proc modeBidiToOut* =
   let p = newPin(1, "A", Bidi)
   let t = newTrace(p)
 
   set(p)
-  check high(t)
+  check highp(t)
   setMode(p, Output)
-  check high(t)
+  check highp(t)
 
 proc modeUncToOut* =
   let p = newPin(1, "A")
   let t = newTrace(p)
 
   set(p)
-  check floating(t)
+  check floatp(t)
   setMode(p, Output)
-  check high(t)
+  check highp(t)
 
 proc modeInToUnc* =
   let p = newPin(1, "A", Input)
   let t = newTrace(p)
 
   set(t)
-  check high(p)
+  check highp(p)
   setMode(p, Unconnected)
-  check high(t)
-  check high(p)
+  check highp(t)
+  check highp(p)

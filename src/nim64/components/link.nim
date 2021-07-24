@@ -143,11 +143,11 @@ proc isNaN(n: float): bool {.inline.} =
   ## comparisons since `NaN != NaN`.
   n.classify == fcNaN
 
-proc isInput*(mode: Mode): bool {.inline.} =
+proc inputp*(mode: Mode): bool {.inline.} =
   ## Determines whether a mode is an input mode; i.e., whether it is `Input` or `Bidi`.
   mode == Input or mode == Bidi
 
-proc isOutput*(mode: Mode): bool {.inline.} =
+proc outputp*(mode: Mode): bool {.inline.} =
   ## Determines whether a mode is an output mode; i.e., whether it's `Output` or `Bidi`.
   mode == Output or mode == Bidi
 
@@ -167,35 +167,47 @@ proc name*(pin: Pin): string =
   ## The pin's name. This is generally provided by the device's literature.
   pin.name
 
-proc high*(pin: Pin): bool {.inline.} =
+proc highp*(pin: Pin): bool {.inline.} =
   ## Determines whether the pin is high. While this generally means a value of 1, any value
   ## of 0.5 or higher will be considered "high".
   pin.level >= 0.5
 
-proc low*(pin: Pin): bool {.inline.} =
+proc lowp*(pin: Pin): bool {.inline.} =
   ## Determines whether the pin is low. While this generally means a value of 0, any value
   ## less than 0.5 will be considered "low".
   pin.level < 0.5
 
-proc floating*(pin: Pin): bool {.inline.} =
+proc floatp*(pin: Pin): bool {.inline.} =
   ## Determines whether the pin's level is floating. This is represented by a value of `NaN`
   ## and indicates that a pin is in a high-impedence state.
   pin.level.isNaN
 
-proc high*(trace: Trace): bool {.inline.} =
+proc lowfp*(pin: Pin): bool {.inline.} =
+  ## The inverse of `high`. This is given a full function because there are many places
+  ## throughout the project where `low` and `floating` are both treated the same (both act
+  ## as lows on logical inputs, for example) while `high` is treated differently.
+  not highp pin
+
+proc highp*(trace: Trace): bool {.inline.} =
   ## Determines whether the trace is high. While this generally means a value of 1, any 
   ## value of 0.5 or higher will be considered "high"
   trace.level >= 0.5
 
-proc low*(trace: Trace): bool {.inline.} =
+proc lowp*(trace: Trace): bool {.inline.} =
   ## Determines whether the trace is low. While this generally means a value of 0, any value
   ## less than 0.5 will be considered "low".
   trace.level < 0.5
 
-proc floating*(trace: Trace): bool {.inline.} =
+proc floatp*(trace: Trace): bool {.inline.} =
   ## Determines whether the pin's level is floating. This is represented by a value of `NaN`
   ## and indicates that a trace has no level at all because no output pins are driving it.
   trace.level.isNaN
+
+proc lowfp*(trace: Trace): bool {.inline.} =
+  ## The inverse of `high`. This is given a full function because there are many places
+  ## throughout the project where `low` and `floating` are both treated the same (both act
+  ## as lows on logical inputs, for example) while `high` is treated differently.
+  not highp trace
 
 proc normalize(pin: Pin, level: float): float =
   ## Normalizes a level by accounting for the pin's pull state if that level is `NaN`.
@@ -210,7 +222,7 @@ proc update(pin: Pin) =
   ## its listeners will be invoked.
   if pin.connected:
     let normalized = pin.normalize(pin.trace.level)
-    if pin.level != normalized and pin.mode.isInput:
+    if pin.level != normalized and pin.mode.inputp:
       pin.level = normalized
       for listener in pin.listeners: listener(pin)
 
@@ -321,44 +333,13 @@ proc float*(trace: Trace): Trace {.discardable, inline.} =
   result = trace
   trace.setLevel(NaN)
 
-proc `+`*(pin: Pin): Pin {.discardable, inline.} =
-  ## Sets the pin's level to 1. This will have no effect if the pin's mode is `Input` and if
-  ## the pin is connected to a trace.
-  set(pin)
-
-proc `-`*(pin: Pin): Pin {.discardable, inline.} =
-  ## Sets the pin's level to 0. This will have no effect if the pin's mode is `Input` and if
-  ## the pin is connected to a trace.
-  clear(pin)
-
-proc `~`*(pin: Pin): Pin {.discardable, inline.} =
-  ## Sets the pin's level to `NaN`. This will have no effect if the pin's mode is `Input` 
-  ## and if the pin is connected to a trace. If the pin has been pulled up or down, it will
-  ## take on the level associated with that pull instead.
-  float(pin)
-
-proc `+`*(trace: Trace): Trace {.discardable, inline.} =
-  ## Sets the trace's value to 1. This will only have an effect if no higher-leveled output
-  ## pins are connected to the trace.
-  set(trace)
-
-proc `-`*(trace: Trace): Trace {.discardable, inline.} =
-  ## Sets the trace's value to 0. This will only have an effect if no higher-leveled output
-  ## pins are connected to the trace.
-  clear(trace)
-
-proc `~`*(trace: Trace): Trace {.discardable, inline.} =
-  ## Sets the trace's value to `NaN`. This will only have an effect if no leveled output
-  ## pins are connected to the trace.
-  float(trace)
-
 proc toggle*(pin: Pin): Pin {.discardable.} =
   ## Toggles the pin's level. This will treat that level as digital; if it is "high" (0.5 or
   ## over), the pin will be set to 0, and if it's "low" (less than 0.5), the pin will be set
   ## to 1. This has no effect on pins with `NaN` levels.
   result = pin
-  if pin.high: clear(pin)
-  elif pin.low: set(pin)
+  if pin.highp: clear(pin)
+  elif pin.lowp: set(pin)
 
 proc setMode*(pin: Pin, mode: Mode): Pin {.discardable.} =
   ## Sets the pin's mode. This will also account for the values that the pin and its
@@ -370,12 +351,12 @@ proc setMode*(pin: Pin, mode: Mode): Pin {.discardable.} =
   pin.mode = mode
 
   if pin.connected:
-    if mode.isOutput:
+    if mode.outputp:
       pin.trace.update(pin.level)
     else:
       if mode == Input:
         pin.level = pin.normalize(pin.trace.level)
-      if oldMode.isOutput and not oldLevel.isNaN:
+      if oldMode.outputp and not oldLevel.isNaN:
         pin.trace.update(NaN)
 
 proc mode*(pin: Pin): Mode =
@@ -388,14 +369,14 @@ proc `mode=`*(pin: Pin, mode: Mode): Pin {.discardable.} =
   result = pin
   pin.setMode(mode)
 
-proc isInput*(pin: Pin): bool =
+proc inputp*(pin: Pin): bool =
   ## Determines whether the pin is in an input mode; i.e., whether it is `Input` or `Bidi`.
-  pin.mode.isInput
+  pin.mode.inputp
 
-proc isOutput*(pin: Pin): bool =
+proc outputp*(pin: Pin): bool =
   ## Determines whether the pin is in an output mode; i.e., whether it is `Output` or 
   ## `Bidi`.
-  pin.mode.isOutput
+  pin.mode.outputp
 
 proc addListener*(pin: Pin, listener: Pin -> void): Pin {.discardable.} =
   ## Adds a new listener function to the list of listeners that the pin will call when its
@@ -461,7 +442,7 @@ proc setTrace(pin: Pin, trace: Trace) =
     pin.connected = true
     if pin.mode == Input or pin.mode == Bidi and pin.level.isNaN:
       pin.level = trace.level
-    elif pin.mode.isOutput:
+    elif pin.mode.outputp:
       trace.update(NaN)
 
 proc addPin*(trace: Trace, pin: Pin): Trace {.discardable.} =

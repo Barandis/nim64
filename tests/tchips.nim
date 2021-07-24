@@ -7,6 +7,7 @@ import unittest
 import ./chips/ic7406
 import ./chips/ic7408
 import ./chips/ic74139
+import ./chips/ic74257
 
 proc ic7406Tests() =
   suite "7406 hex inverter":
@@ -24,23 +25,34 @@ proc ic7408Tests() =
 
 proc ic74139Tests() =
   suite "74139 dual 2-to-4 demultiplexer":
-    test "demux 1 initial levels": demux1Initial()
-    test "demux 1 with high G1": demux1HighG()
-    test "demux 1 with L/L inputs": demux1LL()
-    test "demux 1 with H/L inputs": demux1HL()
-    test "demux 1 with L/H inputs": demux1LH()
-    test "demux 1 with H/H inputs": demux1HH()
-    test "demux 2 initial levels": demux2Initial()
-    test "demux 2 with high G1": demux2HighG()
-    test "demux 2 with L/L inputs": demux2LL()
-    test "demux 2 with H/L inputs": demux2HL()
-    test "demux 2 with L/H inputs": demux2LH()
-    test "demux 2 with H/H inputs": demux2HH()
+    suite "demux 1":
+      test "initial levels": demux1Initial()
+      test "with high G1": demux1HighG()
+      test "with L/L inputs": demux1LL()
+      test "with H/L inputs": demux1HL()
+      test "with L/H inputs": demux1LH()
+      test "with H/H inputs": demux1HH()
+    suite "demux 2":
+      test "initial levels": demux2Initial()
+      test "with high G1": demux2HighG()
+      test "with L/L inputs": demux2LL()
+      test "with H/L inputs": demux2HL()
+      test "with L/H inputs": demux2LH()
+      test "with H/H inputs": demux2HH()
+
+proc ic74257Tests() =
+  suite "74257 quad 2-to-1 multiplexer":
+    test "initial levels": initial74257()
+    suite "mux 1":
+      test "low SEL selects A": mux1SelectA()
+      test "high SEL selects B": mux1SelectB()
+      test "high OE disables output": mux1HighOe()
 
 proc chipTests*() =
   ic7406Tests()
   ic7408Tests()
   ic74139Tests()
+  ic74257Tests()
 
 when isMainModule:
   chipTests()
