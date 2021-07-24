@@ -76,12 +76,21 @@ proc ic74258Tests =
       test "high SEL selects B": inv4SelectB()
       test "high OE disables output": inv4HighOe()
 
+proc ic74373Tests =
+  suite "74373 octal transparent latch":
+    test "data passes through on LE high": passOnLeHigh()
+    test "data latches on LE low": latchOnLeLow()
+    test "data returns to pass through when LE goes high": returnToPass()
+    test "outputs tri-state on OE high": triOnOeHigh()
+    test "latching still happens when OE is high": latchOnOeHigh()
+
 proc chipTests* =
   ic7406Tests()
   ic7408Tests()
   ic74139Tests()
   ic74257Tests()
   ic74258Tests()
+  ic74373Tests()
 
 when isMainModule:
   chipTests()
