@@ -3,15 +3,15 @@
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
-## An emulation of the 74257 quad 2-to-1 multiplexer.
+## An emulation of the 74258 quad 2-to-1 multiplexer.
 ##
-## The 74257 is one of the 7400-series TTL logic chips, consisting of four 2-to-1
+## The 74258 is one of the 7400-series TTL logic chips, consisting of four 2-to-1
 ## multiplexers. Each multiplexer is essentially a switch which uses a single, shared
 ## select signal to choose which of its two inputs to reflect on its output. Each output is
 ## tri-state.
 ##
-## This chip is exactly the same as the 74258 except that the latter has inverted outputs
-## and this one doesn't.
+## This chip is exactly the same as the 74257 except that this one has inverted outputs and
+## this other doesn't.
 ##
 ## The inputs to each multiplexer are the A and B pins, and the Y pins are their outputs.
 ## The SEL pin selects between the A inputs (when SEL is low) and the B inputs (when SEL is
@@ -22,10 +22,10 @@
 ## OE     SEL    An     Bn     Yn
 ## =====  =====  =====  =====  =====
 ## H      X      X      X      **Z**
-## L      L      L      X      **L**
-## L      L      H      X      **H**
-## L      H      X      L      **L**
-## L      H      X      H      **H**
+## L      L      L      X      **H**
+## L      L      H      X      **L**
+## L      H      X      L      **H**
+## L      H      X      H      **L**
 ## =====  =====  =====  =====  =====
 ##
 ## The chip comes in a 16-pin dual in-line package with the following pin assignments.
@@ -35,7 +35,7 @@
 ##      A1 |2       15| OE
 ##      B1 |3       14| A4
 ##      Y1 |4       13| B4
-##      A2 |5 74257 12| Y4
+##      A2 |5 74258 12| Y4
 ##      B2 |6       11| A3
 ##      Y2 |7       10| B3
 ##     GND |8        9| Y3
@@ -43,21 +43,22 @@
 ## ```
 ## GND and VCC are ground and power supply pins respectively, and they are not emulated.
 ##
-## In the Commodore 64, both U13 and U25 are 74LS257 chips (a lower-power, faster variant
-## whose emulation is the same). They are used together to multiplex the CPU's 16 address
-## lines into the 8 lines expected by the 4164 DRAM chips.
+## In the Commodore 64, U14 is a 74LS258 (a lower-power, faster variant whose emulation is
+## the same). It's used to multiplex the upper two lines of the multiplexed address bus
+## from the A6 and A7 lines from the 6567 VIC and the VA14 and VA15 lines from one of the
+## 6526 CIAs.
 
 import sequtils
 import strformat
 import ../components/chip
 import ../components/link
 
-chip Ic74257:
+chip Ic74258:
   pins:
     input:
-      # Select. When this is low, the Y output pins will take on the same value as their
-      # A input pins. When this is high, the Y output pins will instead take on the value
-      # of their B input pins.
+      # Select. When this is low, the Y output pins will take on the inverse of the value of
+      # their A input pins. When this is high, the Y output pins will instead take on the
+      # inverse of the value of their B input pins.
       SEL: 1
 
       # Output enable. When this is high, all of the Y output pins will be forced into
@@ -102,9 +103,9 @@ chip Ic74257:
         if highp pins[OE]:
           tri ypin
         elif highp pins[SEL]:
-          if highp bpin: set ypin else: clear ypin
+          if highp bpin: clear ypin else: set ypin
         else:
-          if highp apin: set ypin else: clear ypin
+          if highp apin: clear ypin else: set ypin
     
     proc controlListener(): proc (_: Pin) =
       let listeners = @[1, 2, 3, 4].map(proc (i: int): proc (_: Pin) = dataListener(i))

@@ -46,7 +46,7 @@ proc modeOutToIn* =
   set(p)
   check highp(t)
   setMode(p, Input)
-  check floatp(t)
+  check trip(t)
 
 proc modeBidiToIn* =
   let p = newPin(1, "A", Bidi)
@@ -55,16 +55,16 @@ proc modeBidiToIn* =
   set(p)
   check highp(t)
   setMode(p, Input)
-  check floatp(t)
+  check trip(t)
 
 proc modeUncToIn* =
   let p = newPin(1, "A")
   let t = newTrace(p, newPin(2, "B", Input))
 
   set(p)
-  check floatp(t)
+  check trip(t)
   setMode(p, Input)
-  check floatp(t)
+  check trip(t)
 
 proc modeBidiToOut* =
   let p = newPin(1, "A", Bidi)
@@ -80,7 +80,7 @@ proc modeUncToOut* =
   let t = newTrace(p)
 
   set(p)
-  check floatp(t)
+  check trip(t)
   setMode(p, Output)
   check highp(t)
 

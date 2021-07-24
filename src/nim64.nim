@@ -6,6 +6,8 @@ import nim64/components/link
 import nim64/chips/ic7406
 import nim64/chips/ic7408
 import nim64/chips/ic74139
+import nim64/chips/ic74257
+import nim64/chips/ic74258
 
 when isMainModule:
   echo("Hello world")

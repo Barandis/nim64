@@ -37,8 +37,8 @@ proc upLowOutput* =
   check lowp(t)
 
 proc upFloatOutput* =
-  let p1 = newPin(1, "A", Output).float()
-  let p2 = newPin(2, "B", Output).float()
+  let p1 = newPin(1, "A", Output).tri()
+  let p2 = newPin(2, "B", Output).tri()
   let t = newTrace(p1, p2).pullUp()
   check highp(t)
 
@@ -73,14 +73,14 @@ proc downLowOutput* =
   check lowp(t)
 
 proc downFloatOutput* =
-  let p1 = newPin(1, "A", Output).float()
-  let p2 = newPin(2, "B", Output).float()
+  let p1 = newPin(1, "A", Output).tri()
+  let p2 = newPin(2, "B", Output).tri()
   let t = newTrace(p1, p2).pullDown()
   check lowp(t)
 
 proc offInitial* =
   let t = newTrace().pullOff()
-  check floatp(t)
+  check trip(t)
 
 proc offInput* =
   let p = newPin(1, "A", Output)
@@ -89,12 +89,12 @@ proc offInput* =
   set(p)
   check highp(t)
   setMode(p, Input)
-  check floatp(t)
+  check trip(t)
 
 proc offNoOutput* =
   let p = newPin(1, "A", Input)
   let t = newTrace(p).pullOff()
-  check floatp(t)
+  check trip(t)
 
 proc offHighOutput* =
   let p1 = newPin(1, "A", Output).set()
@@ -109,7 +109,7 @@ proc offLowOutput* =
   check lowp(t)
 
 proc offFloatOutput* =
-  let p1 = newPin(1, "A", Output).float()
-  let p2 = newPin(2, "B", Output).float()
+  let p1 = newPin(1, "A", Output).tri()
+  let p2 = newPin(2, "B", Output).tri()
   let t = newTrace(p1, p2).pullOff()
-  check floatp(t)
+  check trip(t)

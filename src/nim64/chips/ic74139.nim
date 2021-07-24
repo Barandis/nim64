@@ -114,15 +114,6 @@ chip Ic74139:
       GND: 8
   
   init:
-    clear pins[Y01]
-    set pins[Y11]
-    set pins[Y21]
-    set pins[Y31]
-    clear pins[Y02]
-    set pins[Y12]
-    set pins[Y22]
-    set pins[Y32]
-
     proc dataListener(demux: int): proc (pin: Pin) =
       let gpin = pins[&"G{demux}"]
       let apin = pins[&"A{demux}"]
@@ -133,10 +124,10 @@ chip Ic74139:
       let y3pin = pins[&"Y3{demux}"]
 
       result = proc (_: Pin) =
-        if (lowfp gpin) and (lowfp apin) and (lowfp bpin): clear y0pin else: set y0pin
-        if (lowfp gpin) and (highp apin) and (lowfp bpin): clear y1pin else: set y1pin
-        if (lowfp gpin) and (lowfp apin) and (highp bpin): clear y2pin else: set y2pin
-        if (lowfp gpin) and (highp apin) and (highp bpin): clear y3pin else: set y3pin
+        if (lowp gpin) and (lowp apin) and (lowp bpin): clear y0pin else: set y0pin
+        if (lowp gpin) and (highp apin) and (lowp bpin): clear y1pin else: set y1pin
+        if (lowp gpin) and (lowp apin) and (highp bpin): clear y2pin else: set y2pin
+        if (lowp gpin) and (highp apin) and (highp bpin): clear y3pin else: set y3pin
     
     for i in 1..2:
       let listener = dataListener(i)

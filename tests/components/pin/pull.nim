@@ -14,7 +14,7 @@ proc upUnconnected* =
   let p = newPin(1, "A", Unconnected).pullUp()
   clear(p)
   check lowp(p)
-  float(p)
+  tri(p)
   check highp(p)
 
 proc upInput* =
@@ -23,7 +23,7 @@ proc upInput* =
 
   clear(t)
   check lowp(p)
-  float(t)
+  tri(t)
   check highp(p)
 
 proc upOutput* =
@@ -32,7 +32,7 @@ proc upOutput* =
 
   clear(p)
   check lowp(t)
-  float(p)
+  tri(p)
   check highp(t)
 
 proc upBidi* =
@@ -41,12 +41,12 @@ proc upBidi* =
 
   clear(p)
   check lowp(t)
-  float(p)
+  tri(p)
   check highp(t)
 
 proc upAfter* =
   let p = newPin(1, "A")
-  check floatp(p)
+  check trip(p)
   pullUp(p)
   check highp(p)
 
@@ -58,7 +58,7 @@ proc downUnconnected* =
   let p = newPin(1, "A", Unconnected).pullDown()
   set(p)
   check highp(p)
-  float(p)
+  tri(p)
   check lowp(p)
 
 proc downInput* =
@@ -67,7 +67,7 @@ proc downInput* =
 
   set(t)
   check highp(p)
-  float(t)
+  tri(t)
   check lowp(p)
 
 proc downOutput* =
@@ -76,7 +76,7 @@ proc downOutput* =
 
   set(p)
   check highp(t)
-  float(p)
+  tri(p)
   check lowp(t)
 
 proc downBidi* =
@@ -85,34 +85,34 @@ proc downBidi* =
 
   set(p)
   check highp(t)
-  float(p)
+  tri(p)
   check lowp(t)
 
 proc downAfter* =
   let p = newPin(1, "A")
-  check floatp(p)
+  check trip(p)
   pullDown(p)
   check lowp(p)
 
 proc offInitial* =
   let p = newPin(1, "A").pullOff()
-  check floatp(p)
+  check trip(p)
 
 proc offAfterUp* =
   let p = newPin(1, "A").pullUp()
-  float(p)
+  tri(p)
   check highp(p)
 
   pullOff(p)
-  float(p)
-  check floatp(p)
+  tri(p)
+  check trip(p)
 
 
 proc offAfterDown* =
   let p = newPin(1, "A").pullDown()
-  float(p)
+  tri(p)
   check lowp(p)
 
   pullOff(p)
-  float(p)
-  check floatp(p)
+  tri(p)
+  check trip(p)

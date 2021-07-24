@@ -50,7 +50,7 @@
 ## and return a bool). In any language. It's ugly and it takes 3-4 extra keystrokes just to
 ## say that it's a predicate. I do think it's important to be able to see that something's a
 ## predicate at a glance, especially when those predicates are mixed in with other single-
-## argument functions that are not, like in the example above with `set` and `clear, but
+## argument functions that are not, like in the example above with `set` and `clear`, but
 ## `is` (or worse, `get`) just isn't the way I want to do it.
 ## 
 ## There are languages where `?` is a legal character (Lisp allows it, and Ruby allows it
@@ -67,9 +67,9 @@
 ## a `Trace` as appropriate, and all of them are discardable). This is meant to make it more
 ## concise to set up a new instance; you can do something like this to create a new `Pin`
 ## with all of its properties already set.
-## 
-##     let pin = newPin(1, "A", Output).set().pullUp().addListener(listener)
-## 
+## ```
+## let pin = newPin(1, "A", Output).set().pullUp().addListener(listener)
+## ```
 ## For the sake of completeness, chaining was even added to `name=` functions and operators,
 ## so you *could* do `(pin.mode = Output).set()` if you really wanted to. But if you need to
 ## do that, just use `setMode(pin, Output).set()`.
@@ -101,13 +101,16 @@ type
     ## both, or neither; and a level, which is the signal present on them. In digital 
     ## circuits, this is generally 0 or 1, though there's no reason a pin can't work with 
     ## analog signals (and thus have any level at all).
+    ## 
+    ## These pins are tri-state capable, meaning that at least digitally speaking, they have
+    ## three potential levels: high (1), low (0), and tri-state (Z). The last is a high-
+    ## impedence state that generally means that the pin isn't contributing to its circuit
+    ## at all, as though it's switched off. If a pin is in tri-state, it will have a level
+    ## of `NaN`.
     ##
     ## Pins may also be pulled up or down, which defines what level they have if a level
-    ## isn't given to them. This emulates the internal pull-ups and pull-downs that some
-    ## chips have (such as the port pins on a 6526 CIA). If no level is given to them and
-    ## they have no pull-up or pull-down, then their level will be `NaN`, or no level at 
-    ## all. This can be used to represent, e.g., a high-impedance state that cuts the pin 
-    ## off from its circuit.
+    ## isn't given to them (they're tri-stated). This emulates the internal pull-ups and 
+    ## pull-downs that some chips have (such as the port pins on a 6526 CIA).
     ##
     ## Pins and traces are intimately linked, which is why both are defined in this file. A
     ## pin can be associated with exactly one trace, and unless the pin's level is `NaN` and
@@ -155,14 +158,20 @@ type
     ##
     ## 1. If the trace has at least one output pin connected to it that has a level, the
     ##    trace takes on the maximum level among all of its connected output pins.
-    ## 2. If the value being set is `None`: a. If the trace has been pulled up, its value is
+    ## 2. If the value being set is `NaN`: a. If the trace has been pulled up, its value is
     ##    1.0. b. If the trace has been pulled down, its value is 0.0. c. Its value is
-    ##    `None`.
+    ##    `NaN`.
     ## 3. The trace takes on the set value.
+    ## 
+    ## The `NaN` means a little something different with a trace; on a pin, it refers to a
+    ## tri-state (a high impedence state where the pin isn't driving its trace); with a 
+    ## trace it just means that no level has been set. The procs that deal with this are
+    ## still named after the tri state (`tri` and `trip`) because that finer point doesn't
+    ## mean much most of the time.
     ##
     ## If a trace is set by a pin (either by an output pin changing values or by an
     ## unconnected pin mode-changing into an output pin), then the value is simply set
-    ## *unless* the value it's being set to is `None`. In that case the same rules as direct
+    ## *unless* the value it's being set to is `NaN`. In that case the same rules as direct
     ## setting apply.
     ##
     ## A change in the level of the trace will be propagated to any input pins connected to
@@ -216,16 +225,11 @@ proc lowp*(pin: Pin): bool {.inline.} =
   ## less than 0.5 will be considered "low".
   pin.level < 0.5
 
-proc floatp*(pin: Pin): bool {.inline.} =
-  ## Determines whether the pin's level is floating. This is represented by a value of `NaN`
-  ## and indicates that a pin is in a high-impedence state.
+proc trip*(pin: Pin): bool {.inline.} =
+  ## Determines whether the pin's level is tri-state. This is represented by a value of 
+  ## `NaN` and indicates that a pin is not connected to (and influencing the level of) its 
+  ## trace.
   pin.level.isNaN
-
-proc lowfp*(pin: Pin): bool {.inline.} =
-  ## The inverse of `high`. This is given a full function because there are many places
-  ## throughout the project where `low` and `floating` are both treated the same (both act
-  ## as lows on logical inputs, for example) while `high` is treated differently.
-  not highp pin
 
 proc highp*(trace: Trace): bool {.inline.} =
   ## Determines whether the trace is high. While this generally means a value of 1, any 
@@ -237,16 +241,11 @@ proc lowp*(trace: Trace): bool {.inline.} =
   ## less than 0.5 will be considered "low".
   trace.level < 0.5
 
-proc floatp*(trace: Trace): bool {.inline.} =
-  ## Determines whether the pin's level is floating. This is represented by a value of `NaN`
-  ## and indicates that a trace has no level at all because no output pins are driving it.
+proc trip*(trace: Trace): bool {.inline.} =
+  ## Determines whether the pin's level is tri-state. This is represented by a value of 
+  ## `NaN` and indicates that a trace has no level at all because no output pins are driving 
+  ## it.
   trace.level.isNaN
-
-proc lowfp*(trace: Trace): bool {.inline.} =
-  ## The inverse of `high`. This is given a full function because there are many places
-  ## throughout the project where `low` and `floating` are both treated the same (both act
-  ## as lows on logical inputs, for example) while `high` is treated differently.
-  not highp trace
 
 proc normalize(pin: Pin, level: float): float =
   ## Normalizes a level by accounting for the pin's pull state if that level is `NaN`.
@@ -347,10 +346,10 @@ proc clear*(pin: Pin): Pin {.discardable, inline.} =
   result = pin
   pin.setLevel(0.0)
 
-proc float*(pin: Pin): Pin {.discardable, inline.} =
-  ## Sets the pin's level to `NaN`. This will have no effect if the pin's mode is `Input` 
-  ## and if the pin is connected to a trace. If the pin has been pulled up or down, it will
-  ## take on the level associated with that pull instead.
+proc tri*(pin: Pin): Pin {.discardable, inline.} =
+  ## Sets the pin's level to `NaN`, tri-stating it. This will have no effect if the pin's 
+  ## mode is `Input` and if the pin is connected to a trace. If the pin has been pulled up 
+  ## or down, it will take on the level associated with that pull instead.
   result = pin
   pin.setLevel(NaN)
 
@@ -366,9 +365,9 @@ proc clear*(trace: Trace): Trace {.discardable, inline.} =
   result = trace
   trace.setLevel(0.0)
 
-proc float*(trace: Trace): Trace {.discardable, inline.} =
-  ## Sets the trace's value to `NaN`. This will only have an effect if no leveled output
-  ## pins are connected to the trace.
+proc tri*(trace: Trace): Trace {.discardable, inline.} =
+  ## Sets the trace's value to `NaN`, which represents no level at all. This will only have 
+  ## an effect if no leveled output pins are connected to the trace.
   result = trace
   trace.setLevel(NaN)
 

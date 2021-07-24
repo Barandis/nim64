@@ -13,12 +13,6 @@ proc setup: (Ic7408, Traces) =
   let chip = newIc7408()
   result = (chip, deviceTraces(chip))
 
-proc initial7408* =
-  let(_, traces) = setup()
-
-  for i in 1..4:
-    check lowp traces[&"Y{i}"]
-
 proc gate1* =
   let (_, traces) = setup()
 

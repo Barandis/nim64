@@ -5,43 +5,43 @@
 
 import unittest
 import ../utils
-import ../../src/nim64/chips/ic74257
+import ../../src/nim64/chips/ic74258
 import ../../src/nim64/components/link
 
-proc setup: (Ic74257, Traces) =
-  let chip = newIc74257()
+proc setup: (Ic74258, Traces) =
+  let chip = newIc74258()
   let traces = deviceTraces(chip)
   result = (chip, traces)
 
-proc mux1Setup: (Ic74257, Traces) =
+proc inv1Setup: (Ic74258, Traces) =
   result = setup()
   let (_, traces) = result
   clear traces[A1]
   set traces[B1]
 
-proc mux1SelectA* =
-  let (_, traces) = mux1Setup()
+proc inv1SelectA* =
+  let (_, traces) = inv1Setup()
 
   clear traces[SEL]
-  check lowp traces[Y1]
+  check highp traces[Y1]
 
   set traces[A1]
-  check highp traces[Y1]
-
-proc mux1SelectB* =
-  let (_, traces) = mux1Setup()
-
-  set traces[SEL]
-  check highp traces[Y1]
-
-  clear traces[B1]
   check lowp traces[Y1]
 
-proc mux1HighOe* =
-  let (_, traces) = mux1Setup()
+proc inv1SelectB* =
+  let (_, traces) = inv1Setup()
 
   set traces[SEL]
+  check lowp traces[Y1]
+
+  clear traces[B1]
   check highp traces[Y1]
+
+proc inv1HighOe* =
+  let (_, traces) = inv1Setup()
+
+  set traces[SEL]
+  check lowp traces[Y1]
 
   set traces[OE]
   check trip traces[Y1]
@@ -49,34 +49,34 @@ proc mux1HighOe* =
   clear traces[SEL]
   check trip traces[Y1]
 
-proc mux2Setup: (Ic74257, Traces) =
+proc inv2Setup: (Ic74258, Traces) =
   result = setup()
   let (_, traces) = result
   clear traces[A2]
   set traces[B2]
 
-proc mux2SelectA* =
-  let (_, traces) = mux2Setup()
+proc inv2SelectA* =
+  let (_, traces) = inv2Setup()
 
   clear traces[SEL]
-  check lowp traces[Y2]
-  set traces[A2]
   check highp traces[Y2]
+  set traces[A2]
+  check lowp traces[Y2]
 
-proc mux2SelectB* =
-  let (_, traces) = mux2Setup()
+proc inv2SelectB* =
+  let (_, traces) = inv2Setup()
 
   set traces[SEL]
-  check highp traces[Y2]
+  check lowp traces[Y2]
 
   clear traces[B2]
-  check lowp traces[Y2]
+  check highp traces[Y2]
 
-proc mux2HighOe* =
-  let (_, traces) = mux2Setup()
+proc inv2HighOe* =
+  let (_, traces) = inv2Setup()
 
   set traces[SEL]
-  check highp traces[Y2]
+  check lowp traces[Y2]
 
   set traces[OE]
   check trip traces[Y2]
@@ -84,35 +84,35 @@ proc mux2HighOe* =
   clear traces[SEL]
   check trip traces[Y2]
 
-proc mux3Setup: (Ic74257, Traces) =
+proc inv3Setup: (Ic74258, Traces) =
   result = setup()
   let (_, traces) = result
   clear traces[A3]
   set traces[B3]
 
-proc mux3SelectA* =
-  let (_, traces) = mux3Setup()
+proc inv3SelectA* =
+  let (_, traces) = inv3Setup()
 
   clear traces[SEL]
-  check lowp traces[Y3]
+  check highp traces[Y3]
 
   set traces[A3]
-  check highp traces[Y3]
-
-proc mux3SelectB* =
-  let (_, traces) = mux3Setup()
-
-  set traces[SEL]
-  check highp traces[Y3]
-
-  clear traces[B3]
   check lowp traces[Y3]
 
-proc mux3HighOe* =
-  let (_, traces) = mux3Setup()
+proc inv3SelectB* =
+  let (_, traces) = inv3Setup()
 
   set traces[SEL]
+  check lowp traces[Y3]
+
+  clear traces[B3]
   check highp traces[Y3]
+
+proc inv3HighOe* =
+  let (_, traces) = inv3Setup()
+
+  set traces[SEL]
+  check lowp traces[Y3]
 
   set traces[OE]
   check trip traces[Y3]
@@ -120,35 +120,35 @@ proc mux3HighOe* =
   clear traces[SEL]
   check trip traces[Y3]
 
-proc mux4Setup: (Ic74257, Traces) =
+proc inv4Setup: (Ic74258, Traces) =
   result = setup()
   let (_, traces) = result
   clear traces[A4]
   set traces[B4]
 
-proc mux4SelectA* =
-  let (_, traces) = mux4Setup()
+proc inv4SelectA* =
+  let (_, traces) = inv4Setup()
 
   clear traces[SEL]
-  check lowp traces[Y4]
+  check highp traces[Y4]
 
   set traces[A4]
-  check highp traces[Y4]
-
-proc mux4SelectB* =
-  let (_, traces) = mux4Setup()
-
-  set traces[SEL]
-  check highp traces[Y4]
-
-  clear traces[B4]
   check lowp traces[Y4]
 
-proc mux4HighOe* =
-  let (_, traces) = mux4Setup()
+proc inv4SelectB* =
+  let (_, traces) = inv4Setup()
 
   set traces[SEL]
+  check lowp traces[Y4]
+
+  clear traces[B4]
   check highp traces[Y4]
+
+proc inv4HighOe* =
+  let (_, traces) = inv4Setup()
+
+  set traces[SEL]
+  check lowp traces[Y4]
 
   set traces[OE]
   check trip traces[Y4]

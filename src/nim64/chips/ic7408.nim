@@ -104,11 +104,6 @@ chip Ic7408:
       GND: 7
   
   init:
-    clear pins[Y1]
-    clear pins[Y2]
-    clear pins[Y3]
-    clear pins[Y4]
-
     proc dataListener(gate: int): proc (pin: Pin) =
       let apin = pins[&"A{gate}"]
       let bpin = pins[&"B{gate}"]

@@ -12,64 +12,64 @@ proc isNaN(n: float): bool {.inline.} = n.classify == fcNan
 proc functions* =
   let pin = newPin(1, "A", Input)
 
-  float(pin)
+  tri(pin)
   check:
     level(pin).isNaN
     not highp(pin)
     not lowp(pin)
-    floatp(pin)
+    trip(pin)
 
   set(pin)
   check:
     level(pin) == 1
     highp(pin)
     not lowp(pin)
-    not floatp(pin)
+    not trip(pin)
   
   clear(pin)
   check:
     level(pin) == 0
     not highp(pin)
     lowp(pin)
-    not floatp(pin)
+    not trip(pin)
   
   setLevel(pin, -0.35)
   check:
     level(pin) == -0.35
     not highp(pin)
     lowp(pin)
-    not floatp(pin)
+    not trip(pin)
 
 proc methods* =
   let pin = newPin(1, "A", Input)
 
-  pin.float()
+  pin.tri()
   check:
     pin.level.isNaN
     not pin.highp
     not pin.lowp
-    pin.floatp
+    pin.trip
   
   pin.set()
   check:
     pin.level == 1
     pin.highp
     not pin.lowp
-    not pin.floatp
+    not pin.trip
   
   pin.clear()
   check:
     pin.level == 0
     not pin.highp
     pin.lowp
-    not pin.floatp
+    not pin.trip
   
   pin.level = -0.35
   check:
     pin.level == -0.35
     not pin.highp
     pin.lowp
-    not pin.floatp
+    not pin.trip
 
 proc unconnected* =
   let p = newPin(1, "A", Unconnected)
@@ -77,7 +77,7 @@ proc unconnected* =
 
   t.set()
   check:
-    p.floatp
+    p.trip
     t.highp
   
   p.set()
@@ -95,9 +95,9 @@ proc unconnected* =
     p.level == -0.35
     t.highp
   
-  p.float()
+  p.tri()
   check:
-    p.floatp
+    p.trip
     t.highp
 
 proc input* =
@@ -124,7 +124,7 @@ proc input* =
     p.highp
     t.highp
   
-  p.float()
+  p.tri()
   check:
     p.highp
     t.highp
@@ -135,7 +135,7 @@ proc output* =
 
   t.set()
   check:
-    p.floatp
+    p.trip
     t.highp
   
   p.set()
@@ -153,10 +153,10 @@ proc output* =
     p.level == -0.35
     t.level == -0.35
   
-  p.float()
+  p.tri()
   check:
-    p.floatp
-    t.floatp
+    p.trip
+    t.trip
 
 proc bidi* =
   let p = newPin(1, "A", Bidi)
@@ -182,10 +182,10 @@ proc bidi* =
     p.level == -0.35
     t.level == -0.35
   
-  p.float()
+  p.tri()
   check:
-    p.floatp
-    t.floatp
+    p.trip
+    t.trip
 
 proc toggleHigh* =
   let p = newPin(1, "A")
@@ -209,6 +209,6 @@ proc toggleLow* =
 
 proc toggleFloating* =
   let p = newPin(1, "A")
-  p.float()
+  p.tri()
   p.toggle()
   check p.level.isNaN

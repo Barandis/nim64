@@ -12,19 +12,19 @@ proc directUnc* =
   check:
     highp(t)
     not lowp(t)
-    not floatp(t)
+    not trip(t)
 
   clear(t)
   check:
     not highp(t)
     lowp(t)
-    not floatp(t)
+    not trip(t)
   
-  float(t)
+  tri(t)
   check:
     not highp(t)
     not lowp(t)
-    floatp(t)
+    trip(t)
   
   setLevel(t, -0.35)
   check level(t) == -0.35
@@ -37,8 +37,8 @@ proc directIn* =
   check highp(t)
   clear(t)
   check lowp(t)
-  float(t)
-  check floatp(t)
+  tri(t)
+  check trip(t)
   setLevel(t, -0.35)
   check level(t) == -0.35
 
@@ -51,7 +51,7 @@ proc directOutHigh*() =
   check highp(t)
   clear(t)
   check highp(t)
-  float(t)
+  tri(t)
   check highp(t)
   setLevel(t, -0.35)
   check highp(t)
@@ -65,22 +65,22 @@ proc directOutLow* =
   check lowp(t)
   clear(t)
   check lowp(t)
-  float(t)
+  tri(t)
   check lowp(t)
   setLevel(t, -0.35)
   check level(t) == 0
 
 proc directOutFloat* =
-  let p1 = newPin(1, "A", Output).float()
-  let p2 = newPin(2, "B", Output).float()
+  let p1 = newPin(1, "A", Output).tri()
+  let p2 = newPin(2, "B", Output).tri()
   let t = newTrace(p1, p2)
 
   set(t)
   check highp(t)
   clear(t)
   check lowp(t)
-  float(t)
-  check floatp(t)
+  tri(t)
+  check trip(t)
   setLevel(t, -0.35)
   check level(t) == -0.35
 
@@ -120,10 +120,10 @@ proc indirectBidi* =
     highp(t)
     highp(p)
   
-  float(t)
+  tri(t)
   check:
-    floatp(t)
-    floatp(p)
+    trip(t)
+    trip(p)
 
 proc indirectOutHigh* =
   let p1 = newPin(1, "A", Output)

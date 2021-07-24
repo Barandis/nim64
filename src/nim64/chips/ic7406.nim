@@ -66,13 +66,6 @@ chip Ic7406:
       GND: 7
   
   init:
-    set pins[Y1]
-    set pins[Y2]
-    set pins[Y3]
-    set pins[Y4]
-    set pins[Y5]
-    set pins[Y6]
-
     proc dataListener(gate: int): proc (pin: Pin) =
       let ypin = pins[&"Y{gate}"]
       result = proc (pin: Pin) =

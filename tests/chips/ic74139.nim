@@ -12,15 +12,6 @@ proc setup: (Ic74139, Traces) =
   let chip = newIc74139()
   result = (chip, deviceTraces(chip))
 
-proc demux1Initial* =
-  let (_, traces) = setup()
-
-  check:
-    lowp traces[Y01]
-    highp traces[Y11]
-    highp traces[Y21]
-    highp traces[Y31]
-
 proc demux1HighG* =
   let (_, traces) = setup()
 
@@ -101,15 +92,6 @@ proc demux1HH* =
     highp traces[Y11]
     highp traces[Y21]
     lowp traces[Y31]
-
-proc demux2Initial* =
-  let (_, traces) = setup()
-
-  check:
-    lowp traces[Y02]
-    highp traces[Y12]
-    highp traces[Y22]
-    highp traces[Y32]
 
 proc demux2HighG* =
   let (_, traces) = setup()

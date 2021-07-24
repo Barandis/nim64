@@ -13,12 +13,6 @@ proc setup: (Ic7406, Traces) =
   let chip = newIc7406()
   result = (chip, deviceTraces(chip))
 
-proc initial7406* =
-  let (_, traces) = setup()
-
-  for i in 1..6:
-    check highp traces[&"Y{i}"]
-
 proc lowOnHighIn* =
   let (_, traces) = setup()
 
