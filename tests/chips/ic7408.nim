@@ -4,7 +4,6 @@
 # https://opensource.org/licenses/MIT
 
 import unittest
-import strformat
 import ../utils
 import ../../src/nim64/chips/ic7408
 import ../../src/nim64/components/link

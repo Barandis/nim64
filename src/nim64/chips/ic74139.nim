@@ -130,7 +130,7 @@ chip Ic74139:
         if (lowp gpin) and (highp apin) and (highp bpin): clear y3pin else: set y3pin
     
     for i in 1..2:
-      let listener = dataListener(i)
-      pins[&"G{i}"].addListener(listener)
-      pins[&"A{i}"].addListener(listener)
-      pins[&"B{i}"].addListener(listener)
+      let listener = dataListener i
+      addListener pins[&"G{i}"], listener
+      addListener pins[&"A{i}"], listener
+      addListener pins[&"B{i}"], listener

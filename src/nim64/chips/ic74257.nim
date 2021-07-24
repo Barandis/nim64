@@ -107,15 +107,15 @@ chip Ic74257:
           if highp apin: set ypin else: clear ypin
     
     proc controlListener(): proc (_: Pin) =
-      let listeners = @[1, 2, 3, 4].map(proc (i: int): proc (_: Pin) = dataListener(i))
+      let listeners = map(@[1, 2, 3, 4], proc (i: int): proc (_: Pin) = dataListener i)
       result = proc (pin: Pin) =
-        for listener in listeners: listener(pin)
+        for listener in listeners: listener pin
     
     let listener = controlListener()
-    pins[SEL].addListener(listener)
-    pins[OE].addListener(listener)
+    addListener pins[SEL], listener
+    addListener pins[OE], listener
 
     for i in 1..4:
-      let listener = dataListener(i)
-      pins[&"A{i}"].addListener(listener)
-      pins[&"B{i}"].addListener(listener)
+      let listener = dataListener i
+      addListener pins[&"A{i}"], listener
+      addListener pins[&"B{i}"], listener

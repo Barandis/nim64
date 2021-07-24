@@ -111,10 +111,10 @@ chip Ic74373:
         for i in 0..7:
           let qpin = pins[&"Q{i}"]
           if highp pins[&"D{i}"]: set qpin else: clear qpin
-          latches[i] = none(bool)
+          latches[i] = none bool
       else:
         for i in 0..7:
-          latches[i] = some(highp pins[&"D{i}"])
+          latches[i] = some highp pins[&"D{i}"]
     
     proc enableListener(pin: Pin) =
       if highp pin:
@@ -126,10 +126,10 @@ chip Ic74373:
         for i in 0..7:
           let qpin = pins[&"Q{i}"]
           if latched:
-            if isSome(latches[i]) and get(latches[i]): set qpin else: clear qpin
+            if (isSome latches[i]) and (get latches[i]): set qpin else: clear qpin
           else:
             if highp pins[&"D{i}"]: set qpin else: clear qpin
     
-    for i in 0..7: pins[&"D{i}"].addListener(dataListener(i))
-    pins[LE].addListener(latchListener)
-    pins[OE].addListener(enableListener)
+    for i in 0..7: addListener pins[&"D{i}"], dataListener i
+    addListener pins[LE], latchListener
+    addListener pins[OE], enableListener

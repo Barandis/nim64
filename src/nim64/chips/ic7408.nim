@@ -113,6 +113,6 @@ chip Ic7408:
         if (highp apin) and (highp bpin): set ypin else: clear ypin
     
     for i in 1..4:
-      let listener = dataListener(i)
-      pins[&"A{i}"].addListener(listener)
-      pins[&"B{i}"].addListener(listener)
+      let listener = dataListener i
+      addListener pins[&"A{i}"], listener
+      addListener pins[&"B{i}"], listener

@@ -28,8 +28,11 @@
 ## A few days down the road and I've made up my mind. First of all, I felt the operators
 ## just added noise and weren't clear in purpose, which is the hallmark of a frivolously
 ## added operator. So I removed them. I also decided that the coding style for this project
-## is going to be...function syntax with no parentheses. This is appealing for speed of
-## typing and just for the way it reads. Note that I will use parentheses to group function
+## is going to be...command invocation syntax. This is the regular procedure syntax (i.e.,
+## not method syntax) with parentheses left off where possible (which is in a statement
+## context, or in an expression context when there's only one argument - if there's more 
+## than one, the regular proc syntax is used). This is appealing for speed of typing and 
+## just for the way it reads. Note that I will use parentheses to group function
 ## calls, but in a Haskell-y way: 
 ## 
 ## ```nim
@@ -38,29 +41,35 @@
 ## # this way is wrong; it doesn't know how to group nots and function calls
 ## if not highp apin and not highp bpin: set ypin else: clear ypin
 ## 
-## # so you could do it this way instead
+## # so you could do it this way, proc syntax, instead
 ## if not highp(apin) and not highp(bpin): set ypin else: clear ypin
 ## 
 ## # but I prefer it this way
 ## if not (highp apin) and not (highp bpin): set ypin else: clear ypin
 ## ```
 ## 
-## Speaking of that, what's with the `p` ending all those functions? Well, I have *never*
-## liked the `isSomething` syntax for predicate functions (functions which take one argument
-## and return a bool). In any language. It's ugly and it takes 3-4 extra keystrokes just to
-## say that it's a predicate. I do think it's important to be able to see that something's a
-## predicate at a glance, especially when those predicates are mixed in with other single-
-## argument functions that are not, like in the example above with `set` and `clear`, but
-## `is` (or worse, `get`) just isn't the way I want to do it.
+## The actual problem in this example is only in the first grouping, since the compiler
+## tries to make an expression out of `apin and not highp bpin` and pass it to `highp`.
+## Nevertheless I will use parentheses groupings around the other groupings as well, for
+## consistency's sake.
+## 
+## Speaking of that example, what's with the `p` ending all those functions? Well, I have 
+## *never* liked the `isSomething` syntax for predicate functions (functions which take one 
+## argument and return a `bool`). In any language. It's ugly and it takes 3-4 extra
+## keystrokes just to say that it's a predicate. I do think it's important to be able to see
+## that something's a predicate at a glance, especially when those predicates are mixed in 
+## with other single-argument functions that are not, like in the example above with `set` 
+## and `clear`, but `is` (or worse, `get`) just isn't the way I want to do it.
 ## 
 ## There are languages where `?` is a legal character (Lisp allows it, and Ruby allows it
 ## as long as it's the last character in an identifier), and I think that's a fantastic way
 ## to mark a predicate. But that method isn't available in Nim. So I have hearkened back to
 ## the days of Lisp, where function names would be postfixed with `p` to indicate that
-## they're predicates. Not as good as `?`, but a lot better than `is`.
+## they're predicates. `highp` is not as good as `high?`, but it's a lot better than
+## `isHigh`.
 ## 
 ## (The question of why Lisp used `p` when it *could* have used `?` is a good one that I
-## don't know the answer to. Probably something to do with the leyboards they were using in
+## don't know the answer to. Probably something to do with the keyboards they were using in
 ## 1958.)
 ## 
 ## Every exported mutation function in this module is chainable (they all return a `Pin` or
@@ -189,7 +198,7 @@ type
 proc isNaN(n: float): bool {.inline.} =
   ## Utility function to determine whether a float is `NaN`. This is used in place of
   ## comparisons since `NaN != NaN`.
-  n.classify == fcNaN
+  (classify n) == fcNaN
 
 proc equal(a, b: float): bool {.inline.} =
   ## Equality, but with NaN equaling itself. Necessary to prevent infinite loops in places
@@ -235,7 +244,7 @@ proc trip*(pin: Pin): bool {.inline.} =
   ## Determines whether the pin's level is tri-state. This is represented by a value of 
   ## `NaN` and indicates that a pin is not connected to (and influencing the level of) its 
   ## trace.
-  pin.level.isNaN
+  isNaN pin.level
 
 proc highp*(trace: Trace): bool {.inline.} =
   ## Determines whether the trace is high. While this generally means a value of 1, any 
@@ -251,11 +260,11 @@ proc trip*(trace: Trace): bool {.inline.} =
   ## Determines whether the pin's level is tri-state. This is represented by a value of 
   ## `NaN` and indicates that a trace has no level at all because no output pins are driving 
   ## it.
-  trace.level.isNaN
+  isNaN trace.level
 
 proc normalize(pin: Pin, level: float): float =
   ## Normalizes a level by accounting for the pin's pull state if that level is `NaN`.
-  if level.isNaN: pin.pull.toLevel() else: level
+  if isNaN level: toLevel pin.pull else: level
 
 proc update(pin: Pin) =
   ## Updates the level of a pin to its trace's level. This should only be called by the 
@@ -265,10 +274,10 @@ proc update(pin: Pin) =
   ## trace has an `NaN` value. If the pin's value changes as a result of this function call,
   ## its listeners will be invoked.
   if pin.connected:
-    let normalized = pin.normalize(pin.trace.level)
-    if not equal(pin.level, normalized) and pin.mode.inputp:
+    let normalized = normalize(pin, pin.trace.level)
+    if not equal(pin.level, normalized) and inputp pin.mode:
       pin.level = normalized
-      for listener in pin.listeners: listener(pin)
+      for listener in pin.listeners: listener pin
 
 proc calculate(trace: Trace, level: float): float =
   ## Calculates a new level for the trace. While a level is provided to this function, it's
@@ -276,7 +285,7 @@ proc calculate(trace: Trace, level: float): float =
   ## highest of those levels will be chosen instead. Otherwise, if the trace has a pull,
   ## that value will become the new value. Only if neither of these situations are true will
   ## the provided level actually take effect.
-  let outputs = trace.pins.filter(pin => pin.mode == Output)
+  let outputs = filter(trace.pins, pin => pin.mode == Output)
   if outputs.len > 0:
     var max = -Inf
     for output in outputs:
@@ -285,8 +294,8 @@ proc calculate(trace: Trace, level: float): float =
     if max > -Inf:
       return max
   
-  if level.isNaN:
-    return trace.pull.toLevel
+  if isNaN level:
+    return toLevel trace.pull
 
   return level
 
@@ -298,8 +307,8 @@ proc update(trace: Trace, level: float) =
   ## want to keep it here if I find that the new way (highest output pin level wins) doesn't
   ## work for some reason.
   #trace.level = if level.isNaN: trace.calculate(level) else: level
-  trace.level = trace.calculate(level)
-  for pin in trace.pins: pin.update()
+  trace.level = calculate(trace, level)
+  for pin in trace.pins: update pin
 
 proc setLevel*(pin: Pin, level: float): Pin {.discardable.} =
   ## Sets the pin's level. This will have no effect if the pin's mode is `Input` and if the 
@@ -308,18 +317,18 @@ proc setLevel*(pin: Pin, level: float): Pin {.discardable.} =
   result = pin
   if pin.connected:
     if pin.mode != Input:
-      pin.level = pin.normalize(level)
+      pin.level = normalize(pin, level)
       if pin.mode != Unconnected:
-        pin.trace.update(pin.level)
+        update pin.trace, pin.level
   else:
-    pin.level = pin.normalize(level)
+    pin.level = normalize(pin, level)
 
 proc setLevel*(trace: Trace, level: float): Trace {.discardable.} =
   ## Sets the trace's level. This setting will be overidden if the trace has other output
   ## pins connected to it or if it has been pulled up or down.
   result = trace
-  trace.level = trace.calculate(level)
-  for pin in trace.pins: pin.update()
+  trace.level = calculate(trace, level)
+  for pin in trace.pins: update pin
 
 proc level*(pin: Pin): float =
   ## Returns the pin's current level.
@@ -329,7 +338,7 @@ proc `level=`*(pin: Pin, level: float): Pin {.discardable.} =
   ## Sets the pin's level. This will have no effect if the pin's mode is `Input` and if the 
   ## pin is connected to a trace. Otherwise, any connected trace is also updated with the 
   ## new level.
-  pin.setLevel(level)
+  setLevel pin, level
 
 proc level*(trace: Trace): float =
   ## Returns the trace's current level.
@@ -338,52 +347,51 @@ proc level*(trace: Trace): float =
 proc `level=`*(trace: Trace, level: float): Trace {.discardable.} =
   ## Sets the trace's level. This setting will be overidden if the trace has other output
   ## pins connected to it or if it has been pulled up or down.
-  trace.setLevel(level)
+  setLevel trace, level
 
 proc set*(pin: Pin): Pin {.discardable, inline.} =
   ## Sets the pin's level to 1. This will have no effect if the pin's mode is `Input` and if
   ## the pin is connected to a trace.
   result = pin
-  pin.setLevel(1.0)
+  setLevel pin, 1
 
 proc clear*(pin: Pin): Pin {.discardable, inline.} =
   ## Sets the pin's level to 0. This will have no effect if the pin's mode is `Input` and if
   ## the pin is connected to a trace.
   result = pin
-  pin.setLevel(0.0)
+  setLevel pin, 0
 
 proc tri*(pin: Pin): Pin {.discardable, inline.} =
   ## Sets the pin's level to `NaN`, tri-stating it. This will have no effect if the pin's 
   ## mode is `Input` and if the pin is connected to a trace. If the pin has been pulled up 
   ## or down, it will take on the level associated with that pull instead.
   result = pin
-  pin.setLevel(NaN)
+  setLevel pin, NaN
 
 proc set*(trace: Trace): Trace {.discardable, inline.} =
   ## Sets the trace's value to 1. This will only have an effect if no higher-leveled output
   ## pins are connected to the trace.
   result = trace
-  trace.setLevel(1.0)
+  setLevel trace, 1
 
 proc clear*(trace: Trace): Trace {.discardable, inline.} =
   ## Sets the trace's value to 0. This will only have an effect if no higher-leveled output
   ## pins are connected to the trace.
   result = trace
-  trace.setLevel(0.0)
+  setLevel trace, 0
 
 proc tri*(trace: Trace): Trace {.discardable, inline.} =
   ## Sets the trace's value to `NaN`, which represents no level at all. This will only have 
   ## an effect if no leveled output pins are connected to the trace.
   result = trace
-  trace.setLevel(NaN)
+  setLevel trace, NaN
 
 proc toggle*(pin: Pin): Pin {.discardable.} =
   ## Toggles the pin's level. This will treat that level as digital; if it is "high" (0.5 or
   ## over), the pin will be set to 0, and if it's "low" (less than 0.5), the pin will be set
   ## to 1. This has no effect on pins with `NaN` levels.
   result = pin
-  if pin.highp: clear(pin)
-  elif pin.lowp: set(pin)
+  if highp pin: clear pin elif lowp pin: set pin
 
 proc setMode*(pin: Pin, mode: Mode): Pin {.discardable.} =
   ## Sets the pin's mode. This will also account for the values that the pin and its
@@ -395,13 +403,13 @@ proc setMode*(pin: Pin, mode: Mode): Pin {.discardable.} =
   pin.mode = mode
 
   if pin.connected:
-    if mode.outputp:
-      pin.trace.update(pin.level)
+    if outputp mode:
+      update pin.trace, pin.level
     else:
       if mode == Input:
-        pin.level = pin.normalize(pin.trace.level)
-      if oldMode.outputp and not oldLevel.isNaN:
-        pin.trace.update(NaN)
+        pin.level = normalize(pin, pin.trace.level)
+      if (outputp oldMode) and not (isNaN oldLevel):
+        update pin.trace, NaN
 
 proc mode*(pin: Pin): Mode =
   ## Returns the pin's current mode.
@@ -411,72 +419,72 @@ proc `mode=`*(pin: Pin, mode: Mode): Pin {.discardable.} =
   ## Sets the pin's mode. This will also account for the values that the pin and its
   ## connected trace might take on because of the new mode.
   result = pin
-  pin.setMode(mode)
+  setMode pin, mode
 
-proc inputp*(pin: Pin): bool =
+proc inputp*(pin: Pin): bool {.inline.} =
   ## Determines whether the pin is in an input mode; i.e., whether it is `Input` or `Bidi`.
-  pin.mode.inputp
+  inputp pin.mode
 
-proc outputp*(pin: Pin): bool =
+proc outputp*(pin: Pin): bool {.inline.} =
   ## Determines whether the pin is in an output mode; i.e., whether it is `Output` or 
   ## `Bidi`.
-  pin.mode.outputp
+  outputp pin.mode
 
 proc addListener*(pin: Pin, listener: Pin -> void): Pin {.discardable.} =
   ## Adds a new listener function to the list of listeners that the pin will call when its
   ## trace updates it. If the function is already in the list, it will not be added a second
   ## time.
   result = pin
-  if listener notin pin.listeners: pin.listeners.add(listener)
+  if listener notin pin.listeners: add pin.listeners, listener
 
 proc removeListener*(pin: Pin, listener: Pin -> void): Pin {.discardable.} =
   ## Removes the provided listener function from the list of listeners that the pin will
   ## call when its trace updates it. If the listener is already not in this list, this
   ## function will do noting.
   result = pin
-  pin.listeners.keepIf(l => l != listener)
+  keepIf pin.listeners, l => l != listener
 
 proc pullUp*(pin: Pin): Pin {.discardable.} =
   ## Sets the pin to be pulled up. This pin will then take on a level of 1 any time its
   ## level is set to `NaN`.
   result = pin
   pin.pull = Up
-  pin.level = pin.normalize(pin.level)
+  pin.level = normalize(pin, pin.level)
 
 proc pullDown*(pin: Pin): Pin {.discardable.} =
   ## Sets the pin to be pulled down. This pin will then take on a level of 0 any time its
   ## level is set to `NaN`.
   result = pin
   pin.pull = Down
-  pin.level = pin.normalize(pin.level)
+  pin.level = normalize(pin, pin.level)
 
 proc pullOff*(pin: Pin): Pin {.discardable.} =
   ## Removes any pull status from the pin. The pin will then take on a level of `NaN` if
   ## it is set to that level.
   result = pin
   pin.pull = Off
-  pin.level = pin.normalize(pin.level)
+  pin.level = normalize(pin, pin.level)
 
 proc pullUp*(trace: Trace): Trace {.discardable.} =
   ## Sets the trace to be pulled up. This trace will then take on a level of 1 any time its
   ## level is set to `NaN`.
   result = trace
   trace.pull = Up
-  trace.update(trace.level)
+  update trace, trace.level
 
 proc pullDown*(trace: Trace): Trace {.discardable.} =
   ## Sets the trace to be pulled down. This trace will then take on a level of 0 any time 
   ## its level is set to `NaN`.
   result = trace
   trace.pull = Down
-  trace.update(trace.level)
+  update trace, trace.level
 
 proc pullOff*(trace: Trace): Trace {.discardable.} =
   ## Removes any pull status from the trace. The trace will then take on a level of `NaN` if
   ## it is set to that level.
   result = trace
   trace.pull = Off
-  trace.update(trace.level)
+  update trace, trace.level
 
 proc setTrace(pin: Pin, trace: Trace) =
   ## Assigns the trace to the pin. This can only be done once; after a trace is set, that
@@ -484,25 +492,25 @@ proc setTrace(pin: Pin, trace: Trace) =
   if not pin.connected:
     pin.trace = trace
     pin.connected = true
-    if pin.mode == Input or pin.mode == Bidi and pin.level.isNaN:
+    if pin.mode == Input or pin.mode == Bidi and isNaN pin.level:
       pin.level = trace.level
-    elif pin.mode.outputp:
-      trace.update(NaN)
+    elif outputp pin.mode:
+      update trace, NaN
 
 proc addPin*(trace: Trace, pin: Pin): Trace {.discardable.} =
   ## Adds a pin to the ones connected by the trace. If the pin is already connected to a
   ## trace (including to this one), this function will do nothing.
   result = trace
   if not pin.connected:
-    trace.pins.add(pin)
-    pin.setTrace(trace)
+    add trace.pins, pin
+    setTrace pin, trace
 
 proc addPins*(trace: Trace, pins: varargs[Pin]): Trace {.discardable.} =
   ## Adds one or more pins to the ones connected by the trace. If any of these pins is
   ## already connected to a trace (including this one), the add will not happen for that
   ## pin.
   result = trace
-  for pin in pins: trace.addPin(pin)
+  for pin in pins: addPin trace, pin
 
 proc newPin*(number: int, name: string, mode: Mode = Unconnected): Pin =
   ## Creates a new `Pin`. This pin will start with a level of `NaN` and no pull.
@@ -515,7 +523,7 @@ proc newPin*(number: int, name: string, mode: Mode = Unconnected): Pin =
     listeners: @[],
     connected: false,
   )
-  result.setMode(mode)
+  setMode result, mode
 
 proc newTrace*(pins: varargs[Pin]): Trace =
   ## Creates a new `Trace` from a sequence of the pins that should be connected to the new
@@ -525,5 +533,5 @@ proc newTrace*(pins: varargs[Pin]): Trace =
     pins: @[],
     pull: Off,
   )
-  result.addPins(pins)
-  result.update(NaN)
+  addPins result, pins
+  update result, NaN

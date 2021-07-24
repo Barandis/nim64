@@ -71,4 +71,4 @@ chip Ic7406:
       result = proc (pin: Pin) =
         if highp pin: clear ypin else: set ypin
 
-    for i in 1..6: pins[&"A{i}"].addListener(dataListener(i))
+    for i in 1..6: addListener pins[&"A{i}"], dataListener i

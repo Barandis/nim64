@@ -150,7 +150,7 @@ proc init(chipType, pinsType, initSection: NimNode, pins: seq[PinRepr]): NimNode
       let 
         rawPins: array[1..`pinsLen`, `pinSym`] = []
         table = `newTableSym`[string, `pinSym`]()
-        names = rawPins.`mapSym`(proc (pin: `pinSym`): string = pin.name)
+        names = `mapSym`(rawPins, proc (pin: `pinSym`): string = pin.name)
       
       for pairs in `zipSym`(names, rawPins):
         let (name, pin) = pairs
