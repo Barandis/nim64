@@ -20,68 +20,85 @@ type PinRepr = tuple
   name: string
   mode: NimNode
 
+proc parseHeader(header: NimNode): (NimNode, NimNode, NimNode) =
+  let chipName = if (kind header) == nnkIdent: strVal header else: strVal header[0]
+  let chipType = ident chipName
+  let pinsType = ident (chipName & "Pins")
+  var paramsTree = newTree(nnkFormalParams, chipType)
+
+  if (kind header) == nnkObjConstr:
+    for i in 1..<(len header):
+      let paramId = header[i][0]
+      let paramType = header[i][1]
+      let param = newIdentDefs(paramId, paramType, newEmptyNode())
+      add paramsTree, param
+
+  result = (chipType, pinsType, paramsTree)
+
 proc parsePin(node: NimNode): (int, string) =
   ## Takes an AST node and parses it for information about a single pin. This is well inside
   ## a mode block, so the only things it can gather are number and name. This is called once
   ## per pin by `parsePins` below.
 
-  let name = node[0].strVal
+  let name = strVal node[0]
   var number: int = 0
 
   if node[1][0].kind == nnkIntLit:
-    number = cast[int](node[1][0].intVal)
+    # intVal returns a BiggestInteger, which is great but probably just means it needs to
+    # be converted approximately everywhere
+    number = int intVal node[1][0]
   else:
     error("Pin number must be an integer", node)
   
   result = (number, name)
 
-proc parsePins(pinsSection: NimNode): seq[PinRepr] =
+proc parsePins(pinsTree: NimNode): seq[PinRepr] =
   ## Takes the AST of the full pin section and parses it, returning information about all
   ## pins. Since at this level the mode blocks are still visible, this proc can and does
   ## include mode information as well.
 
-  var inputSection = none(NimNode)
-  var outputSection = none(NimNode)
-  var bidiSection = none(NimNode)
-  var unconnectedSection = none(NimNode)
+  var inputTree = none NimNode
+  var outputTree = none NimNode
+  var bidiTree = none NimNode
+  var uncTree = none NimNode
 
-  for node in pinsSection.children():
-    if node.kind == nnkCall:
-      let ident = node[0].strVal
+  for node in children pinsTree:
+    if (kind node) == nnkCall:
+      let ident = strVal node[0]
       case ident
-      of "input": inputSection = some(node[1])
-      of "output": outputSection = some(node[1])
-      of "bidi": bidiSection = some(node[1])
-      of "unconnected": unconnectedSection = some(node[1])
+      of "input": inputTree = some node[1]
+      of "output": outputTree = some node[1]
+      of "bidi": bidiTree = some node[1]
+      of "unconnected": uncTree = some node[1]
       else: error("Unknown pin type: " & ident, node)
   
-  if inputSection.isSome:
-    for stmtNode in inputSection.get().children():
-      let (number, name) = parsePin(stmtNode)
-      result.add((number, name, bindSym("Input")))
+  if isSome inputTree:
+    for stmtNode in children get inputTree:
+      let (number, name) = parsePin stmtNode
+      add result, (number, name, bindSym "Input")
 
-  if outputSection.isSome:
-    for stmtNode in outputSection.get().children():
-      let (number, name) = parsePin(stmtNode)
-      result.add((number, name, bindSym("Output")))
+  if isSome outputTree:
+    for stmtNode in children get outputTree:
+      let (number, name) = parsePin stmtNode
+      add result, (number, name, bindSym "Output")
   
-  if bidiSection.isSome:
-    for stmtNode in bidiSection.get().children():
-      let (number, name) = parsePin(stmtNode)
-      result.add((number, name, bindSym("Bidi")))
+  if isSome bidiTree:
+    for stmtNode in children get bidiTree:
+      let (number, name) = parsePin stmtNode
+      add result, (number, name, bindSym "Bidi")
   
-  if unconnectedSection.isSome:
-    for stmtNode in unconnectedSection.get().children():
-      let (number, name) = parsePin(stmtNode)
-      result.add((number, name, bindSym("Unconnected")))
+  if isSome uncTree:
+    for stmtNode in children get uncTree:
+      let (number, name) = parsePin stmtNode
+      add result, (number, name, bindSym "Unconnected")
 
 proc prelude(chipType, pinsType: NimNode, numPins: int): NimNode =
   ## Produces the AST for the first part of the macro output. This includes types and the
   ## procs that are attached to those types (indexing and iterators).
 
-  let brackets = newTree(nnkAccQuoted, ident("[]"))
-  let pinSym = bindSym("Pin")
-  let tableSym = bindSym("TableRef")
+  let brackets = newTree(nnkAccQuoted, ident "[]")
+  let pinSym = bindSym "Pin"
+  let tableSym = bindSym "TableRef"
 
   # This produces a full type (the pins type) that is not exported with indexing and
   # iteration capabilities that are also not exported (though the procs and iterators
@@ -117,34 +134,37 @@ proc constants(pins: seq[PinRepr]): NimNode {.compileTime.} =
   ## Produces the AST for the second part of the macro output. This includes constants based
   ## on the names and numbers of the pins in the macro input.
 
-  result = newNimNode(nnkConstSection)
+  result = newNimNode nnkConstSection
 
   for pin in pins:
     let node = newTree(nnkConstDef,
       newTree(nnkPostfix,
-        ident("*"),
-        ident(pin.name),
+        ident "*",
+        ident pin.name,
       ),
       newEmptyNode(),
-      newIntLitNode(pin.number),
+      newIntLitNode pin.number,
     )
-    result.add(node)
+    add result, node
 
-proc init(chipType, pinsType, initSection: NimNode, pins: seq[PinRepr]): NimNode =
+proc init(chipType, pinsType, paramsTree, initTree: NimNode; pins: seq[PinRepr]): NimNode =
   ## Produces the AST for the third part of the macro output. This is the constructor proc
-  ## that will create a new instance of the chip once the type is defined.
+  ## that will create a new instance of the chip once the type is defined. `chipType` and
+  ## `pinsType` are always Ident nodes. `paramsTree` is a FormalParams node; if there are no
+  ## parameters it just contains the return type. `initTree` is an Empty node if there is
+  ## no `init` section; otherwise it's a StmtList node.
 
-  let procName = ident("new" & chipType.strVal)
-  let newTableSym = bindSym("newTable")
-  let pinSym = bindSym("Pin")
-  let mapSym = bindSym("map")
-  let zipSym = bindSym("zip")
+  let procName = ident ("new" & strval chipType)
+  let newTableSym = bindSym "newTable"
+  let pinSym = bindSym "Pin"
+  let mapSym = bindSym "map"
+  let zipSym = bindSym "zip"
 
-  let pinsLen = pins.len
-  let pinsIdent = ident("pins")
+  let pinsLen = len pins
+  let pinsId = ident "pins"
 
-  # There is one part missing from this quote: `rawPins` is an empty array. We'll fix that
-  # in a bit.
+  # There are two things missing from this tree: there are no formal parameters, and the
+  # `rawPins` array is empty. We'll fix both of those next.
   result = quote do:
     proc `procName`*: `chipType` =
       let 
@@ -156,8 +176,13 @@ proc init(chipType, pinsType, initSection: NimNode, pins: seq[PinRepr]): NimNode
         let (name, pin) = pairs
         table[name] = pin
       
-      let `pinsIdent` = `pinsType`(byNumber: rawPins, byName: table)
-      result = `chipType`(pins: `pinsIdent`)
+      let `pinsId` = `pinsType`(byNumber: rawPins, byName: table)
+      result = `chipType`(pins: `pinsId`)
+  
+  # Add in the formal parameters to the proc. If there aren't any, this just swaps out one
+  # return-type-only FormalParams node for another.
+  del result, 3
+  insert result, 3, paramsTree
   
   # This is the node for the brackets in `rawPins = []`. We use it as an attachment point
   # for the nodes that make up the entries in that array. We're basically returning to a
@@ -167,24 +192,24 @@ proc init(chipType, pinsType, initSection: NimNode, pins: seq[PinRepr]): NimNode
 
   # Run through the pins sequence by pin number, not by index. This ensures that the array
   # elements are produced in the proper order no matter the order in the macro input.
-  for i in 1..pins.len:
-    let filtered = pins.filter(proc (pin: PinRepr): bool = pin.number == i)
-    if filtered.len == 0:
-      error("Missing pin number " & $i)
-    elif filtered.len > 1:
-      error("Duplicate pin number " & $i)
+  for i in 1..(len pins):
+    let filtered = filter(pins, proc (pin: PinRepr): bool = pin.number == i)
+    if (len filtered) == 0:
+      error ("Missing pin number " & $i)
+    elif (len filtered) > 1:
+      error ("Duplicate pin number " & $i)
     
     let pin = filtered[0]
-    brackets.add(newCall(
-      bindSym("newPin"),
-      newIntLitNode(pin.number),
-      newStrLitNode(pin.name),
+    add brackets, newCall(
+      bindSym "newPin",
+      newIntLitNode pin.number,
+      newStrLitNode pin.name,
       pin.mode
-    ))
+    )
   
-  result[6].add(initSection)
+  add result[6], initTree
 
-macro chip*(name, body: untyped): untyped =
+macro chip*(header, body: untyped): untyped =
   ## A macro to produce a full definition of a chip from declarative parts.
   ## 
   ## The macro takes the form of a block definition, with other blocks inside of it. The 
@@ -377,24 +402,22 @@ macro chip*(name, body: untyped): untyped =
   ## iteration) as the chip itself has, but that can only be used by code in the `init`
   ## block.
 
-  let chipName = name.strVal
-  let chipType = ident(chipName)
-  let pinsType = ident(chipName & "Pins")
+  let (chipType, pinsType, paramsTree) = parseHeader header
 
-  var pinsSection = none(NimNode)
-  var initSection = none(NimNode)
+  var pinsTree = none NimNode
+  var initTree = none NimNode
 
-  for node in body.children():
-    if node.kind == nnkCall and node[0].strVal == "pins":
-      pinsSection = some(node[1])
-    elif node.kind == nnkCall and node[0].strVal == "init":
-      initSection = some(node[1])
-  if pinsSection.isNone: error("`chip` requires a `pins` section.")
-  if initSection.isNone: initSection = some(newEmptyNode())
+  for node in children body:
+    if (kind node) == nnkCall and (strVal node[0]) == "pins":
+      pinsTree = some node[1]
+    elif (kind node) == nnkCall and (strVal node[0]) == "init":
+      initTree = some node[1]
+  if isNone pinsTree: error "`chip` requires a `pins` section."
+  if isNone initTree: initTree = some newEmptyNode()
   
-  let pinReprs = parsePins(pinsSection.get())
-  let numPins = pinReprs.len
+  let pinReprs = parsePins get pinsTree
+  let numPins = len pinReprs
 
   result = prelude(chipType, pinsType, numPins)
-  result.add(constants(pinReprs))
-  result.add(init(chipType, pinsType, initSection.get(), pinReprs))
+  add result, constants pinReprs
+  add result, init(chipType, pinsType, paramsTree, get initTree, pinReprs)
