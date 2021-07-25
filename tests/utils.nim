@@ -25,3 +25,11 @@ proc deviceTraces*(device: Device): Traces =
     let trace = newTrace(pin)
     result.byNumber.add(trace)
     result.byName[pin.name] = trace
+
+proc valueToTraces*(value: uint, traces: seq[Trace]) =
+  for i, trace in traces:
+    setLevel trace, float(value shr i and 1)
+
+proc tracesToValue*(traces: seq[Trace]): uint =
+  for i, trace in traces:
+    result = result or uint(level trace) shl i

@@ -4,6 +4,8 @@
 # https://opensource.org/licenses/MIT
 
 import unittest
+import ./chips/ic2332
+import ./chips/ic2364
 import ./chips/ic4066
 import ./chips/ic7406
 import ./chips/ic7408
@@ -11,6 +13,15 @@ import ./chips/ic74139
 import ./chips/ic74257
 import ./chips/ic74258
 import ./chips/ic74373
+
+proc ic2332Tests =
+  suite "2332 4k x 8 ROM":
+    test "reads all CHAROM memory locations": readAll()
+
+proc ic2364Tests =
+  suite "2364 8k x 8 ROM":
+    test "reads all BASIC memory locations": readBasic()
+    test "reads all KERNAL memory locations": readKernal()
 
 proc ic4066Tests =
   suite "4066 quad analog switch":
@@ -97,6 +108,8 @@ proc ic74373Tests =
     test "latching still happens when OE is high": latchOnOeHigh()
 
 proc chipTests* =
+  ic2332Tests()
+  ic2364Tests()
   ic4066Tests()
   ic7406Tests()
   ic7408Tests()

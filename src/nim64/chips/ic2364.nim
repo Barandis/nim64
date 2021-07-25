@@ -1,0 +1,126 @@
+# Copyright (c) 2021 Thomas J. Otterson
+# 
+# This software is released under the MIT License.
+# https://opensource.org/licenses/MIT
+
+## An emulation of the 2364 8k x 8-bit ROM.
+##
+## This, along with the similar 2332, is far and away the simplest memory chip in the
+## Commodore 64. With its full complement of address pins and full 8 data pins, there is no
+## need to use multiple chips or to multiplex addresses.
+##
+## Timing of the read cycle (there is, of course, no write cycle in a read-only memory
+## chip) is based solely on the chip select pin `CS`. When this pin goes low, the chip
+## reads its address pins and makes the value at that location available on its data pins.
+##
+## The chip comes in a 24-pin dual in-line package with the following pin assignments.
+## ```
+##         +-----+--+-----+
+##      A7 |1    +--+   24| Vcc
+##      A6 |2           23| A8
+##      A5 |3           22| A9
+##      A4 |4           21| A12
+##      A3 |5           20| CS
+##      A2 |6           19| A10
+##      A1 |7    2364   18| A11
+##      A0 |8           17| D7
+##      D0 |9           16| D6
+##      D1 |10          15| D5
+##      D2 |11          14| D4
+##     GND |12          13| D3
+##         +--------------+
+## ```
+## These pin assignments are explained below.
+##
+## =====  =====  ==========================================================================
+## Pin    Name   Description
+## =====  =====  ==========================================================================
+## 1      A7     Address pin 7.
+## 2      A6     Address pin 6.
+## 3      A5     Address pin 5.
+## 4      A4     Address pin 4.
+## 5      A3     Address pin 3.
+## 6      A2     Address pin 2.
+## 7      A1     Address pin 1.
+## 8      A0     Address pin 0.
+## 9      D0     Data pin 0.
+## 10     D1     Data pin 1.
+## 11     D2     Data pin 2.
+## 12     GND    Electrical ground. Not emulated.
+## 13     D3     Data pin 3.
+## 14     D4     Data pin 4.
+## 15     D5     Data pin 5.
+## 16     D6     Data pin 6.
+## 17     D7     Data pin 7.
+## 18     A11    Address pin 11.
+## 19     A10    Address pin 10.
+## 20     CS     Chip select.
+## 21     A12    Address pin 12.
+## 22     A9     Address pin 9.
+## 23     A8     Address pin 8.
+## 24     VCC    +5V power supply. Not emulated.
+## =====  =====  ==========================================================================
+##
+## In the Commodore 64, U3 and U4 are both 2364A's (a variant with slightly faster data
+## access). U3 stores the BASIC interpreter and U4 stores the kernal.
+
+import ../components/chip
+
+from sequtils import map, toSeq
+from strformat import `&`
+from ../utils import pinsToValue, triPins, valueToPins
+from ../components/link import Pin, addListener, lowp
+
+chip Ic2364(memory: array[8192, uint8]):
+  pins:
+    input:
+      # Address pins A0 - A12.
+      A0: 8
+      A1: 7
+      A2: 6
+      A3: 5
+      A4: 4
+      A5: 3
+      A6: 2
+      A7: 1
+      A8: 23
+      A9: 22
+      A10: 19
+      A11: 18
+      A12: 21
+
+      # Chip select pins. When these is low, a read cycle is executed based on the
+      # address on pins A0-A12. When it's high, the data pins are tri-stated.
+      CS: 20
+
+    output:
+      # Data pins. Unlike other memory chips, these never change from being Output. No
+      # writes are done to a ROM chip.
+      D0: 9
+      D1: 10
+      D2: 11
+      D3: 13
+      D4: 14
+      D5: 15
+      D6: 16
+      D7: 17
+    
+    unconnected:
+      # Power supply and ground pins, not emulated
+      VCC: 24
+      GND: 12
+  
+  init:
+    let addrPins = map(toSeq 0..12, proc (i: int): Pin = pins[&"A{i}"])
+    let dataPins = map(toSeq 0..7, proc (i: int): Pin = pins[&"D{i}"])
+
+    proc read =
+      valueToPins memory[pinsToValue addrPins], dataPins
+    
+    proc enableListener(pin: Pin) =
+      if lowp pin:
+        read()
+      else:
+        triPins dataPins
+    
+    addListener pins[CS], enableListener

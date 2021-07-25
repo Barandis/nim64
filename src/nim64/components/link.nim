@@ -198,13 +198,18 @@ type
 proc isNaN(n: float): bool {.inline.} =
   ## Utility function to determine whether a float is `NaN`. This is used in place of
   ## comparisons since `NaN != NaN`.
+  ##
+  ## This is duplicated here from utils because utils uses this module quite a bit, and this
+  ## module using that one would make for uncomfortable recursion. Even if only the `isNaN`
+  ## symbol is imported from utils (with `from ./utils import isNaN`), and `isNaN` doesn't 
+  ## reference anything in this module. Seems like that should be looked at.
   (classify n) == fcNaN
 
 proc equal(a, b: float): bool {.inline.} =
   ## Equality, but with NaN equaling itself. Necessary to prevent infinite loops in places
   ## where pins only update if their level changes (without this, NaN "changing" to NaN will
   ## trigger an update).
-  result = (a.isNaN and b.isNaN) or (a == b)
+  result = (isNaN a) and (isNaN b) or a == b
 
 proc inputp*(mode: Mode): bool {.inline.} =
   ## Determines whether a mode is an input mode; i.e., whether it is `Input` or `Bidi`.
