@@ -4,6 +4,7 @@
 # https://opensource.org/licenses/MIT
 
 import unittest
+import ./chips/ic2114
 import ./chips/ic2332
 import ./chips/ic2364
 import ./chips/ic4066
@@ -108,6 +109,7 @@ proc ic74373Tests =
     test "latching still happens when OE is high": latchOnOeHigh()
 
 proc chipTests* =
+  ic2114.allTests()
   ic2332Tests()
   ic2364Tests()
   ic4066Tests()
