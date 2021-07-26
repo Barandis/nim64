@@ -21,6 +21,12 @@ type PinRepr = tuple
   mode: NimNode
 
 proc parse_header(header: NimNode): (NimNode, NimNode, NimNode) =
+  ## Parses the part that comes *before* the block, between the `chip` identifier and the
+  ## first colon. This will most often just be an identifier for the new type of chip, but
+  ## it *can* contain a parameter list in parentheses as well. If it does, that same
+  ## parameter list is included in the constructor function, and variables of those names
+  ## and types are made available to the `init` block.
+  ## 
   let chip_name = if (kind header) == nnk_ident: str_val header else: str_val header[0]
   let chip_type = ident chip_name
   let pins_type = ident (chip_name & "Pins")
@@ -38,7 +44,7 @@ proc parse_header(header: NimNode): (NimNode, NimNode, NimNode) =
 proc parse_pin(node: NimNode): (int, string) =
   ## Takes an AST node and parses it for information about a single pin. This is well inside
   ## a mode block, so the only things it can gather are number and name. This is called once
-  ## per pin by `parsePins` below.
+  ## per pin by `parse_pins` below.
 
   let name = str_val node[0]
   var number: int = 0
@@ -114,10 +120,10 @@ proc prelude(chip_type, pins_type: NimNode; num_pins: int): NimNode =
 
     proc `brackets`(pins: `pins_type`, index: int): `pin_sym` {.inline.} = pins.by_number[index]
     proc `brackets`(pins: `pins_type`, index: string): `pin_sym` {.inline.} = pins.by_name[index]
-    iterator items*(pins: `pins_type`): `pin_sym` =
+    iterator items(pins: `pins_type`): `pin_sym` =
       for pin in pins.by_number:
         yield pin
-    iterator pairs*(pins: `pins_type`): tuple[a: int, b: `pin_sym`] =
+    iterator pairs(pins: `pins_type`): tuple[a: int, b: `pin_sym`] =
       for i, pin in pins.by_number:
         yield (i, pin)
 
@@ -207,7 +213,7 @@ proc init(chip_type, pins_type, params_tree, init_tree: NimNode; pins: seq[PinRe
       pin.mode
     )
   
-  # Finally, add the init section verbatim.
+  # Finally, add the `init` section verbatim.
   add result[6], init_tree
 
 macro chip*(header, body: untyped): untyped =
@@ -221,7 +227,14 @@ macro chip*(header, body: untyped): untyped =
   ## chip Ic7406:
   ## ```
   ## 
-  ## Inside this `chip` block there can be two others.
+  ## Optionally, a list of parameters can be included in parentheses after the name of the
+  ## new chip. These must include the name and the type, like normal for parameter lists.
+  ## 
+  ## ```
+  ## chip Ic2332(memory: array[4096, uint8]):
+  ## ```
+  ## 
+  ## Inside this `chip` block there can be two other blocks.
   ## 
   ## The `pins` block is *required*. It provides all of the information that the macro needs
   ## to produce the chip's pins. These pins are separated into blocks named after the four
@@ -250,6 +263,11 @@ macro chip*(header, body: untyped): untyped =
   ## exists, there will still be a constructor proc created, but it'll only create the chip
   ## and return it with no custom functionality.
   ## 
+  ## If a parameter list was included after the chip name (see above), then variables of
+  ## those names and types are *also* made available in the `init` block. They will be set
+  ## to the value provided by the generated constructor proc (see below) when this macro is
+  ## actually invoked.
+  ## 
   ## With all of that for input, this macro provides quite a lot.
   ## 
   ## * A type with the same name as appeared after `chip` is created and exported. (It has
@@ -261,7 +279,9 @@ macro chip*(header, body: untyped): untyped =
   ##   name, and their values are the pin numbers associated with them.
   ## * A constructor proc with a name equal to "new" plus the type name is exported. This
   ##   proc creates all of the chip's pins and prepares the indexing, along with whatever
-  ##   the user provides in the `init` block.
+  ##   the user provides in the `init` block. If a parameter list was provided with the
+  ##   chip name, this proc will take the same parameters, and they will be avialable to the
+  ##   rest of the code in the `init` block.
   ## 
   ## As an example, here is what would be required to make a working 7406 hex inverter.
   ## 
