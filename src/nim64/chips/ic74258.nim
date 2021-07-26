@@ -101,10 +101,11 @@ chip Ic74258:
       result = proc (_: Pin) =
         if highp pins[OE]:
           tri ypin
-        elif highp pins[SEL]:
-          if highp bpin: clear ypin else: set ypin
-        else:
-          if highp apin: clear ypin else: set ypin
+        elif lowp pins[OE]:
+          if highp pins[SEL]:
+            if highp bpin: clear ypin elif lowp bpin: set ypin
+          elif lowp pins[SEL]:
+            if highp apin: clear ypin elif lowp apin: set ypin
     
     proc control_listener(): proc (_: Pin) =
       let listeners = map(@[1, 2, 3, 4], proc (i: int): proc (_: Pin) = data_listener i)

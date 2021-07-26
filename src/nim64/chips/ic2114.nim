@@ -120,11 +120,17 @@ chip Ic2114:
     let addr_pins = map(to_seq 0..9, proc (i: int): Pin = pins[&"A{i}"])
     let data_pins = map(to_seq 0..3, proc (i: int): Pin = pins[&"D{i}"])
 
-    var memory: array[512, uint16]
+    # Memory locations are all 4-bit, and we don't have a uint4, so we choose the size that
+    # makes conversion the easiest
+    var memory: array[512, uint8]
 
+    # Converts an address into the index into the `memory` array, along with the bit index
+    # into that 8-bit number to the lowest bit of the 4-bit value we want.
     proc resolve(address: uint): (uint, uint) =
       result = (address shr 1, (address and 1) * 4)
 
+    # Resolves the address on the address pins and then puts the value from that memory
+    # location onto the data pins,
     proc read =
       mode_to_pins Output, data_pins
       let address = pins_to_value addr_pins
@@ -132,29 +138,31 @@ chip Ic2114:
       let value = (memory[index] and (0b1111u shl shift)) shr shift
       value_to_pins value, dataPins
     
+    # Resolves the address on the address pins and then puts the value from the data pins
+    # into that memory location.
     proc write =
       mode_to_pins Input, data_pins
       let address = pins_to_value addr_pins
       let (index, shift) = resolve address
       let value = pins_to_value data_pins
       let current = memory[index] and not (0b1111u shl shift)
-      memory[index] = uint16 (current or (value shl shift))
+      memory[index] = uint8 (current or (value shl shift))
     
     proc enable_listener(pin: Pin) =
       if highp pin: mode_to_pins Input, data_pins
       elif lowp pin:
         if highp pins[WE]: read()
-        else: write()
+        elif lowp pins[WE]: write()
     
     proc write_listener(pin: Pin) =
       if lowp pins[CS]:
         if highp pin: read()
-        else: write()
+        elif lowp pin: write()
     
     proc address_listener(_: Pin) =
       if lowp pins[CS]:
         if highp pins[WE]: read()
-        else: write()
+        elif lowp pins[WE]: write()
 
     add_listener pins[CS], enable_listener
     add_listener pins[WE], write_listener

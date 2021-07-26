@@ -112,13 +112,15 @@ chip Ic2364(memory: array[8192, uint8]):
     let addr_pins = map(to_seq 0..12, proc (i: int): Pin = pins[&"A{i}"])
     let data_pins = map(to_seq 0..7, proc (i: int): Pin = pins[&"D{i}"])
 
+    # Reads the 8-bit value at the location indicated by the address pins and puts that value
+    # on the data pins.
     proc read =
       value_to_pins memory[pins_to_value addr_pins], data_pins
     
     proc enable_listener(pin: Pin) =
       if lowp pin:
         read()
-      else:
+      elif highp pin:
         tri_pins data_pins
     
     add_listener pins[CS], enable_listener

@@ -94,7 +94,7 @@ chip Ic4066:
         if highp xpin:
           set_mode apin, Input
           set_mode bpin, Input
-        else:
+        elif lowp xpin:
           set_mode apin, Bidi
           set_mode bpin, Bidi
 

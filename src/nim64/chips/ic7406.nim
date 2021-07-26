@@ -68,6 +68,6 @@ chip Ic7406:
     proc data_listener(gate: int): proc (pin: Pin) =
       let ypin = pins[&"Y{gate}"]
       result = proc (pin: Pin) =
-        if highp pin: clear ypin else: set ypin
+        if highp pin: clear ypin elif lowp pin: set ypin
 
     for i in 1..6: add_listener pins[&"A{i}"], data_listener i

@@ -11,6 +11,7 @@ import ../../src/nim64/components/link
 proc setup: (Ic74258, Traces) =
   let chip = new_ic74258()
   let traces = device_traces(chip)
+  clear traces[OE]
   result = (chip, traces)
 
 proc mux_1_setup: (Ic74258, Traces) =

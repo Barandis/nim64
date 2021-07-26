@@ -76,7 +76,14 @@ chip Ic7408:
       let ypin = pins[&"Y{gate}"]
 
       result = proc (pin: Pin) =
-        if (highp apin) and (highp bpin): set ypin else: clear ypin
+        if (highp apin) and (highp bpin):
+          set ypin 
+        elif (highp apin) and (lowp bpin):
+          clear ypin
+        elif (lowp apin) and (highp bpin):
+          clear ypin
+        elif (lowp apin) and (lowp bpin):
+          clear ypin
     
     for i in 1..4:
       let listener = data_listener i
