@@ -81,6 +81,7 @@
 ## 14     Q      Data output.
 ## 15     CAS    Column address strobe.
 ## 16     VSS    0V power supply (ground). Not emulated.
+## =====  =====  ==========================================================================
 ##
 ## In the Commodore 64, U9, U10, U11, U12, U21, U22, U23, and U24 are 4164s, one for each
 ## of the 8 bits on the data bus.

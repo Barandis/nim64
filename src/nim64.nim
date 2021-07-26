@@ -1,13 +1,25 @@
-# This is just an example to get you started. A typical hybrid package
-# uses this file as the main entry point of the application.
+# Copyright (c) 2021 Thomas J. Otterson
+# 
+# This software is released under the MIT License.
+# https://opensource.org/licenses/MIT
 
-import nim64/components/chip
-import nim64/components/link
-import nim64/chips/ic7406
-import nim64/chips/ic7408
-import nim64/chips/ic74139
-import nim64/chips/ic74257
-import nim64/chips/ic74258
+# This file does nothing for now (that'll come later). The imports are basically just a way
+# to make sure everything is available for documentation creation.
+
+import nim64/components/[chip, link]
+import nim64/chips/[
+  ic2114,
+  ic2332,
+  ic2364,
+  ic4066,
+  ic4164,
+  ic7406,
+  ic7408,
+  ic74139,
+  ic74257,
+  ic74258,
+  ic74373,
+]
 
 when isMainModule:
   echo("Hello world")

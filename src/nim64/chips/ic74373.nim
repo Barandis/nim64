@@ -31,7 +31,7 @@
 ## remains high. If it was low, it remains low.
 ##
 ## The chip comes in a 20-pin dual in-line package with the following pin assignments.
-## ```text
+## ```
 ##         +---+--+---+
 ##      OE |1  +--+ 20| VCC
 ##      Q0 |2       19| Q7

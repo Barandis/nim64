@@ -130,10 +130,10 @@ proc prelude(chip_type, pins_type: NimNode; num_pins: int): NimNode =
     proc `brackets`*(chip: `chip_type`, index: int): `pin_sym` {.inline.} = chip.pins[index]
     proc `brackets`*(chip: `chip_type`, index: string): `pin_sym` {.inline.} = chip.pins[index]
     iterator items*(chip: `chip_type`): `pin_sym` =
-      for pin in chip.pins.by_number:
+      for pin in chip.pins:
         yield pin
     iterator pairs*(chip: `chip_type`): tuple[a: int, b: `pin_sym`] =
-      for i, pin in chip.pins.by_number:
+      for i, pin in chip.pins:
         yield (i, pin)
 
 proc constants(pins: seq[PinRepr]): NimNode {.compile_time.} =
@@ -351,11 +351,11 @@ macro chip*(header, body: untyped): untyped =
   ##   chip.pins[index]
   ## 
   ## iterator items*(chip: Ic7406): Pin =
-  ##   for pin in chip.pins.by_number:
+  ##   for pin in chip.pins:
   ##     yield pin
   ## 
   ## iterator pairs*(chip: Ic7406): tuple[a: int, b: Pin] =
-  ##   for i, pin in chip.pins.by_number:
+  ##   for i, pin in chip.pins:
   ##     yield (i, pin)
   ## 
   ## const
