@@ -9,14 +9,14 @@ import unittest
 import ./pin/[level, pull, mode, listener]
 
 proc base_tests =
-  suite "components.pin":
+  suite "Pin":
     test "number":
       let p = new_pin(1, "A")
-      check p.number == 1
+      check (number p) == 1
     
     test "name":
       let p = new_pin(1, "A")
-      check p.name == "A"
+      check (name p) == "A"
 
 proc all_tests* =
   base_tests()

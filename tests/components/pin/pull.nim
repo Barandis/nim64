@@ -7,115 +7,115 @@ import ../../../src/nim64/components/link
 import unittest
 
 proc up_initial =
-  let p = new_pin(1, "A", Output).pull_up()
-  check highp(p)
+  let p = pull_up new_pin(1, "A", Output)
+  check highp p
 
 proc up_unconnected =
-  let p = new_pin(1, "A", Unconnected).pull_up()
-  clear(p)
-  check lowp(p)
-  tri(p)
-  check highp(p)
+  let p = pull_up new_pin(1, "A", Unconnected)
+  clear p
+  check lowp p
+  tri p
+  check highp p
 
 proc up_input =
-  let p = new_pin(1, "A", Input).pull_up()
-  let t = new_trace(p)
+  let p = pull_up new_pin(1, "A", Input)
+  let t = new_trace p
 
-  clear(t)
-  check lowp(p)
-  tri(t)
-  check highp(p)
+  clear t
+  check lowp p
+  tri t
+  check highp p
 
 proc up_output =
-  let p = new_pin(1, "A", Output).pull_up()
-  let t = new_trace(p)
+  let p = pull_up new_pin(1, "A", Output)
+  let t = new_trace p
 
-  clear(p)
-  check lowp(t)
-  tri(p)
-  check highp(t)
+  clear p
+  check lowp t
+  tri p
+  check highp t
 
 proc up_bidi =
-  let p = new_pin(1, "A", Bidi).pull_up()
-  let t = new_trace(p)
+  let p = pull_up new_pin(1, "A", Bidi)
+  let t = new_trace p
 
-  clear(p)
-  check lowp(t)
-  tri(p)
-  check highp(t)
+  clear p
+  check lowp t
+  tri p
+  check highp t
 
 proc up_after =
   let p = new_pin(1, "A")
-  check trip(p)
-  pull_up(p)
-  check highp(p)
+  check trip p
+  pull_up p
+  check highp p
 
 proc down_initial =
-  let p = new_pin(1, "A", Output).pull_down()
-  check lowp(p)
+  let p = pull_down new_pin(1, "A", Output)
+  check lowp p
 
 proc down_unconnected =
-  let p = new_pin(1, "A", Unconnected).pull_down()
-  set(p)
-  check highp(p)
-  tri(p)
-  check lowp(p)
+  let p = pull_down new_pin(1, "A", Unconnected)
+  set p
+  check highp p
+  tri p
+  check lowp p
 
 proc down_input =
-  let p = new_pin(1, "A", Input).pull_down()
-  let t = new_trace(p)
+  let p = pull_down new_pin(1, "A", Input)
+  let t = new_trace p
 
-  set(t)
-  check highp(p)
-  tri(t)
-  check lowp(p)
+  set t
+  check highp p
+  tri t
+  check lowp p
 
 proc down_output =
-  let p = new_pin(1, "A", Output).pull_down()
-  let t = new_trace(p)
+  let p = pull_down new_pin(1, "A", Output)
+  let t = new_trace p
 
-  set(p)
-  check highp(t)
-  tri(p)
-  check lowp(t)
+  set p
+  check highp t
+  tri p
+  check lowp t
 
 proc down_bidi =
-  let p = new_pin(1, "A", Bidi).pull_down()
-  let t = new_trace(p)
+  let p = pull_down new_pin(1, "A", Bidi)
+  let t = new_trace p
 
-  set(p)
-  check highp(t)
-  tri(p)
-  check lowp(t)
+  set p
+  check highp t
+  tri p
+  check lowp t
 
 proc down_after =
   let p = new_pin(1, "A")
-  check trip(p)
-  pull_down(p)
-  check lowp(p)
+  check trip p
+  pull_down p
+  check lowp p
 
 proc off_initial =
-  let p = new_pin(1, "A").pull_off()
-  check trip(p)
+  let p = pull_off new_pin(1, "A")
+  check trip p
 
 proc off_after_up =
-  let p = new_pin(1, "A").pull_up()
-  tri(p)
-  check highp(p)
+  let p = pull_up new_pin(1, "A")
+  tri p
+  check highp p
 
-  pull_off(p)
-  tri(p)
-  check trip(p)
+  pull_off p
+  tri p
+  check trip p
 
 
 proc off_after_down =
-  let p = new_pin(1, "A").pull_down()
-  tri(p)
-  check lowp(p)
+  let p = pull_down new_pin(1, "A")
+  tri p
+  check lowp p
 
-  pull_off(p)
-  tri(p)
-  check trip(p)
+  pull_off p
+  tri p
+  check trip p
 
 proc all_tests* =
   suite "Pin pull-up and pull-down":

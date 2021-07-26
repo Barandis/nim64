@@ -3,11 +3,9 @@
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
-from math import classify, fcNan
+import ../../../src/nim64/utils
 import ../../../src/nim64/components/link
 import unittest
-
-proc nanp(n: float): bool {.inline.} = n.classify == fcNan
 
 proc functions =
   let pin = new_pin(1, "A", Input)
@@ -45,7 +43,7 @@ proc methods =
 
   pin.tri()
   check:
-    pin.level.nanp
+    nanp pin.level
     not pin.highp
     not pin.lowp
     pin.trip
@@ -73,145 +71,145 @@ proc methods =
 
 proc unconnected =
   let p = new_pin(1, "A", Unconnected)
-  let t = new_trace(p)
+  let t = new_trace p
 
-  t.set()
+  set t
   check:
-    p.trip
-    t.highp
+    trip p
+    highp t
   
-  p.set()
+  set p
   check:
-    p.highp
-    t.highp
+    highp p
+    highp t
 
-  p.clear()
+  clear p
   check:
-    p.lowp
-    t.highp
+    lowp p
+    highp t
   
-  p.level = -0.35
+  set_level p, -0.35
   check:
-    p.level == -0.35
-    t.highp
+    (level p) == -0.35
+    highp t
   
-  p.tri()
+  tri p
   check:
-    p.trip
-    t.highp
+    trip p
+    highp t
 
 proc input =
   let p = new_pin(1, "A", Input)
   let t = new_trace(p)
 
-  t.set()
+  set t
   check:
-    p.highp
-    t.highp
+    highp p
+    highp t
   
-  p.set()
+  set p
   check:
-    p.highp
-    t.highp
+    highp p
+    highp t
 
-  p.clear()
+  clear p
   check:
-    p.highp
-    t.highp
+    highp p
+    highp t
   
-  p.level = -0.35
+  set_level p, -0.35
   check:
-    p.highp
-    t.highp
+    highp p
+    highp t
   
-  p.tri()
+  tri p
   check:
-    p.highp
-    t.highp
+    highp p
+    highp t
 
 proc output =
   let p = new_pin(1, "A", Output)
   let t = new_trace(p)
 
-  t.set()
+  set t
   check:
-    p.trip
-    t.highp
+    trip p
+    highp t
   
-  p.set()
+  set p
   check:
-    p.highp
-    t.highp
+    highp p
+    highp t
 
-  p.clear()
+  clear p
   check:
-    p.lowp
-    t.lowp
+    lowp p
+    lowp t
   
-  p.level = -0.35
+  set_level p, -0.35
   check:
-    p.level == -0.35
-    t.level == -0.35
+    (level p) == -0.35
+    (level t) == -0.35
   
-  p.tri()
+  tri p
   check:
-    p.trip
-    t.trip
+    trip p
+    trip t
 
 proc bidi =
   let p = new_pin(1, "A", Bidi)
   let t = new_trace(p)
 
-  t.set()
+  set t
   check:
-    p.highp
-    t.highp
+    highp p
+    highp t
   
-  p.set()
+  set p
   check:
-    p.highp
-    t.highp
+    highp p
+    highp t
 
-  p.clear()
+  clear p
   check:
-    p.lowp
-    t.lowp
+    lowp p
+    lowp t
   
-  p.level = -0.35
+  set_level p, -0.35
   check:
-    p.level == -0.35
-    t.level == -0.35
+    (level p) == -0.35
+    (level t) == -0.35
   
-  p.tri()
+  tri p
   check:
-    p.trip
-    t.trip
+    trip p
+    trip t
 
 proc toggle_high =
   let p = new_pin(1, "A")
-  p.clear()
-  p.toggle()
-  check p.level == 1
+  clear p
+  toggle p
+  check (level p) == 1
 
-  p.level = -0.35
-  p.toggle()
-  check p.level == 1
+  set_level p, -0.35
+  toggle p
+  check (level p) == 1
 
 proc toggle_low =
   let p = new_pin(1, "A")
-  p.set()
-  p.toggle()
-  check p.level == 0
+  set p
+  toggle p
+  check (level p) == 0
 
-  p.level = 1729
-  p.toggle()
-  check p.level == 0
+  set_level p, 1729
+  toggle p
+  check (level p) == 0
 
 proc toggle_tri =
   let p = new_pin(1, "A")
-  p.tri()
-  p.toggle()
-  check nanp p.level
+  tri p
+  toggle p
+  check nanp level p
 
 proc all_tests* =
   suite "Pin level":

@@ -13,86 +13,86 @@ proc mode_initial =
   let p4 = new_pin(4, "D", Bidi)
 
   check:
-    mode(p1) == Unconnected
-    not inputp(p1)
-    not outputp(p1)
+    (mode p1) == Unconnected
+    not inputp p1
+    not outputp p1
 
-    mode(p2) == Input
-    inputp(p2)
-    not outputp(p2)
+    (mode p2) == Input
+    inputp p2
+    not outputp p2
 
-    mode(p3) == Output
-    not inputp(p3)
-    outputp(p3)
+    (mode p3) == Output
+    not inputp p3
+    outputp p3
 
-    mode(p4) == Bidi
-    inputp(p4)
-    outputp(p4)
+    (mode p4) == Bidi
+    inputp p4
+    outputp p4
 
 proc mode_change =
   let p = new_pin(1, "A")
-  check mode(p) == Unconnected
-  setMode(p, Input)
-  check mode(p) == Input
-  setMode(p, Output)
-  check mode(p) == Output
-  setMode(p, Bidi)
-  check mode(p) == Bidi
+  check (mode p) == Unconnected
+  set_mode p, Input
+  check (mode p) == Input
+  set_mode p, Output
+  check (mode p) == Output
+  set_mode p, Bidi
+  check (mode p) == Bidi
 
 proc mode_out_to_in =
   let p = new_pin(1, "A", Output)
   let t = new_trace(p, new_pin(2, "B", Input))
 
-  set(p)
-  check highp(t)
-  set_mode(p, Input)
-  check trip(t)
+  set p
+  check highp t
+  set_mode p, Input
+  check trip t
 
 proc modeBidiToIn =
   let p = new_pin(1, "A", Bidi)
   let t = new_trace(p, new_pin(2, "B", Input))
 
-  set(p)
-  check highp(t)
-  set_mode(p, Input)
-  check trip(t)
+  set p
+  check highp t
+  set_mode p, Input
+  check trip t
 
 proc mode_unc_to_in =
   let p = new_pin(1, "A")
   let t = new_trace(p, new_pin(2, "B", Input))
 
-  set(p)
-  check trip(t)
-  set_mode(p, Input)
-  check trip(t)
+  set p
+  check trip t
+  set_mode p, Input
+  check trip t
 
 proc mode_bidi_to_out =
   let p = new_pin(1, "A", Bidi)
-  let t = new_trace(p)
+  let t = new_trace p
 
-  set(p)
-  check highp(t)
-  set_mode(p, Output)
-  check highp(t)
+  set p
+  check highp t
+  set_mode p, Output
+  check highp t
 
 proc mode_unc_to_out =
   let p = new_pin(1, "A")
-  let t = new_trace(p)
+  let t = new_trace p
 
-  set(p)
-  check trip(t)
-  set_mode(p, Output)
-  check highp(t)
+  set p
+  check trip t
+  set_mode p, Output
+  check highp t
 
 proc mode_in_to_unc =
   let p = new_pin(1, "A", Input)
-  let t = new_trace(p)
+  let t = new_trace p
 
-  set(t)
-  check highp(p)
-  set_mode(p, Unconnected)
-  check highp(t)
-  check highp(p)
+  set t
+  check highp p
+  set_mode p, Unconnected
+  check highp t
+  check highp p
 
 proc all_tests* =
   suite "Pin mode":
