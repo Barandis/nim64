@@ -7,24 +7,23 @@ import ../../src/nim64/components/link
 import unittest
 from sugar import `=>`
 
-import ./trace/level
-import ./trace/pull
+import ./trace/[level, pull]
 
-proc baseTests =
-  suite "components.trace":
+proc base_tests =
+  suite "Trace":
     test "no double add":
-      let p = newPin(1, "a", Input)
-      let t = newTrace(p, p)
+      let p = new_pin(1, "a", Input)
+      let t = new_trace(p, p)
       var count = 0
 
-      addListener(p, (_: Pin) => (count += 1))
+      add_listener(p, (_: Pin) => (count += 1))
       set(t)
       check count == 1
 
-proc allTests* =
-  baseTests()
-  level.allTests()
-  pull.allTests()
+proc all_tests* =
+  base_tests()
+  level.all_tests()
+  pull.all_tests()
 
-when isMainModule:
-  allTests()
+when is_main_module:
+  all_tests()

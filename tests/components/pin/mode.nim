@@ -6,11 +6,11 @@
 import ../../../src/nim64/components/link
 import unittest
 
-proc modeInitial =
-  let p1 = newPin(1, "A", Unconnected)
-  let p2 = newPin(2, "B", Input)
-  let p3 = newPin(3, "C", Output)
-  let p4 = newPin(4, "D", Bidi)
+proc mode_initial =
+  let p1 = new_pin(1, "A", Unconnected)
+  let p2 = new_pin(2, "B", Input)
+  let p3 = new_pin(3, "C", Output)
+  let p4 = new_pin(4, "D", Bidi)
 
   check:
     mode(p1) == Unconnected
@@ -29,8 +29,8 @@ proc modeInitial =
     inputp(p4)
     outputp(p4)
 
-proc modeChange =
-  let p = newPin(1, "A")
+proc mode_change =
+  let p = new_pin(1, "A")
   check mode(p) == Unconnected
   setMode(p, Input)
   check mode(p) == Input
@@ -39,71 +39,71 @@ proc modeChange =
   setMode(p, Bidi)
   check mode(p) == Bidi
 
-proc modeOutToIn =
-  let p = newPin(1, "A", Output)
-  let t = newTrace(p, newPin(2, "B", Input))
+proc mode_out_to_in =
+  let p = new_pin(1, "A", Output)
+  let t = new_trace(p, new_pin(2, "B", Input))
 
   set(p)
   check highp(t)
-  setMode(p, Input)
+  set_mode(p, Input)
   check trip(t)
 
 proc modeBidiToIn =
-  let p = newPin(1, "A", Bidi)
-  let t = newTrace(p, newPin(2, "B", Input))
+  let p = new_pin(1, "A", Bidi)
+  let t = new_trace(p, new_pin(2, "B", Input))
 
   set(p)
   check highp(t)
-  setMode(p, Input)
+  set_mode(p, Input)
   check trip(t)
 
-proc modeUncToIn =
-  let p = newPin(1, "A")
-  let t = newTrace(p, newPin(2, "B", Input))
+proc mode_unc_to_in =
+  let p = new_pin(1, "A")
+  let t = new_trace(p, new_pin(2, "B", Input))
 
   set(p)
   check trip(t)
-  setMode(p, Input)
+  set_mode(p, Input)
   check trip(t)
 
-proc modeBidiToOut =
-  let p = newPin(1, "A", Bidi)
-  let t = newTrace(p)
+proc mode_bidi_to_out =
+  let p = new_pin(1, "A", Bidi)
+  let t = new_trace(p)
 
   set(p)
   check highp(t)
-  setMode(p, Output)
+  set_mode(p, Output)
   check highp(t)
 
-proc modeUncToOut =
-  let p = newPin(1, "A")
-  let t = newTrace(p)
+proc mode_unc_to_out =
+  let p = new_pin(1, "A")
+  let t = new_trace(p)
 
   set(p)
   check trip(t)
-  setMode(p, Output)
+  set_mode(p, Output)
   check highp(t)
 
-proc modeInToUnc =
-  let p = newPin(1, "A", Input)
-  let t = newTrace(p)
+proc mode_in_to_unc =
+  let p = new_pin(1, "A", Input)
+  let t = new_trace(p)
 
   set(t)
   check highp(p)
-  setMode(p, Unconnected)
+  set_mode(p, Unconnected)
   check highp(t)
   check highp(p)
 
-proc allTests* =
+proc all_tests* =
   suite "Pin mode":
-    test "initial": modeInitial()
-    test "mode change": modeChange()
-    test "output to input": modeOutToIn()
-    test "bidi to input": modeBidiToIn()
-    test "unconnected to input": modeUncToIn()
-    test "bidi to output": modeBidiToOut()
-    test "unconnected to output": modeUncToOut()
-    test "input to unconnected": modeInToUnc()
+    test "initial": mode_initial()
+    test "mode change": mode_change()
+    test "output to input": mode_out_to_in()
+    test "bidi to input": mode_bidi_to_in()
+    test "unconnected to input": mode_unc_to_in()
+    test "bidi to output": mode_bidi_to_out()
+    test "unconnected to output": mode_unc_to_out()
+    test "input to unconnected": mode_in_to_unc()
 
-when isMainModule:
-  allTests()
+when is_main_module:
+  all_tests()

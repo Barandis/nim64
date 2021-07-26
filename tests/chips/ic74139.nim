@@ -9,10 +9,10 @@ import ../../src/nim64/chips/ic74139
 import ../../src/nim64/components/link
 
 proc setup: (Ic74139, Traces) =
-  let chip = newIc74139()
-  result = (chip, deviceTraces(chip))
+  let chip = new_ic74139()
+  result = (chip, device_traces(chip))
 
-proc demux1HighG =
+proc demux_1_high_g =
   let (_, traces) = setup()
 
   set traces[G1]
@@ -45,7 +45,7 @@ proc demux1HighG =
     highp traces[Y21]
     highp traces[Y31]
 
-proc demux1LL =
+proc demux_1_ll =
   let (_, traces) = setup()
 
   clear traces[G1]
@@ -57,7 +57,7 @@ proc demux1LL =
     highp traces[Y21]
     highp traces[Y31]
 
-proc demux1HL =
+proc demux_1_hl =
   let (_, traces) = setup()
 
   clear traces[G1]
@@ -69,7 +69,7 @@ proc demux1HL =
     highp traces[Y21]
     highp traces[Y31]
 
-proc demux1LH =
+proc demux_1_lh =
   let (_, traces) = setup()
 
   clear traces[G1]
@@ -81,7 +81,7 @@ proc demux1LH =
     lowp traces[Y21]
     highp traces[Y31]
 
-proc demux1HH =
+proc demux_1_hh =
   let (_, traces) = setup()
 
   clear traces[G1]
@@ -93,7 +93,7 @@ proc demux1HH =
     highp traces[Y21]
     lowp traces[Y31]
 
-proc demux2HighG =
+proc demux_2_high_g =
   let (_, traces) = setup()
 
   set traces[G2]
@@ -126,7 +126,7 @@ proc demux2HighG =
     highp traces[Y22]
     highp traces[Y32]
 
-proc demux2LL =
+proc demux_2_ll =
   let (_, traces) = setup()
 
   clear traces[G2]
@@ -138,7 +138,7 @@ proc demux2LL =
     highp traces[Y22]
     highp traces[Y32]
 
-proc demux2HL =
+proc demux_2_hl =
   let (_, traces) = setup()
 
   clear traces[G2]
@@ -150,7 +150,7 @@ proc demux2HL =
     highp traces[Y22]
     highp traces[Y32]
 
-proc demux2LH =
+proc demux_2_lh =
   let (_, traces) = setup()
 
   clear traces[G2]
@@ -162,7 +162,7 @@ proc demux2LH =
     lowp traces[Y22]
     highp traces[Y32]
 
-proc demux2HH =
+proc demux_2_hh =
   let (_, traces) = setup()
 
   clear traces[G2]
@@ -174,18 +174,18 @@ proc demux2HH =
     highp traces[Y22]
     lowp traces[Y32]
 
-proc allTests* =
+proc all_tests* =
   suite "74139 dual 2-to-4 demultiplexer":
-    test "sets all demux 1 outputs high when G1 is high": demux1HighG()
-    test "sets Y01 low when A1 is low and B1 is low": demux1LL()
-    test "sets Y11 low when A1 is high and B1 is low": demux1HL()
-    test "sets Y21 low when A1 is low and B1 is high": demux1LH()
-    test "sets Y31 low when A1 is high and B1 is high": demux1HH()
-    test "sets all demux 2 outputs high when G2 is high": demux2HighG()
-    test "sets Y02 low when A2 is low and B2 is low": demux2LL()
-    test "sets Y12 low when A2 is high and B2 is low": demux2HL()
-    test "sets Y22 low when A2 is low and B2 is high": demux2LH()
-    test "sets Y32 low when A2 is high and B2 is high": demux2HH()
+    test "sets all demux 1 outputs high when G1 is high": demux_1_high_g()
+    test "sets Y01 low when A1 is low and B1 is low": demux_1_ll()
+    test "sets Y11 low when A1 is high and B1 is low": demux_1_hl()
+    test "sets Y21 low when A1 is low and B1 is high": demux_1_lh()
+    test "sets Y31 low when A1 is high and B1 is high": demux_1_hh()
+    test "sets all demux 2 outputs high when G2 is high": demux_2_high_g()
+    test "sets Y02 low when A2 is low and B2 is low": demux_2_ll()
+    test "sets Y12 low when A2 is high and B2 is low": demux_2_hl()
+    test "sets Y22 low when A2 is low and B2 is high": demux_2_lh()
+    test "sets Y32 low when A2 is high and B2 is high": demux_2_hh()
 
-when isMainModule:
-  allTests()
+when is_main_module:
+  all_tests()

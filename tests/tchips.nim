@@ -3,28 +3,30 @@
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
-import ./chips/ic2114
-import ./chips/ic2332
-import ./chips/ic2364
-import ./chips/ic4066
-import ./chips/ic7406
-import ./chips/ic7408
-import ./chips/ic74139
-import ./chips/ic74257
-import ./chips/ic74258
-import ./chips/ic74373
+import ./chips/[
+  ic2114,
+  ic2332,
+  ic2364,
+  ic4066,
+  ic7406,
+  ic7408,
+  ic74139,
+  ic74257,
+  ic74258,
+  ic74373,
+]
 
-proc allTests* =
-  ic2114.allTests()
-  ic2332.allTests()
-  ic2364.allTests()
-  ic4066.allTests()
-  ic7406.allTests()
-  ic7408.allTests()
-  ic74139.allTests()
-  ic74257.allTests()
-  ic74258.allTests()
-  ic74373.allTests()
+proc all_tests* =
+  ic2114.all_tests()
+  ic2332.all_tests()
+  ic2364.all_tests()
+  ic4066.all_tests()
+  ic7406.all_tests()
+  ic7408.all_tests()
+  ic74139.all_tests()
+  ic74257.all_tests()
+  ic74258.all_tests()
+  ic74373.all_tests()
 
-when isMainModule:
-  allTests()
+when is_main_module:
+  all_tests()

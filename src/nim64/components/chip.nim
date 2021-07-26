@@ -20,85 +20,85 @@ type PinRepr = tuple
   name: string
   mode: NimNode
 
-proc parseHeader(header: NimNode): (NimNode, NimNode, NimNode) =
-  let chipName = if (kind header) == nnkIdent: strVal header else: strVal header[0]
-  let chipType = ident chipName
-  let pinsType = ident (chipName & "Pins")
-  var paramsTree = newTree(nnkFormalParams, chipType)
+proc parse_header(header: NimNode): (NimNode, NimNode, NimNode) =
+  let chip_name = if (kind header) == nnk_ident: str_val header else: str_val header[0]
+  let chip_type = ident chip_name
+  let pins_type = ident (chip_name & "Pins")
+  var params_tree = new_tree(nnk_formal_params, chip_type)
 
-  if (kind header) == nnkObjConstr:
+  if (kind header) == nnk_obj_constr:
     for i in 1..<(len header):
-      let paramId = header[i][0]
-      let paramType = header[i][1]
-      let param = newIdentDefs(paramId, paramType, newEmptyNode())
-      add paramsTree, param
+      let param_id = header[i][0]
+      let param_type = header[i][1]
+      let param = new_ident_defs(param_id, param_type, new_empty_node())
+      add params_tree, param
 
-  result = (chipType, pinsType, paramsTree)
+  result = (chip_type, pins_type, params_tree)
 
-proc parsePin(node: NimNode): (int, string) =
+proc parse_pin(node: NimNode): (int, string) =
   ## Takes an AST node and parses it for information about a single pin. This is well inside
   ## a mode block, so the only things it can gather are number and name. This is called once
   ## per pin by `parsePins` below.
 
-  let name = strVal node[0]
+  let name = str_val node[0]
   var number: int = 0
 
-  if node[1][0].kind == nnkIntLit:
+  if node[1][0].kind == nnk_int_lit:
     # intVal returns a BiggestInteger, which is great but probably just means it needs to
     # be converted approximately everywhere
-    number = int intVal node[1][0]
+    number = int int_val node[1][0]
   else:
     error("Pin number must be an integer", node)
   
   result = (number, name)
 
-proc parsePins(pinsTree: NimNode): seq[PinRepr] =
+proc parse_pins(pins_tree: NimNode): seq[PinRepr] =
   ## Takes the AST of the full pin section and parses it, returning information about all
   ## pins. Since at this level the mode blocks are still visible, this proc can and does
   ## include mode information as well.
 
-  var inputTree = none NimNode
-  var outputTree = none NimNode
-  var bidiTree = none NimNode
-  var uncTree = none NimNode
+  var input_tree = none NimNode
+  var output_tree = none NimNode
+  var bidi_tree = none NimNode
+  var unc_tree = none NimNode
 
-  for node in children pinsTree:
-    if (kind node) == nnkCall:
-      let ident = strVal node[0]
+  for node in children pins_tree:
+    if (kind node) == nnk_call:
+      let ident = str_val node[0]
       case ident
-      of "input": inputTree = some node[1]
-      of "output": outputTree = some node[1]
-      of "bidi": bidiTree = some node[1]
-      of "unconnected": uncTree = some node[1]
+      of "input": input_tree = some node[1]
+      of "output": output_tree = some node[1]
+      of "bidi": bidi_tree = some node[1]
+      of "unconnected": unc_tree = some node[1]
       else: error("Unknown pin type: " & ident, node)
   
-  if isSome inputTree:
-    for stmtNode in children get inputTree:
-      let (number, name) = parsePin stmtNode
+  if is_some input_tree:
+    for stmt_node in children get input_tree:
+      let (number, name) = parse_pin stmt_node
       add result, (number, name, bindSym "Input")
 
-  if isSome outputTree:
-    for stmtNode in children get outputTree:
-      let (number, name) = parsePin stmtNode
-      add result, (number, name, bindSym "Output")
+  if is_some output_tree:
+    for stmt_node in children get output_tree:
+      let (number, name) = parse_pin stmt_node
+      add result, (number, name, bind_sym "Output")
   
-  if isSome bidiTree:
-    for stmtNode in children get bidiTree:
-      let (number, name) = parsePin stmtNode
-      add result, (number, name, bindSym "Bidi")
+  if is_some bidi_tree:
+    for stmt_node in children get bidi_tree:
+      let (number, name) = parse_pin stmt_node
+      add result, (number, name, bind_sym "Bidi")
   
-  if isSome uncTree:
-    for stmtNode in children get uncTree:
-      let (number, name) = parsePin stmtNode
-      add result, (number, name, bindSym "Unconnected")
+  if is_some unc_tree:
+    for stmt_node in children get unc_tree:
+      let (number, name) = parse_pin stmt_node
+      add result, (number, name, bind_sym "Unconnected")
 
-proc prelude(chipType, pinsType: NimNode, numPins: int): NimNode =
+proc prelude(chip_type, pins_type: NimNode; num_pins: int): NimNode =
   ## Produces the AST for the first part of the macro output. This includes types and the
   ## procs that are attached to those types (indexing and iterators).
 
-  let brackets = newTree(nnkAccQuoted, ident "[]")
-  let pinSym = bindSym "Pin"
-  let tableSym = bindSym "TableRef"
+  let brackets = new_tree(nnk_acc_quoted, ident "[]")
+  let pin_sym = bind_sym "Pin"
+  let table_sym = bind_sym "TableRef"
 
   # This produces a full type (the pins type) that is not exported with indexing and
   # iteration capabilities that are also not exported (though the procs and iterators
@@ -106,85 +106,85 @@ proc prelude(chipType, pinsType: NimNode, numPins: int): NimNode =
   # just to be available with the `pins` variable in the `init` block.
   result = quote do:
     type 
-      `pinsType` = ref object
-        byNumber: array[1..`numPins`, `pinSym`]
-        byName: `tableSym`[string, `pinSym`]
-      `chipType`* = ref object
-        pins: `pinsType`
+      `pins_type` = ref object
+        by_number: array[1..`num_pins`, `pin_sym`]
+        by_name: `table_sym`[string, `pin_sym`]
+      `chip_type`* = ref object
+        pins: `pins_type`
 
-    proc `brackets`(pins: `pinsType`, index: int): `pinSym` {.inline.} = pins.byNumber[index]
-    proc `brackets`(pins: `pinsType`, index: string): `pinSym` {.inline.} = pins.byName[index]
-    iterator items*(pins: `pinsType`): `pinSym` =
-      for pin in pins.byNumber:
+    proc `brackets`(pins: `pins_type`, index: int): `pin_sym` {.inline.} = pins.by_number[index]
+    proc `brackets`(pins: `pins_type`, index: string): `pin_sym` {.inline.} = pins.by_name[index]
+    iterator items*(pins: `pins_type`): `pin_sym` =
+      for pin in pins.by_number:
         yield pin
-    iterator pairs*(pins: `pinsType`): tuple[a: int, b: `pinSym`] =
-      for i, pin in pins.byNumber:
+    iterator pairs*(pins: `pins_type`): tuple[a: int, b: `pin_sym`] =
+      for i, pin in pins.by_number:
         yield (i, pin)
 
-    proc `brackets`*(chip: `chipType`, index: int): `pinSym` {.inline.} = chip.pins[index]
-    proc `brackets`*(chip: `chipType`, index: string): `pinSym` {.inline.} = chip.pins[index]
-    iterator items*(chip: `chipType`): `pinSym` =
-      for pin in chip.pins.byNumber:
+    proc `brackets`*(chip: `chip_type`, index: int): `pin_sym` {.inline.} = chip.pins[index]
+    proc `brackets`*(chip: `chip_type`, index: string): `pin_sym` {.inline.} = chip.pins[index]
+    iterator items*(chip: `chip_type`): `pin_sym` =
+      for pin in chip.pins.by_number:
         yield pin
-    iterator pairs*(chip: `chipType`): tuple[a: int, b: `pinSym`] =
-      for i, pin in chip.pins.byNumber:
+    iterator pairs*(chip: `chip_type`): tuple[a: int, b: `pin_sym`] =
+      for i, pin in chip.pins.by_number:
         yield (i, pin)
 
-proc constants(pins: seq[PinRepr]): NimNode {.compileTime.} =
+proc constants(pins: seq[PinRepr]): NimNode {.compile_time.} =
   ## Produces the AST for the second part of the macro output. This includes constants based
   ## on the names and numbers of the pins in the macro input.
 
-  result = newNimNode nnkConstSection
+  result = new_nim_node nnk_const_section
 
   for pin in pins:
-    let node = newTree(nnkConstDef,
-      newTree(nnkPostfix,
+    let node = new_tree(nnk_const_def,
+      new_tree(nnk_postfix,
         ident "*",
         ident pin.name,
       ),
-      newEmptyNode(),
-      newIntLitNode pin.number,
+      new_empty_node(),
+      new_int_lit_node pin.number,
     )
     add result, node
 
-proc init(chipType, pinsType, paramsTree, initTree: NimNode; pins: seq[PinRepr]): NimNode =
+proc init(chip_type, pins_type, params_tree, init_tree: NimNode; pins: seq[PinRepr]): NimNode =
   ## Produces the AST for the third part of the macro output. This is the constructor proc
-  ## that will create a new instance of the chip once the type is defined. `chipType` and
-  ## `pinsType` are always Ident nodes. `paramsTree` is a FormalParams node; if there are no
-  ## parameters it just contains the return type. `initTree` is an Empty node if there is
-  ## no `init` section; otherwise it's a StmtList node.
+  ## that will create a new instance of the chip once the type is defined. `chip_type` and
+  ## `pins_type` are always Ident nodes. `params_tree` is a FormalParams node; if there are 
+  ## no parameters it just contains the return type. `init_tree` is an Empty node if there 
+  ## is no `init` section; otherwise it's a StmtList node.
 
-  let procName = ident ("new" & strval chipType)
-  let newTableSym = bindSym "newTable"
-  let pinSym = bindSym "Pin"
-  let mapSym = bindSym "map"
-  let zipSym = bindSym "zip"
+  let proc_name = ident ("new" & str_val chip_type)
+  let new_table_sym = bind_sym "newTable"
+  let pin_sym = bind_sym "Pin"
+  let map_sym = bind_sym "map"
+  let zip_sym = bind_sym "zip"
 
-  let pinsLen = len pins
-  let pinsId = ident "pins"
+  let pins_len = len pins
+  let pins_id = ident "pins"
 
   # There are two things missing from this tree: there are no formal parameters, and the
-  # `rawPins` array is empty. We'll fix both of those next.
+  # `raw_pins` array is empty. We'll fix both of those next.
   result = quote do:
-    proc `procName`*: `chipType` =
+    proc `proc_name`*: `chip_type` =
       let 
-        rawPins: array[1..`pinsLen`, `pinSym`] = []
-        table = `newTableSym`[string, `pinSym`]()
-        names = `mapSym`(rawPins, proc (pin: `pinSym`): string = pin.name)
+        raw_pins: array[1..`pins_len`, `pin_sym`] = []
+        table = `new_table_sym`[string, `pin_sym`]()
+        names = `map_sym`(raw_pins, proc (pin: `pin_sym`): string = pin.name)
       
-      for pairs in `zipSym`(names, rawPins):
+      for pairs in `zip_sym`(names, raw_pins):
         let (name, pin) = pairs
         table[name] = pin
       
-      let `pinsId` = `pinsType`(byNumber: rawPins, byName: table)
-      result = `chipType`(pins: `pinsId`)
+      let `pins_id` = `pins_type`(by_number: raw_pins, by_name: table)
+      result = `chip_type`(pins: `pins_id`)
   
   # Add in the formal parameters to the proc. If there aren't any, this just swaps out one
   # return-type-only FormalParams node for another.
   del result, 3
-  insert result, 3, paramsTree
+  insert result, 3, params_tree
   
-  # This is the node for the brackets in `rawPins = []`. We use it as an attachment point
+  # This is the node for the brackets in `raw_pins = []`. We use it as an attachment point
   # for the nodes that make up the entries in that array. We're basically returning to a
   # node we already created to insert some more stuff into it, which is of course fine
   # because it's still compile time when this is running.
@@ -200,14 +200,15 @@ proc init(chipType, pinsType, paramsTree, initTree: NimNode; pins: seq[PinRepr])
       error ("Duplicate pin number " & $i)
     
     let pin = filtered[0]
-    add brackets, newCall(
-      bindSym "newPin",
-      newIntLitNode pin.number,
-      newStrLitNode pin.name,
+    add brackets, new_call(
+      bind_sym "new_pin",
+      new_int_lit_node pin.number,
+      new_str_lit_node pin.name,
       pin.mode
     )
   
-  add result[6], initTree
+  # Finally, add the init section verbatim.
+  add result[6], init_tree
 
 macro chip*(header, body: untyped): untyped =
   ## A macro to produce a full definition of a chip from declarative parts.
@@ -288,20 +289,12 @@ macro chip*(header, body: untyped): untyped =
   ##       GND: 7
   ## 
   ##   init:
-  ##     +pins[Y1]
-  ##     +pins[Y2]
-  ##     +pins[Y3]
-  ##     +pins[Y4]
-  ##     +pins[Y5]
-  ##     +pins[Y6]
-  ## 
-  ##     proc dataListener(gate: int): proc (pin: Pin) =
+  ##     proc data_listener(gate: int): proc (pin: Pin) =
   ##       let ypin = pins[&"Y{gate}"]
-  ##       proc listener(pin: Pin) =
-  ##         ypin.level = if pin.high: 0 else: 1
-  ##       result = listener
-  ## 
-  ##     for i in 1..6: pins[&"A{i}"].addListener(dataListener(i))
+  ##       result = proc (pin: Pin) =
+  ##         if highp pin: clear ypin else: set ypin
+  ##
+  ##     for i in 1..6: add_listener pins[&"A{i}"], data_listener i
   ## ```
   ## 
   ## And here is the code the macro produces from that input. It's reformatted somewhat here
@@ -311,24 +304,24 @@ macro chip*(header, body: untyped): untyped =
   ## ```
   ## type
   ##   Ic7406Pins = ref object
-  ##     byNumber: array[1 .. 14, Pin]
-  ##     byName: TableRef[string, Pin]
+  ##     by_number: array[1 .. 14, Pin]
+  ##     by_name: TableRef[string, Pin]
   ## 
   ##   Ic7406* = ref object
   ##     pins: Ic7406Pins
   ##
   ## proc `[]`(pins: Ic7406Pins; index: int): Pin {.inline.} =
-  ##   pins.byNumber[index]
+  ##   pins.by_number[index]
   ## 
   ## proc `[]`(pins: Ic7406Pins; index: string): Pin {.inline.} =
-  ##   pins.byName[index]
+  ##   pins.by_name[index]
   ## 
   ## iterator items(pins: Ic7406Pins): Pin =
-  ##   for pin in pins.byNumber:
+  ##   for pin in pins.by_number:
   ##     yield pin
   ## 
   ## iterator pairs(pins: Ic7406Pins): tuple[a: int, b: Pin] =
-  ##   for i, pin in pins.byNumber:
+  ##   for i, pin in pins.by_number:
   ##     yield (i, pin)
   ## 
   ## proc `[]`*(chip: Ic7406; index: int): Pin {.inline.} =
@@ -338,11 +331,11 @@ macro chip*(header, body: untyped): untyped =
   ##   chip.pins[index]
   ## 
   ## iterator items*(chip: Ic7406): Pin =
-  ##   for pin in chip.pins.byNumber:
+  ##   for pin in chip.pins.by_number:
   ##     yield pin
   ## 
   ## iterator pairs*(chip: Ic7406): tuple[a: int, b: Pin] =
-  ##   for i, pin in chip.pins.byNumber:
+  ##   for i, pin in chip.pins.by_number:
   ##     yield (i, pin)
   ## 
   ## const
@@ -361,9 +354,9 @@ macro chip*(header, body: untyped): untyped =
   ##   VCC* = 14
   ##   GND* = 7
   ## 
-  ## proc newIc7406*(): Ic7406 =
+  ## proc new_Ic7406*(): Ic7406 =
   ##   let
-  ##     rawPins: array[1 .. 14, Pin] = [newPin(1, "A1", Input),
+  ##     raw_pins: array[1 .. 14, Pin] = [newPin(1, "A1", Input),
   ##         newPin(2, "Y1", Output), newPin(3, "A2", Input),
   ##         newPin(4, "Y2", Output), newPin(5, "A3", Input),
   ##         newPin(6, "Y3", Output), newPin(7, "GND", Unconnected),
@@ -371,30 +364,22 @@ macro chip*(header, body: untyped): untyped =
   ##         newPin(10, "Y5", Output), newPin(11, "A5", Input),
   ##         newPin(12, "Y6", Output), newPin(13, "A6", Input),
   ##         newPin(14, "VCC", Unconnected)]
-  ##     table = newTable[string, Pin]()
-  ##     names = rawPins.map(proc (pin: Pin): string = pin.name)
+  ##     table = new_table[string, Pin]()
+  ##     names = raw_pins.map(proc (pin: Pin): string = pin.name)
   ## 
-  ##   for pairs in zip(names, rawPins):
+  ##   for pairs in zip(names, raw_pins):
   ##     let (name, pin) = pairs
   ##     table[name] = pin
   ## 
-  ##   let pins = Ic7406Pins(byNumber: rawPins, byName: table)
+  ##   let pins = Ic7406Pins(by_number: raw_pins, by_name: table)
   ##   result = Ic7406(pins: pins)
   ## 
-  ##   +pins[Y1]
-  ##   +pins[Y2]
-  ##   +pins[Y3]
-  ##   +pins[Y4]
-  ##   +pins[Y5]
-  ##   +pins[Y6]
-  ## 
-  ##   proc dataListener(gate: int): proc (pin: Pin) =
+  ##   proc data_listener(gate: int): proc (pin: Pin) =
   ##     let ypin = pins[&"Y{gate}"]
-  ##     proc listener(pin: Pin) =
-  ##       ypin.level = if pin.high: 0 else: 1
-  ##     result = listener
-  ## 
-  ##   for i in 1..6: pins[&"A{i}"].addListener(dataListener(i))
+  ##     result = proc (pin: Pin) =
+  ##       if highp pin: clear ypin else: set ypin
+  ##
+  ##   for i in 1..6: add_listener pins[&"A{i}"], data_listener i
   ## ```
   ## 
   ## This makes clear that the actual pin container is not an exported type and it does not
@@ -402,22 +387,22 @@ macro chip*(header, body: untyped): untyped =
   ## iteration) as the chip itself has, but that can only be used by code in the `init`
   ## block.
 
-  let (chipType, pinsType, paramsTree) = parseHeader header
+  let (chip_type, pins_type, params_tree) = parse_header header
 
-  var pinsTree = none NimNode
-  var initTree = none NimNode
+  var pins_tree = none NimNode
+  var init_tree = none NimNode
 
   for node in children body:
-    if (kind node) == nnkCall and (strVal node[0]) == "pins":
-      pinsTree = some node[1]
-    elif (kind node) == nnkCall and (strVal node[0]) == "init":
-      initTree = some node[1]
-  if isNone pinsTree: error "`chip` requires a `pins` section."
-  if isNone initTree: initTree = some newEmptyNode()
+    if (kind node) == nnk_call and (str_val node[0]) == "pins":
+      pins_tree = some node[1]
+    elif (kind node) == nnk_call and (str_val node[0]) == "init":
+      init_tree = some node[1]
+  if is_none pins_tree: error "`chip` requires a `pins` section."
+  if is_none init_tree: init_tree = some new_empty_node()
   
-  let pinReprs = parsePins get pinsTree
-  let numPins = len pinReprs
+  let pin_reprs = parse_pins get pins_tree
+  let num_pins = len pin_reprs
 
-  result = prelude(chipType, pinsType, numPins)
-  add result, constants pinReprs
-  add result, init(chipType, pinsType, paramsTree, get initTree, pinReprs)
+  result = prelude(chip_type, pins_type, num_pins)
+  add result, constants pin_reprs
+  add result, init(chip_type, pins_type, params_tree, get init_tree, pin_reprs)

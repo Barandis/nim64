@@ -35,8 +35,7 @@
 ## into the inverse AEC signal for the 82S100.
 
 import strformat
-import ../components/chip
-import ../components/link
+import ../components/[chip, link]
 
 chip Ic7406:
   pins:
@@ -66,9 +65,9 @@ chip Ic7406:
       GND: 7
   
   init:
-    proc dataListener(gate: int): proc (pin: Pin) =
+    proc data_listener(gate: int): proc (pin: Pin) =
       let ypin = pins[&"Y{gate}"]
       result = proc (pin: Pin) =
         if highp pin: clear ypin else: set ypin
 
-    for i in 1..6: addListener pins[&"A{i}"], dataListener i
+    for i in 1..6: add_listener pins[&"A{i}"], data_listener i

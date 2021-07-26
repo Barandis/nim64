@@ -3,12 +3,11 @@
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
-import ./components/pin
-import ./components/trace
+import ./components/[pin, trace]
 
-proc allTests* =
-  pin.allTests()
-  trace.allTests()
+proc all_tests* =
+  pin.all_tests()
+  trace.all_tests()
 
-when isMainModule:
-  allTests()
+when is_main_module:
+  all_tests()

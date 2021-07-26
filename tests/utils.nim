@@ -8,28 +8,28 @@ import ../src/nim64/components/link
 
 type
   Traces* = ref object
-    byNumber: seq[Trace]
-    byName: TableRef[string, Trace]
+    by_number: seq[Trace]
+    by_name: TableRef[string, Trace]
   
   Device = concept x
     x.items() is Pin
 
-proc `[]`*(tr: Traces, index: int): Trace = tr.byNumber[index]
-proc `[]`*(tr: Traces, index: string): Trace = tr.byName[index]
+proc `[]`*(tr: Traces, index: int): Trace = tr.by_number[index]
+proc `[]`*(tr: Traces, index: string): Trace = tr.by_name[index]
 
-proc deviceTraces*(device: Device): Traces =
-  result = Traces(byNumber: @[], byName: newTable[string, Trace]())
-  result.byNumber.add(nil)
+proc device_traces*(device: Device): Traces =
+  result = Traces(by_number: @[], by_name: new_table[string, Trace]())
+  result.by_number.add(nil)
 
   for pin in device:
-    let trace = newTrace(pin)
-    result.byNumber.add(trace)
-    result.byName[pin.name] = trace
+    let trace = new_trace(pin)
+    result.by_number.add(trace)
+    result.by_name[pin.name] = trace
 
-proc valueToTraces*(value: uint, traces: seq[Trace]) =
+proc value_to_traces*(value: uint, traces: seq[Trace]) =
   for i, trace in traces:
-    setLevel trace, float(value shr i and 1)
+    set_level trace, float(value shr i and 1)
 
-proc tracesToValue*(traces: seq[Trace]): uint =
+proc traces_to_value*(traces: seq[Trace]): uint =
   for i, trace in traces:
     result = result or uint(level trace) shl i

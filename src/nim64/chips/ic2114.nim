@@ -78,12 +78,10 @@
 ## In the Commodore 64, U6 is a 2114. As explained above, it was used strictly as RAM for
 ## storing graphics colors.
 
-import ../components/chip
-
-from sequtils import map, toSeq
-from strformat import `&`
-from ../utils import modeToPins, pinsToValue, valueToPins
-from ../components/link import Input, Output, Pin, addListener, lowp, highp
+import sequtils
+import strformat
+import ../utils
+import ../components/[chip, link]
 
 chip Ic2114:
   pins:
@@ -119,8 +117,8 @@ chip Ic2114:
       GND: 9
   
   init:
-    let addrPins = map(toSeq 0..9, proc (i: int): Pin = pins[&"A{i}"])
-    let dataPins = map(toSeq 0..3, proc (i: int): Pin = pins[&"D{i}"])
+    let addr_pins = map(to_seq 0..9, proc (i: int): Pin = pins[&"A{i}"])
+    let data_pins = map(to_seq 0..3, proc (i: int): Pin = pins[&"D{i}"])
 
     var memory: array[512, uint16]
 
@@ -128,36 +126,36 @@ chip Ic2114:
       result = (address shr 1, (address and 1) * 4)
 
     proc read =
-      modeToPins Output, dataPins
-      let address = pinsToValue addrPins
+      mode_to_pins Output, data_pins
+      let address = pins_to_value addr_pins
       let (index, shift) = resolve address
       let value = (memory[index] and (0b1111u shl shift)) shr shift
-      valueToPins value, dataPins
+      value_to_pins value, dataPins
     
     proc write =
-      modeToPins Input, dataPins
-      let address = pinsToValue addrPins
+      mode_to_pins Input, data_pins
+      let address = pins_to_value addr_pins
       let (index, shift) = resolve address
-      let value = pinsToValue dataPins
+      let value = pins_to_value data_pins
       let current = memory[index] and not (0b1111u shl shift)
       memory[index] = uint16 (current or (value shl shift))
     
-    proc enableListener(pin: Pin) =
-      if highp pin: modeToPins Input, dataPins
+    proc enable_listener(pin: Pin) =
+      if highp pin: mode_to_pins Input, data_pins
       elif lowp pin:
         if highp pins[WE]: read()
         else: write()
     
-    proc writeListener(pin: Pin) =
+    proc write_listener(pin: Pin) =
       if lowp pins[CS]:
         if highp pin: read()
         else: write()
     
-    proc addressListener(_: Pin) =
+    proc address_listener(_: Pin) =
       if lowp pins[CS]:
         if highp pins[WE]: read()
         else: write()
 
-    addListener pins[CS], enableListener
-    addListener pins[WE], writeListener
-    for pin in addrPins: addListener pin, addressListener
+    add_listener pins[CS], enable_listener
+    add_listener pins[WE], write_listener
+    for pin in addr_pins: add_listener pin, address_listener

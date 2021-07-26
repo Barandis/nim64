@@ -64,12 +64,10 @@
 ## In the Commodore 64, U3 and U4 are both 2364A's (a variant with slightly faster data
 ## access). U3 stores the BASIC interpreter and U4 stores the kernal.
 
-import ../components/chip
-
-from sequtils import map, toSeq
-from strformat import `&`
-from ../utils import pinsToValue, triPins, valueToPins
-from ../components/link import Pin, addListener, lowp
+import sequtils
+import strformat
+import ../utils
+import ../components/[chip, link]
 
 chip Ic2364(memory: array[8192, uint8]):
   pins:
@@ -111,16 +109,16 @@ chip Ic2364(memory: array[8192, uint8]):
       GND: 12
   
   init:
-    let addrPins = map(toSeq 0..12, proc (i: int): Pin = pins[&"A{i}"])
-    let dataPins = map(toSeq 0..7, proc (i: int): Pin = pins[&"D{i}"])
+    let addr_pins = map(to_seq 0..12, proc (i: int): Pin = pins[&"A{i}"])
+    let data_pins = map(to_seq 0..7, proc (i: int): Pin = pins[&"D{i}"])
 
     proc read =
-      valueToPins memory[pinsToValue addrPins], dataPins
+      value_to_pins memory[pins_to_value addr_pins], data_pins
     
-    proc enableListener(pin: Pin) =
+    proc enable_listener(pin: Pin) =
       if lowp pin:
         read()
       else:
-        triPins dataPins
+        tri_pins data_pins
     
-    addListener pins[CS], enableListener
+    add_listener pins[CS], enable_listener

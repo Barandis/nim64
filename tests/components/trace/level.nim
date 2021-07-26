@@ -6,8 +6,8 @@
 import ../../../src/nim64/components/link
 import unittest
 
-proc directUnc =
-  let t = newTrace()
+proc direct_unc =
+  let t = new_trace()
   set(t)
   check:
     highp(t)
@@ -26,12 +26,12 @@ proc directUnc =
     not lowp(t)
     trip(t)
   
-  setLevel(t, -0.35)
+  set_level(t, -0.35)
   check level(t) == -0.35
 
-proc directIn =
-  let p = newPin(1, "A", Input)
-  let t = newTrace(p)
+proc direct_in =
+  let p = new_pin(1, "A", Input)
+  let t = new_trace(p)
 
   set(t)
   check highp(t)
@@ -39,13 +39,13 @@ proc directIn =
   check lowp(t)
   tri(t)
   check trip(t)
-  setLevel(t, -0.35)
+  set_level(t, -0.35)
   check level(t) == -0.35
 
-proc directOutHigh =
-  let p1 = newPin(1, "A", Output).set()
-  let p2 = newPin(2, "B", Output).clear()
-  let t = newTrace(p1, p2)
+proc direct_out_high =
+  let p1 = new_pin(1, "A", Output).set()
+  let p2 = new_pin(2, "B", Output).clear()
+  let t = new_trace(p1, p2)
 
   set(t)
   check highp(t)
@@ -53,13 +53,13 @@ proc directOutHigh =
   check highp(t)
   tri(t)
   check highp(t)
-  setLevel(t, -0.35)
+  set_level(t, -0.35)
   check highp(t)
 
-proc directOutLow =
-  let p1 = newPin(1, "A", Output).clear()
-  let p2 = newPin(2, "B", Output).clear()
-  let t = newTrace(p1, p2)
+proc direct_out_low =
+  let p1 = new_pin(1, "A", Output).clear()
+  let p2 = new_pin(2, "B", Output).clear()
+  let t = new_trace(p1, p2)
 
   set(t)
   check lowp(t)
@@ -67,13 +67,13 @@ proc directOutLow =
   check lowp(t)
   tri(t)
   check lowp(t)
-  setLevel(t, -0.35)
+  set_level(t, -0.35)
   check level(t) == 0
 
-proc directOutTri =
-  let p1 = newPin(1, "A", Output).tri()
-  let p2 = newPin(2, "B", Output).tri()
-  let t = newTrace(p1, p2)
+proc direct_out_tri =
+  let p1 = new_pin(1, "A", Output).tri()
+  let p2 = new_pin(2, "B", Output).tri()
+  let t = new_trace(p1, p2)
 
   set(t)
   check highp(t)
@@ -81,39 +81,39 @@ proc directOutTri =
   check lowp(t)
   tri(t)
   check trip(t)
-  setLevel(t, -0.35)
+  set_level(t, -0.35)
   check level(t) == -0.35
 
-proc indirectUnc =
-  let p = newPin(1, "A")
-  let t = newTrace(p).clear()
+proc indirect_unc =
+  let p = new_pin(1, "A")
+  let t = new_trace(p).clear()
 
   set(p)
   check:
     lowp(t)
     highp(p)
 
-proc indirectIn =
-  let p = newPin(1, "A", Input)
-  let t = newTrace(p).clear()
+proc indirect_in =
+  let p = new_pin(1, "A", Input)
+  let t = new_trace(p).clear()
 
   set(p)
   check:
     lowp(t)
     lowp(p)
 
-proc indirectOut =
-  let p = newPin(1, "A", Output)
-  let t = newTrace(p).clear()
+proc indirect_out =
+  let p = new_pin(1, "A", Output)
+  let t = new_trace(p).clear()
 
   set(p)
   check:
     highp(t)
     highp(p)
 
-proc indirectBidi =
-  let p = newPin(1, "A", Bidi)
-  let t = newTrace(p).clear()
+proc indirect_bidi =
+  let p = new_pin(1, "A", Bidi)
+  let t = new_trace(p).clear()
 
   set(p)
   check:
@@ -125,37 +125,37 @@ proc indirectBidi =
     trip(t)
     trip(p)
 
-proc indirectOutHigh =
-  let p1 = newPin(1, "A", Output)
-  let p2 = newPin(2, "B", Output).set()
-  let p3 = newPin(3, "C", Output).set()
-  let t = newTrace(p1, p2, p3)
+proc indirect_out_high =
+  let p1 = new_pin(1, "A", Output)
+  let p2 = new_pin(2, "B", Output).set()
+  let p3 = new_pin(3, "C", Output).set()
+  let t = new_trace(p1, p2, p3)
 
   clear(p1)
   check highp(t)
 
-proc indirectOutLow =
-  let p1 = newPin(1, "A", Output)
-  let p2 = newPin(2, "B", Output).clear()
-  let p3 = newPin(3, "C", Output).clear()
-  let t = newTrace(p1, p2, p3)
+proc indirect_out_low =
+  let p1 = new_pin(1, "A", Output)
+  let p2 = new_pin(2, "B", Output).clear()
+  let p3 = new_pin(3, "C", Output).clear()
+  let t = new_trace(p1, p2, p3)
 
   clear(p1)
   check lowp(t)
 
-proc allTests* =
+proc all_tests* =
   suite "Trace level":
-    test "trace affected by direct set with unconnected pins only": directUnc()
-    test "trace affected by direct set when connected to input pins only": directIn()
-    test "trace unaffected by direct set when connected to high output pins": directOutHigh()
-    test "trace unaffected by direct set when connected to low output pins": directOutLow()
-    test "trace affected by direct set when no leveled output pins connected": directOutTri()
-    test "trace unaffected by setting an unconnected pin": indirectUnc()
-    test "trace unaffected by setting a connected input pin": indirectIn()
-    test "trace affected by setting a connected output pin": indirectOut()
-    test "trace affected by setting a connected bidi pin": indirectBidi()
-    test "trace unaffected if high output set low with other high outputs": indirectOutHigh()
-    test "trace affected if high output set low with no other high outputs": indirectOutLow()
+    test "trace affected by direct set with unconnected pins only": direct_unc()
+    test "trace affected by direct set when connected to input pins only": direct_in()
+    test "trace unaffected by direct set when connected to high output pins": direct_out_high()
+    test "trace unaffected by direct set when connected to low output pins": direct_out_low()
+    test "trace affected by direct set when no leveled output pins connected": direct_out_tri()
+    test "trace unaffected by setting an unconnected pin": indirect_unc()
+    test "trace unaffected by setting a connected input pin": indirect_in()
+    test "trace affected by setting a connected output pin": indirect_out()
+    test "trace affected by setting a connected bidi pin": indirect_bidi()
+    test "trace unaffected if high output set low with other high outputs": indirect_out_high()
+    test "trace affected if high output set low with no other high outputs": indirect_out_low()
 
-when isMainModule:
-  allTests()
+when is_main_module:
+  all_tests()

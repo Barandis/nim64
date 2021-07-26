@@ -6,134 +6,134 @@
 import ../../../src/nim64/components/link
 import unittest
 
-proc upInitial =
-  let p = newPin(1, "A", Output).pullUp()
+proc up_initial =
+  let p = new_pin(1, "A", Output).pull_up()
   check highp(p)
 
-proc upUnconnected =
-  let p = newPin(1, "A", Unconnected).pullUp()
+proc up_unconnected =
+  let p = new_pin(1, "A", Unconnected).pull_up()
   clear(p)
   check lowp(p)
   tri(p)
   check highp(p)
 
-proc upInput =
-  let p = newPin(1, "A", Input).pullUp()
-  let t = newTrace(p)
+proc up_input =
+  let p = new_pin(1, "A", Input).pull_up()
+  let t = new_trace(p)
 
   clear(t)
   check lowp(p)
   tri(t)
   check highp(p)
 
-proc upOutput =
-  let p = newPin(1, "A", Output).pullUp()
-  let t = newTrace(p)
+proc up_output =
+  let p = new_pin(1, "A", Output).pull_up()
+  let t = new_trace(p)
 
   clear(p)
   check lowp(t)
   tri(p)
   check highp(t)
 
-proc upBidi =
-  let p = newPin(1, "A", Bidi).pullUp()
-  let t = newTrace(p)
+proc up_bidi =
+  let p = new_pin(1, "A", Bidi).pull_up()
+  let t = new_trace(p)
 
   clear(p)
   check lowp(t)
   tri(p)
   check highp(t)
 
-proc upAfter =
-  let p = newPin(1, "A")
+proc up_after =
+  let p = new_pin(1, "A")
   check trip(p)
-  pullUp(p)
+  pull_up(p)
   check highp(p)
 
-proc downInitial =
-  let p = newPin(1, "A", Output).pullDown()
+proc down_initial =
+  let p = new_pin(1, "A", Output).pull_down()
   check lowp(p)
 
-proc downUnconnected =
-  let p = newPin(1, "A", Unconnected).pullDown()
+proc down_unconnected =
+  let p = new_pin(1, "A", Unconnected).pull_down()
   set(p)
   check highp(p)
   tri(p)
   check lowp(p)
 
-proc downInput =
-  let p = newPin(1, "A", Input).pullDown()
-  let t = newTrace(p)
+proc down_input =
+  let p = new_pin(1, "A", Input).pull_down()
+  let t = new_trace(p)
 
   set(t)
   check highp(p)
   tri(t)
   check lowp(p)
 
-proc downOutput =
-  let p = newPin(1, "A", Output).pullDown()
-  let t = newTrace(p)
+proc down_output =
+  let p = new_pin(1, "A", Output).pull_down()
+  let t = new_trace(p)
 
   set(p)
   check highp(t)
   tri(p)
   check lowp(t)
 
-proc downBidi =
-  let p = newPin(1, "A", Bidi).pullDown()
-  let t = newTrace(p)
+proc down_bidi =
+  let p = new_pin(1, "A", Bidi).pull_down()
+  let t = new_trace(p)
 
   set(p)
   check highp(t)
   tri(p)
   check lowp(t)
 
-proc downAfter =
-  let p = newPin(1, "A")
+proc down_after =
+  let p = new_pin(1, "A")
   check trip(p)
-  pullDown(p)
+  pull_down(p)
   check lowp(p)
 
-proc offInitial =
-  let p = newPin(1, "A").pullOff()
+proc off_initial =
+  let p = new_pin(1, "A").pull_off()
   check trip(p)
 
-proc offAfterUp =
-  let p = newPin(1, "A").pullUp()
+proc off_after_up =
+  let p = new_pin(1, "A").pull_up()
   tri(p)
   check highp(p)
 
-  pullOff(p)
+  pull_off(p)
   tri(p)
   check trip(p)
 
 
-proc offAfterDown =
-  let p = newPin(1, "A").pullDown()
+proc off_after_down =
+  let p = new_pin(1, "A").pull_down()
   tri(p)
   check lowp(p)
 
-  pullOff(p)
+  pull_off(p)
   tri(p)
   check trip(p)
 
-proc allTests* =
+proc all_tests* =
   suite "Pin pull-up and pull-down":
-    test "pulled-up pin initial value is high": upInitial()
-    test "unconnected pin pulled up on tri-state": upUnconnected()
-    test "input pin pulled up if trace is tri-state": upInput()
-    test "output pin pulled up and affects trace level": upOutput()
-    test "bidi pin pulled up and affects trace level": upBidi()
-    test "pulling up a pin later sets it high if it is still tri-state": upAfter()
-    test "pulled-up pin initial value is low": downInitial()
-    test "unconnected pin pulled down on tri-state": downUnconnected()
-    test "input pin pulled down if trace is tri-state": downInput()
-    test "output pin pulled down and affects trace level": downOutput()
-    test "bidi pin pulled down and affects trace level": downBidi()
-    test "pulling down a pin later sets it low if it is still tri-state": downAfter()
-    test "unpulled pin initial value is tri-state": offInitial()
-    test "removing pull up tri-states pin if it was high only because of pull-up": offAfterUp()
-    test "removing pull down tri-states pin if it was low only becuase of pull-down": offAfterDown()
+    test "pulled-up pin initial value is high": up_initial()
+    test "unconnected pin pulled up on tri-state": up_unconnected()
+    test "input pin pulled up if trace is tri-state": up_input()
+    test "output pin pulled up and affects trace level": up_output()
+    test "bidi pin pulled up and affects trace level": up_bidi()
+    test "pulling up a pin later sets it high if it is still tri-state": up_after()
+    test "pulled-up pin initial value is low": down_initial()
+    test "unconnected pin pulled down on tri-state": down_unconnected()
+    test "input pin pulled down if trace is tri-state": down_input()
+    test "output pin pulled down and affects trace level": down_output()
+    test "bidi pin pulled down and affects trace level": down_bidi()
+    test "pulling down a pin later sets it low if it is still tri-state": down_after()
+    test "unpulled pin initial value is tri-state": off_initial()
+    test "removing pull up tri-states pin if it was high because of pull-up": off_after_up()
+    test "removing pull down tri-states pin if it was low becuase of pull-down": off_after_down()
 
-when isMainModule:
-  allTests()
+when is_main_module:
+  all_tests()

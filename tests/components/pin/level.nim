@@ -7,14 +7,14 @@ from math import classify, fcNan
 import ../../../src/nim64/components/link
 import unittest
 
-proc isNaN(n: float): bool {.inline.} = n.classify == fcNan
+proc nanp(n: float): bool {.inline.} = n.classify == fcNan
 
 proc functions =
-  let pin = newPin(1, "A", Input)
+  let pin = new_pin(1, "A", Input)
 
   tri(pin)
   check:
-    level(pin).isNaN
+    nanp level(pin)
     not highp(pin)
     not lowp(pin)
     trip(pin)
@@ -41,11 +41,11 @@ proc functions =
     not trip(pin)
 
 proc methods =
-  let pin = newPin(1, "A", Input)
+  let pin = new_pin(1, "A", Input)
 
   pin.tri()
   check:
-    pin.level.isNaN
+    pin.level.nanp
     not pin.highp
     not pin.lowp
     pin.trip
@@ -72,8 +72,8 @@ proc methods =
     not pin.trip
 
 proc unconnected =
-  let p = newPin(1, "A", Unconnected)
-  let t = newTrace(p)
+  let p = new_pin(1, "A", Unconnected)
+  let t = new_trace(p)
 
   t.set()
   check:
@@ -101,8 +101,8 @@ proc unconnected =
     t.highp
 
 proc input =
-  let p = newPin(1, "A", Input)
-  let t = newTrace(p)
+  let p = new_pin(1, "A", Input)
+  let t = new_trace(p)
 
   t.set()
   check:
@@ -130,8 +130,8 @@ proc input =
     t.highp
 
 proc output =
-  let p = newPin(1, "A", Output)
-  let t = newTrace(p)
+  let p = new_pin(1, "A", Output)
+  let t = new_trace(p)
 
   t.set()
   check:
@@ -159,8 +159,8 @@ proc output =
     t.trip
 
 proc bidi =
-  let p = newPin(1, "A", Bidi)
-  let t = newTrace(p)
+  let p = new_pin(1, "A", Bidi)
+  let t = new_trace(p)
 
   t.set()
   check:
@@ -187,8 +187,8 @@ proc bidi =
     p.trip
     t.trip
 
-proc toggleHigh =
-  let p = newPin(1, "A")
+proc toggle_high =
+  let p = new_pin(1, "A")
   p.clear()
   p.toggle()
   check p.level == 1
@@ -197,8 +197,8 @@ proc toggleHigh =
   p.toggle()
   check p.level == 1
 
-proc toggleLow =
-  let p = newPin(1, "A")
+proc toggle_low =
+  let p = new_pin(1, "A")
   p.set()
   p.toggle()
   check p.level == 0
@@ -207,13 +207,13 @@ proc toggleLow =
   p.toggle()
   check p.level == 0
 
-proc toggleTri =
-  let p = newPin(1, "A")
+proc toggle_tri =
+  let p = new_pin(1, "A")
   p.tri()
   p.toggle()
-  check p.level.isNaN
+  check nanp p.level
 
-proc allTests* =
+proc all_tests* =
   suite "Pin level":
     test "pin levels without trace, proc syntax": functions()
     test "pin levels without trace, method syntax": methods()
@@ -221,9 +221,9 @@ proc allTests* =
     test "input pin levels unaffected by setting, affected by trace": input()
     test "output pin levels affected by setting, set trace level": output()
     test "bidi pin levels affected by setting, affected by trace": bidi()
-    test "toggling a low pin changes it to high": toggleHigh()
-    test "toggling a high pin changes it to low": toggleLow()
-    test "toggling tri-state has no effect": toggleTri()
+    test "toggling a low pin changes it to high": toggle_high()
+    test "toggling a high pin changes it to low": toggle_low()
+    test "toggling tri-state has no effect": toggle_tri()
 
-when isMainModule:
-  allTests()
+when is_main_module:
+  all_tests()

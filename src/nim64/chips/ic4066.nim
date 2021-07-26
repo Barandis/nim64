@@ -55,8 +55,7 @@
 import options
 import sequtils
 import strformat
-import ../components/chip
-import ../components/link
+import ../components/[chip, link]
 
 chip Ic4066:
   pins:
@@ -86,46 +85,46 @@ chip Ic4066:
   init:
     var last = repeat(none Pin, 4)
 
-    proc controlListener(gate: int): proc (_: Pin) =
+    proc control_listener(gate: int): proc (_: Pin) =
       let xpin = pins[&"X{gate}"]
       let apin = pins[&"A{gate}"]
       let bpin = pins[&"B{gate}"]
 
       result = proc (_: Pin) =
         if highp xpin:
-          setMode apin, Input
-          setMode bpin, Input
+          set_mode apin, Input
+          set_mode bpin, Input
         else:
-          setMode apin, Bidi
-          setMode bpin, Bidi
+          set_mode apin, Bidi
+          set_mode bpin, Bidi
 
-          let lastPin = last[gate - 1]
-          if isSome lastPin:
-            let pin = get lastPin
+          let last_pin = last[gate - 1]
+          if is_some last_pin:
+            let pin = get last_pin
             if trip pin:
               clear apin
               clear bpin
             elif pin == apin:
-              setLevel bpin, level apin
+              set_level bpin, level apin
             else:
-              setLevel apin, level bpin
+              set_level apin, level bpin
           else:
             clear apin
             clear bpin
     
-    proc dataListener(gate: int): proc (_: Pin) =
+    proc data_listener(gate: int): proc (_: Pin) =
       let xpin = pins[&"X{gate}"]
       let apin = pins[&"A{gate}"]
       let bpin = pins[&"B{gate}"]
 
       result = proc (pin: Pin) =
-        let outpin = if pin == apin: bpin else: apin
+        let out_pin = if pin == apin: bpin else: apin
         last[gate - 1] = some pin
         if lowp xpin:
-          setLevel outpin, level pin
+          setLevel out_pin, level pin
     
     for i in 1..4:
-      addListener pins[&"X{i}"], controlListener i
-      let listener = dataListener i
-      addListener pins[&"A{i}"], listener
-      addListener pins[&"B{i}"], listener
+      add_listener pins[&"X{i}"], control_listener i
+      let listener = data_listener i
+      add_listener pins[&"A{i}"], listener
+      add_listener pins[&"B{i}"], listener

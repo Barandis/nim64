@@ -66,12 +66,10 @@
 ## In the Commodore 64, U5 is a 2332A (a variant with slightly faster data access). It's
 ## used to store information on how to display characters to the screen.
 
-import ../components/chip
-
-from sequtils import map, toSeq
-from strformat import `&`
-from ../utils import pinsToValue, triPins, valueToPins
-from ../components/link import Pin, addListener, lowp
+import sequtils
+import strformat
+import ../utils
+import ../components/[chip, link]
 
 chip Ic2332(memory: array[4096, uint8]):
   pins:
@@ -113,17 +111,17 @@ chip Ic2332(memory: array[4096, uint8]):
       GND: 12
   
   init:
-    let addrPins = map(toSeq 0..11, proc (i: int): Pin = pins[&"A{i}"])
-    let dataPins = map(toSeq 0..7, proc (i: int): Pin = pins[&"D{i}"])
+    let addr_pins = map(to_seq 0..11, proc (i: int): Pin = pins[&"A{i}"])
+    let data_pins = map(to_seq 0..7, proc (i: int): Pin = pins[&"D{i}"])
 
     proc read =
-      valueToPins memory[pinsToValue addrPins], dataPins
+      value_to_pins memory[pins_to_value addr_pins], data_pins
     
-    proc enableListener(_: Pin) =
+    proc enable_listener(_: Pin) =
       if (lowp pins[CS1]) and (lowp pins[CS2]):
         read()
       else:
-        triPins dataPins
+        tri_pins data_pins
     
-    addListener pins[CS1], enableListener
-    addListener pins[CS2], enableListener
+    add_listener pins[CS1], enable_listener
+    add_listener pins[CS2], enable_listener

@@ -6,27 +6,24 @@
 import ../../src/nim64/components/link
 import unittest
 
-import ./pin/level
-import ./pin/pull
-import ./pin/mode
-import ./pin/listener
+import ./pin/[level, pull, mode, listener]
 
-proc baseTests =
+proc base_tests =
   suite "components.pin":
     test "number":
-      let p = newPin(1, "A")
+      let p = new_pin(1, "A")
       check p.number == 1
     
     test "name":
-      let p = newPin(1, "A")
+      let p = new_pin(1, "A")
       check p.name == "A"
 
-proc allTests* =
-  baseTests()
-  level.allTests()
-  pull.allTests()
-  mode.allTests()
-  listener.allTests()
+proc all_tests* =
+  base_tests()
+  level.all_tests()
+  pull.all_tests()
+  mode.all_tests()
+  listener.all_tests()
 
-when isMainModule:
-  allTests()
+when is_main_module:
+  all_tests()

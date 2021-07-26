@@ -49,8 +49,7 @@
 
 import sequtils
 import strformat
-import ../components/chip
-import ../components/link
+import ../components/[chip, link]
 
 chip Ic74257:
   pins:
@@ -93,7 +92,7 @@ chip Ic74257:
       GND: 8
   
   init:
-    proc dataListener(mux: int): proc (_: Pin) =
+    proc data_listener(mux: int): proc (_: Pin) =
       let apin = pins[&"A{mux}"]
       let bpin = pins[&"B{mux}"]
       let ypin = pins[&"Y{mux}"]
@@ -106,16 +105,16 @@ chip Ic74257:
         else:
           if highp apin: set ypin else: clear ypin
     
-    proc controlListener(): proc (_: Pin) =
-      let listeners = map(@[1, 2, 3, 4], proc (i: int): proc (_: Pin) = dataListener i)
+    proc control_listener(): proc (_: Pin) =
+      let listeners = map(@[1, 2, 3, 4], proc (i: int): proc (_: Pin) = data_listener i)
       result = proc (pin: Pin) =
         for listener in listeners: listener pin
     
-    let listener = controlListener()
-    addListener pins[SEL], listener
-    addListener pins[OE], listener
+    let listener = control_listener()
+    add_listener pins[SEL], listener
+    add_listener pins[OE], listener
 
     for i in 1..4:
-      let listener = dataListener i
-      addListener pins[&"A{i}"], listener
-      addListener pins[&"B{i}"], listener
+      let listener = data_listener i
+      add_listener pins[&"A{i}"], listener
+      add_listener pins[&"B{i}"], listener

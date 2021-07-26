@@ -10,12 +10,12 @@ import ../../src/nim64/chips/ic74373
 import ../../src/nim64/components/link
 
 proc setup: (Ic74373, Traces) =
-  let chip = newIc74373()
-  let traces = deviceTraces(chip)
+  let chip = new_ic74373()
+  let traces = device_traces(chip)
   result = (chip, traces)
   clear traces[OE]
 
-proc passOnLeHigh =
+proc pass_on_le_high =
   let (_, traces) = setup()
 
   set traces[LE]
@@ -27,7 +27,7 @@ proc passOnLeHigh =
     clear traces[&"D{i}"]
     check lowp traces[&"Q{i}"]
 
-proc latchOnLeLow =
+proc latch_on_le_low =
   let (_, traces) = setup()
 
   set traces[LE]
@@ -47,7 +47,7 @@ proc latchOnLeLow =
     ## Even inputs remain high even when inputs are low
     check (level traces[&"Q{i}"]) == float ((i + 1) mod 2)
 
-proc returnToPass =
+proc return_to_pass =
   let (_, traces) = setup()
 
   set traces[LE]
@@ -69,7 +69,7 @@ proc returnToPass =
     # ...until now, when the latch is released and the high inputs pass through
     check highp traces[&"Q{i}"]
 
-proc triOnOeHigh =
+proc tri_on_oe_high =
   let (_, traces) = setup()
 
   set traces[LE]
@@ -87,7 +87,7 @@ proc triOnOeHigh =
   for i in 0..7:
     check highp traces[&"Q{i}"]
 
-proc latchOnOeHigh =
+proc latch_on_oe_high =
   let (_, traces) = setup()
 
   set traces[LE]
@@ -106,13 +106,13 @@ proc latchOnOeHigh =
   for i in 0..7:
     check (level traces[&"Q{i}"]) == float (i mod 2)
 
-proc allTests* =
+proc all_tests* =
   suite "74373 octal transparent latch":
-    test "data passes through when LE is high": passOnLeHigh()
-    test "data latches when LE goes low": latchOnLeLow()
-    test "data returns to pass through when LE goes high": returnToPass()
-    test "outputs are tri-state on OE high": triOnOeHigh()
-    test "latching still happens when OE is high": latchOnOeHigh()
+    test "data passes through when LE is high": pass_on_le_high()
+    test "data latches when LE goes low": latch_on_le_low()
+    test "data returns to pass through when LE goes high": return_to_pass()
+    test "outputs are tri-state on OE high": tri_on_oe_high()
+    test "latching still happens when OE is high": latch_on_oe_high()
 
-when isMainModule:
-  allTests()
+when is_main_module:
+  all_tests()

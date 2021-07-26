@@ -56,8 +56,7 @@
 import options
 import sequtils
 import strformat
-import ../components/chip
-import ../components/link
+import ../components/[chip, link]
 
 chip Ic74373:
   pins:
@@ -100,13 +99,13 @@ chip Ic74373:
   init:
     var latches = repeat(none(bool), 8)
 
-    proc dataListener(latch: int): proc (_: Pin) =
+    proc data_listener(latch: int): proc (_: Pin) =
       let qpin = pins[&"Q{latch}"]
       result = proc (pin: Pin) =
         if (highp pins[LE]) and (lowp pins[OE]):
           if highp pin: set qpin else: clear qpin
     
-    proc latchListener(pin: Pin) =
+    proc latch_listener(pin: Pin) =
       if highp pin:
         for i in 0..7:
           let qpin = pins[&"Q{i}"]
@@ -116,7 +115,7 @@ chip Ic74373:
         for i in 0..7:
           latches[i] = some highp pins[&"D{i}"]
     
-    proc enableListener(pin: Pin) =
+    proc enable_listener(pin: Pin) =
       if highp pin:
         for i in 0..7:
           tri pins[&"Q{i}"]
@@ -126,10 +125,10 @@ chip Ic74373:
         for i in 0..7:
           let qpin = pins[&"Q{i}"]
           if latched:
-            if (isSome latches[i]) and (get latches[i]): set qpin else: clear qpin
+            if (is_some latches[i]) and (get latches[i]): set qpin else: clear qpin
           else:
             if highp pins[&"D{i}"]: set qpin else: clear qpin
     
-    for i in 0..7: addListener pins[&"D{i}"], dataListener i
-    addListener pins[LE], latchListener
-    addListener pins[OE], enableListener
+    for i in 0..7: add_listener pins[&"D{i}"], data_listener i
+    add_listener pins[LE], latch_listener
+    add_listener pins[OE], enable_listener

@@ -6,23 +6,23 @@
 from math import classify, fcNan
 import ./components/link
 
-proc isNaN*(n: float): bool {.inline.} =
+proc nanp*(n: float): bool {.inline.} =
   ## Utility function to determine whether a float is `NaN`. This is used in place of
   ## comparisons since `NaN != NaN`.
   (classify n) == fcNaN
 
-proc valueToPins*(value: uint, pins: seq[Pin]) =
+proc value_to_pins*(value: uint, pins: seq[Pin]) =
   for i, pin in pins:
-    setLevel pin, float(value shr i and 1)
+    set_level pin, float(value shr i and 1)
 
-proc pinsToValue*(pins: seq[Pin]): uint =
+proc pins_to_value*(pins: seq[Pin]): uint =
   for i, pin in pins:
     result = result or uint(level pin) shl i
 
-proc modeToPins*(mode: Mode, pins: seq[Pin]) =
+proc mode_to_pins*(mode: Mode, pins: seq[Pin]) =
   for pin in pins:
-    setMode pin, mode
+    set_mode pin, mode
 
-proc triPins*(pins: seq[Pin]) =
+proc tri_pins*(pins: seq[Pin]) =
   for pin in pins:
     tri pin

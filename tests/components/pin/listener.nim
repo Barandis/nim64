@@ -7,130 +7,130 @@ import ../../../src/nim64/components/link
 import unittest
 from sugar import `=>`
 
-proc listenUnc =
-  let p = newPin(1, "A")
-  let t = newTrace(p)
+proc listen_unc =
+  let p = new_pin(1, "A")
+  let t = new_trace(p)
   var count = 0
 
-  addListener(p, (_: Pin) => (count += 1))
+  add_listener(p, (_: Pin) => (count += 1))
 
   set(t)
   check count == 0
 
-proc listenIn =
-  let p = newPin(1, "A", Input)
-  let t = newTrace(p)
+proc listen_in =
+  let p = new_pin(1, "A", Input)
+  let t = new_trace(p)
   var count = 0
   var args: seq[Pin] = @[]
 
-  addListener(p, (pin: Pin) => (count += 1; add(args, pin)))
+  add_listener(p, (pin: Pin) => (count += 1; add(args, pin)))
 
   set(t)
   check:
     count == 1
     args[0] == p
 
-proc listenOut =
-  let p = newPin(1, "A", Output)
-  let t = newTrace(p)
+proc listen_out =
+  let p = new_pin(1, "A", Output)
+  let t = new_trace(p)
   var count = 0
 
-  addListener(p, (_: Pin) => (count += 1))
+  add_listener(p, (_: Pin) => (count += 1))
 
   set(t)
   check count == 0
 
-proc listenBidi =
-  let p = newPin(1, "A", Bidi)
-  let t = newTrace(p)
+proc listen_bidi =
+  let p = new_pin(1, "A", Bidi)
+  let t = new_trace(p)
   var count = 0
   var args: seq[Pin] = @[]
 
-  addListener(p, (pin: Pin) => (count += 1; add(args, pin)))
+  add_listener p, (pin: Pin) => (count += 1; add(args, pin))
 
   set(t)
   check:
     count == 1
     args[0] == p
 
-proc listenDirect =
-  let p = newPin(1, "A", Input)
+proc listen_direct =
+  let p = new_pin(1, "A", Input)
   var count = 0
 
-  addListener(p, (_: Pin) => (count += 1))
+  add_listener(p, (_: Pin) => (count += 1))
 
   set(p)
   check count == 0
 
-proc listenRemove =
-  let p = newPin(1, "A", Input)
-  let t = newTrace(p)
+proc listen_remove =
+  let p = new_pin(1, "A", Input)
+  let t = new_trace(p)
   var count1 = 0
   var count2 = 0
 
   let listen1 = (p: Pin) => (count1 += 1)
   let listen2 = (p: Pin) => (count2 += 1)
 
-  addListener(p, listen1)
-  addListener(p, listen2)
+  add_listener p, listen1
+  add_listener p, listen2
 
   set(t)
   check:
     count1 == 1
     count2 == 1
   
-  removeListener(p, listen1)
+  remove_listener p, listen1
 
   clear(t)
   check:
     count1 == 1
     count2 == 2
 
-proc listenNoExist =
-  let p = newPin(1, "A", Input)
-  let t = newTrace(p)
+proc listen_no_exist =
+  let p = new_pin(1, "A", Input)
+  let t = new_trace(p)
   var count1 = 0
   var count2 = 0
 
   let listen1 = (p: Pin) => (count1 += 1)
   let listen2 = (p: Pin) => (count2 += 1)
 
-  addListener(p, listen2)
+  add_listener p, listen2
 
   set(t)
   check:
     count1 == 0
     count2 == 1
   
-  removeListener(p, listen1)
+  remove_listener p, listen1
 
   clear(t)
   check:
     count1 == 0
     count2 == 2
 
-proc listenDouble =
-  let p = newPin(1, "A", Input)
-  let t = newTrace(p)
+proc listen_double =
+  let p = new_pin(1, "A", Input)
+  let t = new_trace(p)
   var count = 0
 
   let listen = (_: Pin) => (count += 1)
-  addListener(p, listen)
-  addListener(p, listen)
+  add_listener p, listen
+  add_listener p, listen
 
   set(t)
   check count == 1
 
-proc allTests* =
+proc all_tests* =
   suite "Pin listeners":
-    test "unconnected pins do not fire listeners": listenUnc()
-    test "input pins fire listeners": listenIn()
-    test "output pins do not fire listeners": listenOut()
-    test "bidi pins fire listeners": listenBidi()
-    test "direct pin level changes do not fire listeners": listenDirect()
-    test "removed listeners cease to fire": listenRemove()
-    test "removing unadded listener has no effect": listenNoExist()
-    test "listeners is not added if already added": listenDouble()
+    test "unconnected pins do not fire listeners": listen_unc()
+    test "input pins fire listeners": listen_in()
+    test "output pins do not fire listeners": listen_out()
+    test "bidi pins fire listeners": listen_bidi()
+    test "direct pin level changes do not fire listeners": listen_direct()
+    test "removed listeners cease to fire": listen_remove()
+    test "removing unadded listener has no effect": listen_no_exist()
+    test "listeners is not added if already added": listen_double()
 
-when isMainModule:
-  allTests()
+when is_main_module:
+  all_tests()
