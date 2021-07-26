@@ -19,7 +19,7 @@ proc mux1Setup: (Ic74257, Traces) =
   clear traces[A1]
   set traces[B1]
 
-proc mux1SelectA* =
+proc mux1SelectA =
   let (_, traces) = mux1Setup()
 
   clear traces[SEL]
@@ -28,7 +28,7 @@ proc mux1SelectA* =
   set traces[A1]
   check highp traces[Y1]
 
-proc mux1SelectB* =
+proc mux1SelectB =
   let (_, traces) = mux1Setup()
 
   set traces[SEL]
@@ -37,7 +37,7 @@ proc mux1SelectB* =
   clear traces[B1]
   check lowp traces[Y1]
 
-proc mux1HighOe* =
+proc mux1HighOe =
   let (_, traces) = mux1Setup()
 
   set traces[SEL]
@@ -55,7 +55,7 @@ proc mux2Setup: (Ic74257, Traces) =
   clear traces[A2]
   set traces[B2]
 
-proc mux2SelectA* =
+proc mux2SelectA =
   let (_, traces) = mux2Setup()
 
   clear traces[SEL]
@@ -63,7 +63,7 @@ proc mux2SelectA* =
   set traces[A2]
   check highp traces[Y2]
 
-proc mux2SelectB* =
+proc mux2SelectB =
   let (_, traces) = mux2Setup()
 
   set traces[SEL]
@@ -72,7 +72,7 @@ proc mux2SelectB* =
   clear traces[B2]
   check lowp traces[Y2]
 
-proc mux2HighOe* =
+proc mux2HighOe =
   let (_, traces) = mux2Setup()
 
   set traces[SEL]
@@ -90,7 +90,7 @@ proc mux3Setup: (Ic74257, Traces) =
   clear traces[A3]
   set traces[B3]
 
-proc mux3SelectA* =
+proc mux3SelectA =
   let (_, traces) = mux3Setup()
 
   clear traces[SEL]
@@ -99,7 +99,7 @@ proc mux3SelectA* =
   set traces[A3]
   check highp traces[Y3]
 
-proc mux3SelectB* =
+proc mux3SelectB =
   let (_, traces) = mux3Setup()
 
   set traces[SEL]
@@ -108,7 +108,7 @@ proc mux3SelectB* =
   clear traces[B3]
   check lowp traces[Y3]
 
-proc mux3HighOe* =
+proc mux3HighOe =
   let (_, traces) = mux3Setup()
 
   set traces[SEL]
@@ -126,7 +126,7 @@ proc mux4Setup: (Ic74257, Traces) =
   clear traces[A4]
   set traces[B4]
 
-proc mux4SelectA* =
+proc mux4SelectA =
   let (_, traces) = mux4Setup()
 
   clear traces[SEL]
@@ -135,7 +135,7 @@ proc mux4SelectA* =
   set traces[A4]
   check highp traces[Y4]
 
-proc mux4SelectB* =
+proc mux4SelectB =
   let (_, traces) = mux4Setup()
 
   set traces[SEL]
@@ -144,7 +144,7 @@ proc mux4SelectB* =
   clear traces[B4]
   check lowp traces[Y4]
 
-proc mux4HighOe* =
+proc mux4HighOe =
   let (_, traces) = mux4Setup()
 
   set traces[SEL]
@@ -155,3 +155,21 @@ proc mux4HighOe* =
 
   clear traces[SEL]
   check trip traces[Y4]
+
+proc allTests* =
+  suite "74257 quad 2-to-1 multiplexer":
+    test "low SEL selects A1": mux1SelectA()
+    test "high SEL selects B1": mux1SelectB()
+    test "high OE tri-states A1 and B1": mux1HighOe()
+    test "low SEL selects A2": mux2SelectA()
+    test "high SEL selects B2": mux2SelectB()
+    test "high OE tri-states A1 and B1": mux2HighOe()
+    test "low SEL selects A3": mux3SelectA()
+    test "high SEL selects B3": mux3SelectB()
+    test "high OE tri-states A1 and B1": mux3HighOe()
+    test "low SEL selects A4": mux4SelectA()
+    test "high SEL selects B4": mux4SelectB()
+    test "high OE tri-states A1 and B1": mux4HighOe()
+
+when isMainModule:
+  allTests()

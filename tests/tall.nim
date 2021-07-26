@@ -6,5 +6,5 @@
 import ./tchips
 import ./tcomponents
 
-chipTests()
-componentTests()
+tchips.allTests()
+tcomponents.allTests()

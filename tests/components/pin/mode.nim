@@ -6,7 +6,7 @@
 import ../../../src/nim64/components/link
 import unittest
 
-proc modeInitial* =
+proc modeInitial =
   let p1 = newPin(1, "A", Unconnected)
   let p2 = newPin(2, "B", Input)
   let p3 = newPin(3, "C", Output)
@@ -29,7 +29,7 @@ proc modeInitial* =
     inputp(p4)
     outputp(p4)
 
-proc modeChange* =
+proc modeChange =
   let p = newPin(1, "A")
   check mode(p) == Unconnected
   setMode(p, Input)
@@ -39,7 +39,7 @@ proc modeChange* =
   setMode(p, Bidi)
   check mode(p) == Bidi
 
-proc modeOutToIn* =
+proc modeOutToIn =
   let p = newPin(1, "A", Output)
   let t = newTrace(p, newPin(2, "B", Input))
 
@@ -48,7 +48,7 @@ proc modeOutToIn* =
   setMode(p, Input)
   check trip(t)
 
-proc modeBidiToIn* =
+proc modeBidiToIn =
   let p = newPin(1, "A", Bidi)
   let t = newTrace(p, newPin(2, "B", Input))
 
@@ -57,7 +57,7 @@ proc modeBidiToIn* =
   setMode(p, Input)
   check trip(t)
 
-proc modeUncToIn* =
+proc modeUncToIn =
   let p = newPin(1, "A")
   let t = newTrace(p, newPin(2, "B", Input))
 
@@ -66,7 +66,7 @@ proc modeUncToIn* =
   setMode(p, Input)
   check trip(t)
 
-proc modeBidiToOut* =
+proc modeBidiToOut =
   let p = newPin(1, "A", Bidi)
   let t = newTrace(p)
 
@@ -75,7 +75,7 @@ proc modeBidiToOut* =
   setMode(p, Output)
   check highp(t)
 
-proc modeUncToOut* =
+proc modeUncToOut =
   let p = newPin(1, "A")
   let t = newTrace(p)
 
@@ -84,7 +84,7 @@ proc modeUncToOut* =
   setMode(p, Output)
   check highp(t)
 
-proc modeInToUnc* =
+proc modeInToUnc =
   let p = newPin(1, "A", Input)
   let t = newTrace(p)
 
@@ -93,3 +93,17 @@ proc modeInToUnc* =
   setMode(p, Unconnected)
   check highp(t)
   check highp(p)
+
+proc allTests* =
+  suite "Pin mode":
+    test "initial": modeInitial()
+    test "mode change": modeChange()
+    test "output to input": modeOutToIn()
+    test "bidi to input": modeBidiToIn()
+    test "unconnected to input": modeUncToIn()
+    test "bidi to output": modeBidiToOut()
+    test "unconnected to output": modeUncToOut()
+    test "input to unconnected": modeInToUnc()
+
+when isMainModule:
+  allTests()

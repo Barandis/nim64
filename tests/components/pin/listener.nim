@@ -7,7 +7,7 @@ import ../../../src/nim64/components/link
 import unittest
 from sugar import `=>`
 
-proc listenUnc* =
+proc listenUnc =
   let p = newPin(1, "A")
   let t = newTrace(p)
   var count = 0
@@ -17,7 +17,7 @@ proc listenUnc* =
   set(t)
   check count == 0
 
-proc listenIn* =
+proc listenIn =
   let p = newPin(1, "A", Input)
   let t = newTrace(p)
   var count = 0
@@ -30,7 +30,7 @@ proc listenIn* =
     count == 1
     args[0] == p
 
-proc listenOut* =
+proc listenOut =
   let p = newPin(1, "A", Output)
   let t = newTrace(p)
   var count = 0
@@ -40,7 +40,7 @@ proc listenOut* =
   set(t)
   check count == 0
 
-proc listenBidi* =
+proc listenBidi =
   let p = newPin(1, "A", Bidi)
   let t = newTrace(p)
   var count = 0
@@ -53,7 +53,7 @@ proc listenBidi* =
     count == 1
     args[0] == p
 
-proc listenDirect* =
+proc listenDirect =
   let p = newPin(1, "A", Input)
   var count = 0
 
@@ -62,7 +62,7 @@ proc listenDirect* =
   set(p)
   check count == 0
 
-proc listenRemove* =
+proc listenRemove =
   let p = newPin(1, "A", Input)
   let t = newTrace(p)
   var count1 = 0
@@ -86,7 +86,7 @@ proc listenRemove* =
     count1 == 1
     count2 == 2
 
-proc listenNoExist* =
+proc listenNoExist =
   let p = newPin(1, "A", Input)
   let t = newTrace(p)
   var count1 = 0
@@ -109,7 +109,7 @@ proc listenNoExist* =
     count1 == 0
     count2 == 2
 
-proc listenDouble* =
+proc listenDouble =
   let p = newPin(1, "A", Input)
   let t = newTrace(p)
   var count = 0
@@ -120,3 +120,17 @@ proc listenDouble* =
 
   set(t)
   check count == 1
+
+proc allTests* =
+  suite "Pin listeners":
+    test "unconnected pins do not fire listeners": listenUnc()
+    test "input pins fire listeners": listenIn()
+    test "output pins do not fire listeners": listenOut()
+    test "bidi pins fire listeners": listenBidi()
+    test "direct pin level changes do not fire listeners": listenDirect()
+    test "removed listeners cease to fire": listenRemove()
+    test "removing unadded listener has no effect": listenNoExist()
+    test "listeners is not added if already added": listenDouble()
+
+when isMainModule:
+  allTests()

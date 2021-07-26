@@ -9,7 +9,7 @@ import unittest
 
 proc isNaN(n: float): bool {.inline.} = n.classify == fcNan
 
-proc functions* =
+proc functions =
   let pin = newPin(1, "A", Input)
 
   tri(pin)
@@ -40,7 +40,7 @@ proc functions* =
     lowp(pin)
     not trip(pin)
 
-proc methods* =
+proc methods =
   let pin = newPin(1, "A", Input)
 
   pin.tri()
@@ -71,7 +71,7 @@ proc methods* =
     pin.lowp
     not pin.trip
 
-proc unconnected* =
+proc unconnected =
   let p = newPin(1, "A", Unconnected)
   let t = newTrace(p)
 
@@ -100,7 +100,7 @@ proc unconnected* =
     p.trip
     t.highp
 
-proc input* =
+proc input =
   let p = newPin(1, "A", Input)
   let t = newTrace(p)
 
@@ -129,7 +129,7 @@ proc input* =
     p.highp
     t.highp
 
-proc output* =
+proc output =
   let p = newPin(1, "A", Output)
   let t = newTrace(p)
 
@@ -158,7 +158,7 @@ proc output* =
     p.trip
     t.trip
 
-proc bidi* =
+proc bidi =
   let p = newPin(1, "A", Bidi)
   let t = newTrace(p)
 
@@ -187,7 +187,7 @@ proc bidi* =
     p.trip
     t.trip
 
-proc toggleHigh* =
+proc toggleHigh =
   let p = newPin(1, "A")
   p.clear()
   p.toggle()
@@ -197,7 +197,7 @@ proc toggleHigh* =
   p.toggle()
   check p.level == 1
 
-proc toggleLow* =
+proc toggleLow =
   let p = newPin(1, "A")
   p.set()
   p.toggle()
@@ -207,8 +207,23 @@ proc toggleLow* =
   p.toggle()
   check p.level == 0
 
-proc toggleFloating* =
+proc toggleTri =
   let p = newPin(1, "A")
   p.tri()
   p.toggle()
   check p.level.isNaN
+
+proc allTests* =
+  suite "Pin level":
+    test "pin levels without trace, proc syntax": functions()
+    test "pin levels without trace, method syntax": methods()
+    test "unconnected pin levels affected by setting, unaffected by trace": unconnected()
+    test "input pin levels unaffected by setting, affected by trace": input()
+    test "output pin levels affected by setting, set trace level": output()
+    test "bidi pin levels affected by setting, affected by trace": bidi()
+    test "toggling a low pin changes it to high": toggleHigh()
+    test "toggling a high pin changes it to low": toggleLow()
+    test "toggling tri-state has no effect": toggleTri()
+
+when isMainModule:
+  allTests()

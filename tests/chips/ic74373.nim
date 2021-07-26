@@ -15,7 +15,7 @@ proc setup: (Ic74373, Traces) =
   result = (chip, traces)
   clear traces[OE]
 
-proc passOnLeHigh* =
+proc passOnLeHigh =
   let (_, traces) = setup()
 
   set traces[LE]
@@ -27,7 +27,7 @@ proc passOnLeHigh* =
     clear traces[&"D{i}"]
     check lowp traces[&"Q{i}"]
 
-proc latchOnLeLow* =
+proc latchOnLeLow =
   let (_, traces) = setup()
 
   set traces[LE]
@@ -47,7 +47,7 @@ proc latchOnLeLow* =
     ## Even inputs remain high even when inputs are low
     check (level traces[&"Q{i}"]) == float ((i + 1) mod 2)
 
-proc returnToPass* =
+proc returnToPass =
   let (_, traces) = setup()
 
   set traces[LE]
@@ -69,7 +69,7 @@ proc returnToPass* =
     # ...until now, when the latch is released and the high inputs pass through
     check highp traces[&"Q{i}"]
 
-proc triOnOeHigh* =
+proc triOnOeHigh =
   let (_, traces) = setup()
 
   set traces[LE]
@@ -87,7 +87,7 @@ proc triOnOeHigh* =
   for i in 0..7:
     check highp traces[&"Q{i}"]
 
-proc latchOnOeHigh* =
+proc latchOnOeHigh =
   let (_, traces) = setup()
 
   set traces[LE]
@@ -105,3 +105,14 @@ proc latchOnOeHigh* =
 
   for i in 0..7:
     check (level traces[&"Q{i}"]) == float (i mod 2)
+
+proc allTests* =
+  suite "74373 octal transparent latch":
+    test "data passes through when LE is high": passOnLeHigh()
+    test "data latches when LE goes low": latchOnLeLow()
+    test "data returns to pass through when LE goes high": returnToPass()
+    test "outputs are tri-state on OE high": triOnOeHigh()
+    test "latching still happens when OE is high": latchOnOeHigh()
+
+when isMainModule:
+  allTests()

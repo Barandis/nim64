@@ -24,7 +24,7 @@ proc setup(rom: array[8192, uint8]): (Ic2364, Traces, seq[Trace], seq[Trace]) =
 
   result = (chip, traces, addrTraces, dataTraces)
 
-proc readBasic* =
+proc readBasic =
   let (_, traces, addrTraces, dataTraces) = setup BasicRom
 
   for address in 0..0x1ff:
@@ -35,7 +35,7 @@ proc readBasic* =
 
     check value == BasicRom[address]
 
-proc readKernal* =
+proc readKernal =
   let (_, traces, addrTraces, dataTraces) = setup KernalRom
 
   for address in 0..0x1ff:
@@ -46,6 +46,10 @@ proc readKernal* =
 
     check value == KernalRom[address]
 
+proc allTests* =
+  suite "2364 8k x 8 ROM":
+    test "reads all BASIC memory locations": readBasic()
+    test "reads all KERNAL memory locations": readKernal()
+
 when isMainModule:
-  readBasic()
-  readKernal()
+  allTests()

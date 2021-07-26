@@ -13,7 +13,7 @@ proc setup: (Ic4066, Traces) =
   let traces = deviceTraces(chip)
   result = (chip, traces)
 
-proc passAtoB* =
+proc passAtoB =
   let (_, traces) = setup()
 
   clear traces[X1]
@@ -32,7 +32,7 @@ proc passAtoB* =
   setLevel traces[A4], 1
   check (level traces[B4]) == 1
 
-proc passBtoA* =
+proc passBtoA =
   let (_, traces) = setup()
 
   clear traces[X1]
@@ -51,7 +51,7 @@ proc passBtoA* =
   setLevel traces[B4], 1
   check (level traces[A4]) == 1
 
-proc disconOnHighX* =
+proc disconOnHighX =
   let (_, traces) = setup()
 
   set traces[X1]
@@ -74,7 +74,7 @@ proc disconOnHighX* =
     trip traces[A4]
     trip traces[B4]
 
-proc noPassAtoBOnHighX* =
+proc noPassAtoBOnHighX =
   let (_, traces) = setup()
 
   set traces[X1]
@@ -93,7 +93,7 @@ proc noPassAtoBOnHighX* =
   setLevel traces[A4], 1
   check trip traces[B4]
 
-proc noPassBtoAOnHighX* =
+proc noPassBtoAOnHighX =
   let (_, traces) = setup()
 
   set traces[X1]
@@ -112,7 +112,7 @@ proc noPassBtoAOnHighX* =
   setLevel traces[B4], 1
   check trip traces[A4]
 
-proc lastSetA* =
+proc lastSetA =
   let (_, traces) = setup()
 
   set traces[X1]
@@ -139,7 +139,7 @@ proc lastSetA* =
   clear traces[X4]
   check (level traces[B4]) == 1
 
-proc lastSetB* =
+proc lastSetB =
   let (_, traces) = setup()
 
   set traces[X1]
@@ -166,7 +166,7 @@ proc lastSetB* =
   clear traces[X4]
   check (level traces[A4]) == 1
 
-proc lastSetNone* =
+proc lastSetNone =
   let (_, traces) = setup()
 
   set traces[X1]
@@ -192,3 +192,17 @@ proc lastSetNone* =
   check:
     lowp traces[A4]
     lowp traces[B4]
+
+proc allTests* =
+  suite "4066 quad analog switch":
+    test "passes signals from A to B": passAtoB()
+    test "passes signals from B to A": passBtoA()
+    test "tri-states A and B on high X": disconOnHighX()
+    test "does not pass signals from A to B on high X": noPassAtoBOnHighX()
+    test "does not pass signals from B to A on high X": noPassBtoAOnHighX()
+    test "sets B to A when X goes low if A was last set": lastSetA()
+    test "sets A to B when X goes low if B was last set": lastSetB()
+    test "clears A and B when X goes low if neither was last set": lastSetNone()
+
+when isMainModule:
+  allTests()

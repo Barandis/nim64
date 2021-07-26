@@ -24,7 +24,7 @@ proc setup: (Ic2332, Traces, seq[Trace], seq[Trace]) =
 
   result = (chip, traces, addrTraces, dataTraces)
 
-proc readAll* =
+proc readAll =
   let (_, traces, addrTraces, dataTraces) = setup()
 
   for address in 0..0xff:
@@ -35,5 +35,9 @@ proc readAll* =
 
     check value == CharacterRom[address]
 
+proc allTests* =
+  suite "2332 4k x 8 ROM":
+    test "reads all CHAROM memory locations": readAll()
+
 when isMainModule:
-  readAll()
+  allTests()
