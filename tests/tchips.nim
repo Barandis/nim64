@@ -9,6 +9,7 @@ import ./chips/[
   ic2364,
   ic4066,
   ic4164,
+  ic6526,
   ic7406,
   ic7408,
   ic74139,
@@ -23,6 +24,7 @@ proc all_tests* =
   ic2364.all_tests()
   ic4066.all_tests()
   ic4164.all_tests()
+  ic6526.all_tests()
   ic7406.all_tests()
   ic7408.all_tests()
   ic74139.all_tests()

@@ -32,3 +32,26 @@ proc tri_pins*(pins: seq[Pin]) =
   ## A batch assignment of tri-state value (`NaN`) to each pin within the provided sequence.
   for pin in pins:
     tri pin
+
+type BitRange*[T] = range[0..sizeof(T) * 8 - 1]
+
+proc bit_set*[T: SomeUnsignedInt](value: T, bit: BitRange[T]): bool =
+  (value and (1.T shl bit)) > 0
+
+proc bit_clear*[T: SomeUnsignedInt](value: T, bit: BitRange[T]): bool =
+  (value and (1.T shl bit)) == 0
+
+proc bit_value*[T: SomeUnsignedInt](value: T, bit: BitRange[T]): T =
+  (value and (1.T shl bit)) shr bit
+
+proc set_bit*[T: SomeUnsignedInt](value: T, bit: BitRange[T]): T =
+  value or (1.T shl bit)
+
+proc clear_bit*[T: SomeUnsignedInt](value: T, bit: BitRange[T]): T =
+  value and not (1.T shl bit)
+
+proc toggle_bit*[T: SomeUnsignedInt](value: T, bit: BitRange[T]): T =
+  value xor (1.T shl bit)
+
+proc set_bit_value*[T: SomeUnsignedInt](value: T, bit: BitRange[T], bit_value: uint): T =
+  if (bit_value and 1) == 1: set_bit(value, bit) else: clear_bit(value, bit)

@@ -13,6 +13,7 @@ import nim64/chips/[
   ic2364,
   ic4066,
   ic4164,
+  ic6526,
   ic7406,
   ic7408,
   ic74139,
