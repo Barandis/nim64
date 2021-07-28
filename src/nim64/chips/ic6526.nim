@@ -630,7 +630,7 @@ chip Ic6526:
     #
     # * Note that pins PA0-PA7 and PB0-PB7 are pulled up by internal resistors, which is
     #   emulated, so the PCR registers will read all 1's for unconnected lines on reset.
-    proc reset=
+    proc reset =
       # Backwards order to hit control registers first, so we know we're setting the TOD
       # clock later and not the TOD alarm, and also to ensure hours gets hit before tenths
       # so we know the clock hasn't halted
@@ -638,14 +638,14 @@ chip Ic6526:
         # Timer latches get all 1's; ICR mask gets all flags reset; all others get all 0's
         let value = if i >= TALO and i <= TBHI: 0xffu8 elif i == ICR: 0x7fu8 else: 0x00u8
         write_register i, value
-
-      # Force latched timer values into the timer registers
-      write_register CRA, 1u8 shl LOAD
-      write_register CRB, 1u8 shl LOAD
       # Read ICR to clear all IRQ flags and release the IRQ line
       discard read_register ICR
+
+      # Force latched timer values into the timer registers. Also set CRB to write to TOD
+      # alarm so we can zero that next.
+      write_register CRA, 1u8 shl LOAD
+      write_register CRB, (1u8 shl ALARM or 1u8 shl LOAD)
       # Write zeros to the TOD alarm
-      write_register CRB, 1u8 shl ALARM
       write_register TODHR, 0
       write_register TODMIN, 0
       write_register TODSEC, 0
@@ -654,12 +654,12 @@ chip Ic6526:
       write_register CRA, 0
       write_register CRB, 0
 
-      # Set output pins to their default modes and values
+      # Set output pins to their default modes and values. IRQ is already reset by reading
+      # the ICR above.
       mode_to_pins Output, data_pins
       tri_pins data_pins
       set_mode pins[CNT], Input
       set_mode pins[SP], Input
-      tri pins[IRQ]
       set pins[PC]
 
       # Call other reset procs to reset local state

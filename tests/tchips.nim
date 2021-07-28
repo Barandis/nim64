@@ -16,6 +16,7 @@ import ./chips/[
   ic74257,
   ic74258,
   ic74373,
+  ic82s100,
 ]
 
 proc all_tests* =
@@ -31,6 +32,7 @@ proc all_tests* =
   ic74257.all_tests()
   ic74258.all_tests()
   ic74373.all_tests()
+  ic82s100.all_tests()
 
 when is_main_module:
   all_tests()
