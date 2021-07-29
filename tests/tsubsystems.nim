@@ -3,10 +3,11 @@
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
-import ./tchips
-import ./tcomponents
-import ./tsubsystems
+import ./subsystems/[dram, pla]
 
-tchips.all_tests()
-tcomponents.all_tests()
-tsubsystems.all_tests()
+proc all_tests* =
+  dram.all_tests()
+  pla.all_tests()
+
+if is_main_module:
+  all_tests()

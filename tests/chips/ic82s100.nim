@@ -127,10 +127,74 @@ proc combinations =
 
     check actual == expected
 
+# Input of an address in the $A000-$AFFF range with R/W = read. This should select the BASIC
+# ROM as the enabled chip.
+proc select_basic =
+  let (_, _, in_traces, out_traces) = setup()
+
+  # Bit 0: 1 = CAS off, doesn't matter since we're not trying to access main RAM
+  # Bits 1-3: 111 = no ROM banks switched out for RAM
+  # Bits 4, 14, 15: 100 = VIC address bus, doesn't matter with BA and AEC both on
+  # Bits 5-8: 1010 = main address bus top four bits (address starts with $A)
+  # Bits 9-10: 10 = BA and AEC both on (AEC is inverted in the PLA), meaning CPU has the 
+  #     address bus (and not VIC, hence the VIC address bus not mattering)
+  # Bit 11: 1 = read
+  # Bits 12-13: 11 = EXROM and GAME both off, indicating no expansion cartridge
+  let input = 0b0011101010111111u16
+  value_to_traces input, in_traces
+  let output = traces_to_value out_traces
+  # bit 1 low means BASIC ROM
+  check output == 0b11111101
+
+# Same as above, except with an address in the $E000-$EFFF range. This should select the
+# KERNAL ROM as the enabled chip.
+proc select_kernal =
+  let (_, _, in_traces, out_traces) = setup()
+
+  # Bit 0: 1 = CAS off
+  # Bits 1-3: 111 = no ROM banks switched out for RAM
+  # Bits 4, 14, 15: 1-- = VIC address bus, doesn't matter iwth BA and AEC both on
+  # Bits 5-8: 1110 = main address bus top four bits (address starts with $E)
+  # Bits 9-10: BA and AEC both on, meaning CPU has the address bus (and not VIC, hence the
+  #     VIC address bus not mattering)
+  # Bit 11: R/W = read
+  # Bits 12-13: EXROM and GAME both off, indicating no expansion cartridge
+  let input = 0b0011101011111111u16
+  value_to_traces input, in_traces
+  let output = traces_to_value out_traces
+  # bit 2 low means KERNAL ROM
+  check output == 0b11111011
+
+# Same parameters as BASIC above, *except* that R/W is changed to W. ROM is not writable, so
+# the C64 instead writes to RAM at the same address (this is convenient for copying, e.g.,
+# BASIC into RAM for later modification...you just read an address and write the result back
+# to the same address). CAS is also low (on) here because RAM writes don't happen until the
+# VIC lowers its CAS pin (this gives the multiplexers a chance to get the full address into
+# the RAM chips before the write is made). Before that happens, nothing is selected.
+proc select_basic_write =
+  let (_, _, in_traces, out_traces) = setup()
+
+  # Bit 0: 0 = CAS on
+  # Bits 1-3: 111 = no ROM banks switched out for RAM
+  # Bits 4, 14, 15: 100 = VIC address bus, doesn't matter iwth BA and AEC both on
+  # Bits 5-8: 1010 = main address bus top four bits (address starts with $A)
+  # Bits 9-10: 10 = BA and AEC both on, meaning CPU has the address bus (and not VIC, hence 
+  #     the VIC address bus not mattering)
+  # Bit 11: 0 = write
+  # Bits 12-13: 11 = EXROM and GAME both off, indicating no expansion cartridge
+  let input = 0b0011001010111110u16
+  value_to_traces input, in_traces
+  let output = traces_to_value out_traces
+  # bit 0 low means main RAM
+  check output == 0b11111110
+
 proc all_tests* =
   suite "82S100 programmable logic array":
     test "all outputs tri-stated when OE is high": triOnHighOe()
     test "all logic combinations resolve correctly": combinations()
+    test "selects BASIC given the expected input for it": select_basic()
+    test "selects KERNAL given the expected input for it": select_kernal()
+    test "selects RAM given BASIC input except write instead of read": select_basic_write()
 
 if is_main_module:
   all_tests()

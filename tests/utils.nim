@@ -11,7 +11,7 @@ type
     by_number: seq[Trace]
     by_name: TableRef[string, Trace]
   
-  Device = concept x
+  Device* = concept x
     x.items() is Pin
 
 proc `[]`*(tr: Traces, index: int): Trace = tr.by_number[index]

@@ -61,6 +61,7 @@ proc mode_unc_to_in =
   let p = new_pin(1, "A")
   let t = new_trace(p, new_pin(2, "B", Input))
 
+  echo level t
   set p
   check trip t
   set_mode p, Input
