@@ -98,24 +98,24 @@ chip Ic74257:
       let ypin = pins[&"Y{mux}"]
 
       result = proc (_: Pin) =
-        if highp pins[OE]:
-          tri ypin
-        elif lowp pins[OE]:
-          if highp pins[SEL]:
-            if highp bpin: set ypin elif lowp bpin: clear ypin
-          elif lowp pins[SEL]:
-            if highp apin: set ypin elif lowp apin: clear ypin
+        if highp(pins[OE]):
+          tri(ypin)
+        elif lowp(pins[OE]):
+          if highp(pins[SEL]):
+            if highp(bpin): set(ypin) elif lowp(bpin): clear(ypin)
+          elif lowp(pins[SEL]):
+            if highp(apin): set(ypin) elif lowp(apin): clear(ypin)
     
     proc control_listener(): proc (_: Pin) =
-      let listeners = map(@[1, 2, 3, 4], proc (i: int): proc (_: Pin) = data_listener i)
+      let listeners = map(@[1, 2, 3, 4], proc (i: int): proc (_: Pin) = data_listener(i))
       result = proc (pin: Pin) =
-        for listener in listeners: listener pin
+        for listener in listeners: listener(pin)
     
     let listener = control_listener()
-    add_listener pins[SEL], listener
-    add_listener pins[OE], listener
+    add_listener(pins[SEL], listener)
+    add_listener(pins[OE], listener)
 
     for i in 1..4:
-      let listener = data_listener i
-      add_listener pins[&"A{i}"], listener
-      add_listener pins[&"B{i}"], listener
+      let listener = data_listener(i)
+      add_listener(pins[&"A{i}"], listener)
+      add_listener(pins[&"B{i}"], listener)

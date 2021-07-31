@@ -26,7 +26,7 @@
 proc read_icr: uint8 =
   result = registers[ICR]
   registers[ICR] = 0
-  tri pins[IRQ]
+  tri(pins[IRQ])
 
 proc write_icr(value: uint8) =
   let masked = value and 0x1f
@@ -48,10 +48,10 @@ proc write_cra(value: uint8) =
   # If PBON is set, PB6 becomes an output for Timer A. Otherwise, bit 6 of the DDRA
   # register controls it.
   if bit_set(value, PBON):
-    set_mode pins[PB6], Output
-    clear pins[PB6]
+    set_mode(pins[PB6], Output)
+    clear(pins[PB6])
   else:
-    set_mode pins[PB6], if bit_set(registers[DDRA], 6): Output else: Input
+    set_mode(pins[PB6], if bit_set(registers[DDRA], 6): Output else: Input)
   
   # If LOAD is set, the contents of the timer latch are forced into the timer register
   # immediately (normally the latches are loaded into the register on underflow).
@@ -62,13 +62,13 @@ proc write_cra(value: uint8) =
   # If SPMODE is set, the SP pin is set to output. Since the CNT pin is then used to signal
   # new data, it must also be set to output.
   if bit_set(value, SPMODE):
-    set_mode pins[SP], Output
-    set_mode pins[CNT], Output
-    clear pins[SP]
-    clear pins[CNT]
+    set_mode(pins[SP], Output)
+    set_mode(pins[CNT], Output)
+    clear(pins[SP])
+    clear(pins[CNT])
   else:
-    set_mode pins[SP], Input
-    set_mode pins[CNT], Input
+    set_mode(pins[SP], Input)
+    set_mode(pins[CNT], Input)
 
 proc write_crb(value: uint8) =
   # The LOAD bit is a strobe and does not get recorded
@@ -77,10 +77,10 @@ proc write_crb(value: uint8) =
   # If PBON is set, PB7 becomes an output for Timer A. Otherwise, bit 6 of the DDRB
   # register controls it.
   if bit_set(value, PBON):
-    set_mode pins[PB7], Output
-    clear pins[PB7]
+    set_mode(pins[PB7], Output)
+    clear(pins[PB7])
   else:
-    set_mode pins[PB7], if bit_set(registers[DDRB], 6): Output else: Input
+    set_mode(pins[PB7], if bit_set(registers[DDRB], 6): Output else: Input)
   
   # If LOAD is set, the contents of the timer latch are forced into the timer register
   # immediately (normally the latches are loaded into the register on underflow).

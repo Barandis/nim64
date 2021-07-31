@@ -83,7 +83,7 @@ chip Ic4066:
       GND: 7
   
   init:
-    var last = repeat(none Pin, 4)
+    var last = repeat(none(Pin), 4)
 
     proc control_listener(gate: int): proc (_: Pin) =
       let xpin = pins[&"X{gate}"]
@@ -91,26 +91,26 @@ chip Ic4066:
       let bpin = pins[&"B{gate}"]
 
       result = proc (_: Pin) =
-        if highp xpin:
-          set_mode apin, Input
-          set_mode bpin, Input
-        elif lowp xpin:
-          set_mode apin, Bidi
-          set_mode bpin, Bidi
+        if highp(xpin):
+          set_mode(apin, Input)
+          set_mode(bpin, Input)
+        elif lowp(xpin):
+          set_mode(apin, Bidi)
+          set_mode(bpin, Bidi)
 
           let last_pin = last[gate - 1]
-          if is_some last_pin:
-            let pin = get last_pin
-            if trip pin:
-              clear apin
-              clear bpin
+          if is_some(last_pin):
+            let pin = get(last_pin)
+            if trip(pin):
+              clear(apin)
+              clear(bpin)
             elif pin == apin:
-              set_level bpin, level apin
+              set_level(bpin, level(apin))
             else:
-              set_level apin, level bpin
+              set_level(apin, level(bpin))
           else:
-            clear apin
-            clear bpin
+            clear(apin)
+            clear(bpin)
     
     proc data_listener(gate: int): proc (_: Pin) =
       let xpin = pins[&"X{gate}"]
@@ -119,12 +119,12 @@ chip Ic4066:
 
       result = proc (pin: Pin) =
         let out_pin = if pin == apin: bpin else: apin
-        last[gate - 1] = some pin
-        if lowp xpin:
-          setLevel out_pin, level pin
+        last[gate - 1] = some(pin)
+        if lowp(xpin):
+          set_level(out_pin, level(pin))
     
     for i in 1..4:
-      add_listener pins[&"X{i}"], control_listener i
+      add_listener(pins[&"X{i}"], control_listener(i))
       let listener = data_listener i
-      add_listener pins[&"A{i}"], listener
-      add_listener pins[&"B{i}"], listener
+      add_listener(pins[&"A{i}"], listener)
+      add_listener(pins[&"B{i}"], listener)

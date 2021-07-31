@@ -355,8 +355,8 @@
 ##
 ## Finally, there is an active low chip select pin `CS`. Most of the chip continues
 ## functioning (running down interval timers, keeping track of the TOD, receiving data on
-## ports, etc.) at all times. The `CS` simply must be low to do a read from or a write to the
-## registers.
+## ports, etc.) at all times. The `CS` simply must be low to do a read from or a write to
+## the registers.
 ##
 ## The chip comes in a 40-pin dual in-line package with the following pin assignments.
 ## ```
@@ -385,10 +385,10 @@
 ## ```
 ## Pin assignments are explained below.
 ##
-## =====  ======  =========================================================================
+## =====  =======  ========================================================================
 ## Pin    Name     Description
-## =====  ======  =========================================================================
-## 1      `VSS`    0V power supply (grounded). Not emulated.
+## =====  =======  ========================================================================
+## 1      `VSS`    0V power supply (ground). Not emulated.
 ## 2      `PA0`    Parallel port A pin 0.
 ## 3      `PA1`    Parallel port A pin 1.
 ## 4      `PA2`    Parallel port A pin 2.
@@ -407,12 +407,12 @@
 ## 17     `PB7`    Parallel port B pin 7.
 ## 18     `PC`     Handshaking output. Goes low for a cycle when `PRB` is read or written.
 ## 19     `TOD`    Time-of-day clock input. Should be 50 or 60Hz.
-## 20     `VCC`    +5V power supply (grounded). Not emulated.
+## 20     `VCC`    +5V power supply. Not emulated.
 ## 21     `IRQ`    Interrupt request. Set low each time an interrupt condition is met.
-## 22     `R_W`    Read (1) and write (0) control.
+## 22     `R_W`    Read (`1`) and write (`0`) control for the registers.
 ## 23     `CS`     Chip select. Must be low to read or write registers.
 ## 24     `FLAG`   Handshaking input pin. Setting low can trigger an interrupt.
-## 25     `PHI2`   Clock input. Clock should be set to 1MHz.
+## 25     `PHI2`   Clock input. Should be 1MHz; other values will affect timer accuracy.
 ## 26     `D7`     Data pin 7.
 ## 27     `D6`     Data pin 6.
 ## 28     `D5`     Data pin 5.
@@ -447,6 +447,7 @@
 
 import sequtils
 import strformat
+import sugar
 import ../utils
 import ../components/[chip, link]
 
@@ -485,7 +486,7 @@ chip Ic6526:
       # IRQ input, maskable to fire hardware interrupt. Often used for handshaking.
       FLAG: 24
 
-      # Determines whether data is being read from (1) or written to (0) the chip
+      # Determines whether data is being read from (1) or written to (0) the chip.
       R_W: 22
 
       # Serial port. This is bidirectional but the direction is chosen by a control bit.
@@ -559,15 +560,15 @@ chip Ic6526:
     CRB: 15     # Control register B
 
   init:
-    set pins[PC]
+    pins[PC].set
     for i in 0..7:
-      pull_up pins[&"PA{i}"]
-      pull_up pins[&"PB{i}"]
+      pins[&"PA{i}"].pull_up
+      pins[&"PB{i}"].pull_up
 
-    let addr_pins = map(to_seq 0..3, proc (i: int): Pin = pins[&"A{i}"])
-    let data_pins = map(to_seq 0..7, proc (i: int): Pin = pins[&"D{i}"])
-    let pa_pins = map(to_seq 0..7, proc (i: int): Pin = pins[&"PA{i}"])
-    let pb_pins = map(to_seq 0..7, proc (i: int): Pin = pins[&"PB{i}"])
+    let addr_pins = map(to_seq(0..3), i => pins[&"A{i}"])
+    let data_pins = map(to_seq(0..7), i => pins[&"D{i}"])
+    let pa_pins = map(to_seq(0..7), i => pins[&"PA{i}"])
+    let pb_pins = map(to_seq(0..7), i => pins[&"PB{i}"])
 
     # A group of "shadow registers" that allow different functionality between read and
     # write on a register, as well as storage for a second value. Not every register has a
@@ -598,19 +599,19 @@ chip Ic6526:
     # make that happen.
     proc write_register(index: int, value: uint8) =
       case index
-      of PRA: write_pra value
-      of PRB: write_prb value
-      of DDRA: write_ddra value
-      of DDRB: write_ddrb value
+      of PRA: write_pra(value)
+      of PRB: write_prb(value)
+      of DDRA: write_ddra(value)
+      of DDRB: write_ddrb(value)
       of TALO, TAHI, TBLO, TBHI: latches[index] = value
-      of TOD10TH: write_tenths value
-      of TODSEC: write_seconds value
-      of TODMIN: write_minutes value
-      of TODHR: write_hours value
-      of SDR: write_sdr value
-      of ICR: write_icr value
-      of CRA: write_cra value
-      of CRB: write_crb value
+      of TOD10TH: write_tenths(value)
+      of TODSEC: write_seconds(value)
+      of TODMIN: write_minutes(value)
+      of TODHR: write_hours(value)
+      of SDR: write_sdr(value)
+      of ICR: write_icr(value)
+      of CRA: write_cra(value)
+      of CRB: write_crb(value)
       else: registers[index] = value
 
     # This is the result of a reset according to the specs of the device. The kernal is
@@ -637,30 +638,30 @@ chip Ic6526:
       for i in countdown(15, 0):
         # Timer latches get all 1's; ICR mask gets all flags reset; all others get all 0's
         let value = if i >= TALO and i <= TBHI: 0xffu8 elif i == ICR: 0x7fu8 else: 0x00u8
-        write_register i, value
+        write_register(i, value)
       # Read ICR to clear all IRQ flags and release the IRQ line
-      discard read_register ICR
+      discard read_register(ICR)
 
       # Force latched timer values into the timer registers. Also set CRB to write to TOD
       # alarm so we can zero that next.
-      write_register CRA, 1u8 shl LOAD
-      write_register CRB, (1u8 shl ALARM or 1u8 shl LOAD)
+      write_register(CRA, 1u8 shl LOAD)
+      write_register(CRB, (1u8 shl ALARM or 1u8 shl LOAD))
       # Write zeros to the TOD alarm
-      write_register TODHR, 0
-      write_register TODMIN, 0
-      write_register TODSEC, 0
-      write_register TOD10TH, 0
+      write_register(TODHR, 0)
+      write_register(TODMIN, 0)
+      write_register(TODSEC, 0)
+      write_register(TOD10TH, 0)
       # Clear out any values we've put into the control registers
-      write_register CRA, 0
-      write_register CRB, 0
+      write_register(CRA, 0)
+      write_register(CRB, 0)
 
       # Set output pins to their default modes and values. IRQ is already reset by reading
       # the ICR above.
-      mode_to_pins Output, data_pins
-      tri_pins data_pins
-      set_mode pins[CNT], Input
-      set_mode pins[SP], Input
-      set pins[PC]
+      mode_to_pins(Output, data_pins)
+      tri_pins(data_pins)
+      set_mode(pins[CNT], Input)
+      set_mode(pins[SP], Input)
+      set(pins[PC])
 
       # Call other reset procs to reset local state
       timer_reset()
@@ -668,31 +669,31 @@ chip Ic6526:
 
     # Reads and writes between the data bus and the registers only happens on translation of
     # CS from high to low.
-    add_listener pins[CS], proc (pin: Pin) =
-      if highp pin:
-        mode_to_pins Output, data_pins
-        tri_pins data_pins
-      elif lowp pin:
-        let index = pins_to_value addr_pins
-        if highp pins[R_W]:
-          value_to_pins read_register int index, data_pins
-        elif lowp pins[R_W]:
-          mode_to_pins Input, data_pins
-          write_register int index, uint8 pins_to_value data_pins
+    add_listener(pins[CS], proc (pin: Pin) =
+      if highp(pin):
+        mode_to_pins(Output, data_pins)
+        tri_pins(data_pins)
+      elif lowp(pin):
+        let index = pins_to_value(addr_pins)
+        if highp(pins[R_W]):
+          value_to_pins(read_register(int(index)), data_pins)
+        elif lowp(pins[R_W]):
+          mode_to_pins(Input, data_pins)
+          write_register(int(index), uint8(pins_to_value(data_pins))))
 
-    # FLAG handling. Lowering this pin sets the appropriate bit in the ICR and fires an interrupt if
-    # that bit is enabled by the ICR mask. This is potentially useful for handshaking with another
-    # 6526 by receiving its PC output on this pin.
-    add_listener pins[FLAG], proc (pin: Pin) =
-      if lowp pin:
+    # FLAG handling. Lowering this pin sets the appropriate bit in the ICR and fires an
+    # interrupt if that bit is enabled by the ICR mask. This is potentially useful for
+    # handshaking with another 6526 by receiving its PC output on this pin.
+    add_listener(pins[FLAG], proc (pin: Pin) =
+      if lowp(pin):
         registers[ICR] = set_bit(registers[ICR], FLG)
         if bit_set(latches[ICR], FLG):
           registers[ICR] = set_bit(registers[ICR], IR)
-          clear pins[IRQ]
+          clear(pins[IRQ]))
 
     # Reset the chip when the reset pin goes low.
-    add_listener pins[RES], proc (pin: Pin) =
-      if lowp pin: reset()
+    add_listener(pins[RES], proc (pin: Pin) =
+      if lowp(pin): reset())
 
     # initial values of all registers are the same as a reset
     reset()

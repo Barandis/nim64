@@ -66,27 +66,27 @@ proc inc_hours =
   tod.hours = bcd_inc tod.hours
 
   if (tod.hours and not pm_mask) == 0x12:
-    tod.hours = uint8 toggle_bit(tod.hours, PM)
+    tod.hours = uint8(toggle_bit(tod.hours, PM))
   elif bcd_gte(tod.hours and not pm_mask, 13):
     tod.hours = (tod.hours and pm_mask) or 1
 
 # Increments the minutes, rolling over and incrementing the hours after 60.
 proc inc_minutes =
-  tod.minutes = bcd_inc tod.minutes
+  tod.minutes = bcd_inc(tod.minutes)
   if bcd_gte(tod.minutes, 60):
     tod.minutes = 0
     inc_hours()
 
 # Increments the seconds, rolling over and incrementing the minutes after 60.
 proc inc_seconds =
-  tod.seconds = bcd_inc tod.seconds
+  tod.seconds = bcd_inc(tod.seconds)
   if bcd_gte(tod.seconds, 60):
     tod.seconds = 0
     inc_minutes()
 
 # Increments the tehnts of seconds, rolling over and incrementing the seconds after 10.
 proc inc_tenths =
-  tod.tenths = bcd_inc tod.tenths
+  tod.tenths = bcd_inc(tod.tenths)
   if bcd_gte(tod.tenths, 10):
     tod.tenths = 0
     inc_seconds()
@@ -163,7 +163,7 @@ proc read_hours: uint8 =
   registers[TODHR]
 
 add_listener pins[TOD], proc (pin: Pin) =
-  if (highp pin) and not tod.halted:
+  if highp(pin) and not tod.halted:
     tod.pulses += 1
     # runs if 1/10 second has elapsed, counting pulses for that time at either 50Hz or 60Hz
     if tod.pulses == (if bit_set(registers[CRA], TODIN): 5 else: 6):
@@ -187,4 +187,4 @@ add_listener pins[TOD], proc (pin: Pin) =
         registers[ICR] = set_bit(registers[ICR], ALRM)
         if bit_set(latches[ICR], ALRM):
           registers[ICR] = set_bit(registers[ICR], IR)
-          clear pins[IRQ]
+          clear(pins[IRQ])

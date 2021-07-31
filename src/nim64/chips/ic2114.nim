@@ -80,6 +80,7 @@
 
 import sequtils
 import strformat
+import sugar
 import ../utils
 import ../components/[chip, link]
 
@@ -117,8 +118,8 @@ chip Ic2114:
       GND: 9
   
   init:
-    let addr_pins = map(to_seq 0..9, proc (i: int): Pin = pins[&"A{i}"])
-    let data_pins = map(to_seq 0..3, proc (i: int): Pin = pins[&"D{i}"])
+    let addr_pins = map(to_seq(0..9), i => pins[&"A{i}"])
+    let data_pins = map(to_seq(0..3), i => pins[&"D{i}"])
 
     # Memory locations are all 4-bit, and we don't have a uint4, so we choose the smallest
     # size we *do* have. This wastes a bit of space but is addressable without using
@@ -128,35 +129,35 @@ chip Ic2114:
     # Resolves the address on the address pins and then puts the value from that memory
     # location onto the data pins.
     proc read =
-      mode_to_pins Output, data_pins
-      let address = pins_to_value addr_pins
+      mode_to_pins(Output, data_pins)
+      let address = pins_to_value(addr_pins)
       let value = memory[address]
-      value_to_pins value, dataPins
+      value_to_pins(value, dataPins)
     
     # Resolves the address on the address pins and then puts the value from the data pins
     # into that memory location.
     proc write =
-      mode_to_pins Input, data_pins
-      let address = pins_to_value addr_pins
-      let value = pins_to_value data_pins
-      memory[address] = uint8 value
+      mode_to_pins(Input, data_pins)
+      let address = pins_to_value(addr_pins)
+      let value = pins_to_value(data_pins)
+      memory[address] = uint8(value)
     
     proc enable_listener(pin: Pin) =
-      if highp pin: mode_to_pins Input, data_pins
-      elif lowp pin:
-        if highp pins[WE]: read()
-        elif lowp pins[WE]: write()
+      if highp(pin): mode_to_pins(Input, data_pins)
+      elif lowp(pin):
+        if highp(pins[WE]): read()
+        elif lowp(pins[WE]): write()
     
     proc write_listener(pin: Pin) =
-      if lowp pins[CS]:
-        if highp pin: read()
-        elif lowp pin: write()
+      if lowp(pins[CS]):
+        if highp(pin): read()
+        elif lowp(pin): write()
     
     proc address_listener(_: Pin) =
-      if lowp pins[CS]:
-        if highp pins[WE]: read()
-        elif lowp pins[WE]: write()
+      if lowp(pins[CS]):
+        if highp(pins[WE]): read()
+        elif lowp(pins[WE]): write()
 
-    add_listener pins[CS], enable_listener
-    add_listener pins[WE], write_listener
-    for pin in addr_pins: add_listener pin, address_listener
+    add_listener(pins[CS], enable_listener)
+    add_listener(pins[WE], write_listener)
+    for pin in addr_pins: add_listener(pin, address_listener)

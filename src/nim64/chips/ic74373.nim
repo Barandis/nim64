@@ -102,34 +102,35 @@ chip Ic74373:
     proc data_listener(latch: int): proc (_: Pin) =
       let qpin = pins[&"Q{latch}"]
       result = proc (pin: Pin) =
-        if (highp pins[LE]) and (lowp pins[OE]):
-          if highp pin: set qpin elif lowp pin: clear qpin
+        if highp(pins[LE]) and lowp(pins[OE]):
+          if highp(pin): set(qpin) elif lowp(pin): clear(qpin)
     
     proc latch_listener(pin: Pin) =
-      if highp pin:
+      if highp(pin):
         for i in 0..7:
           let dpin = pins[&"D{i}"]
           let qpin = pins[&"Q{i}"]
-          if highp dpin: set qpin elif lowp dpin: clear qpin
-          latches[i] = none bool
-      elif lowp pin:
+          if highp(dpin): set(qpin) elif lowp(dpin): clear(qpin)
+          latches[i] = none(bool)
+      elif lowp(pin):
         for i in 0..7:
-          latches[i] = some highp pins[&"D{i}"]
+          latches[i] = some(highp(pins[&"D{i}"]))
     
     proc enable_listener(pin: Pin) =
-      if highp pin:
+      if highp(pin):
         for i in 0..7:
-          tri pins[&"Q{i}"]
-      elif lowp pin:
-        let latched = lowp pins[LE]
+          tri(pins[&"Q{i}"])
+      elif lowp(pin):
+        let latched = lowp(pins[LE])
 
         for i in 0..7:
           let qpin = pins[&"Q{i}"]
           if latched:
-            if (is_some latches[i]) and (get latches[i]): set qpin else: clear qpin
+            if is_some(latches[i]) and get(latches[i]): set(qpin) else: clear(qpin)
           else:
-            if highp pins[&"D{i}"]: set qpin elif lowp pins[&"D{i}"]: clear qpin
+            let dpin = pins[&"D{i}"]
+            if highp(dpin): set(qpin) elif lowp(dpin): clear(qpin)
     
-    for i in 0..7: add_listener pins[&"D{i}"], data_listener i
-    add_listener pins[LE], latch_listener
-    add_listener pins[OE], enable_listener
+    for i in 0..7: add_listener(pins[&"D{i}"], data_listener(i))
+    add_listener(pins[LE], latch_listener)
+    add_listener(pins[OE], enable_listener)

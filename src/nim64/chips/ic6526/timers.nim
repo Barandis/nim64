@@ -173,12 +173,12 @@ proc underflow_timer_a =
 
   # Set PB6 to appropriate level if on
   if bit_set(cra, PBON):
-    if bit_set(cra, OUTMODE): toggle pins[PB6]
-    else: set pins[PB6]
+    if bit_set(cra, OUTMODE): toggle(pins[PB6])
+    else: set(pins[PB6])
   
   # Decrement timer B if CRB says so
   if bit_set(crb, INMODE1):
-    if (if bit_set(crb, INMODE0): highp pins[CNT] else: true): decrement_timer_b()
+    if (if bit_set(crb, INMODE0): highp(pins[CNT]) else: true): decrement_timer_b()
   
   # Potentially send a bit out the serial port if it is set to output mode and if the timer
   # is set to run continuously
@@ -188,7 +188,7 @@ proc underflow_timer_a =
   registers[ICR] = set_bit(registers[ICR], TA)
   if bit_set(latches[ICR], TA):
     registers[ICR] = set_bit(registers[ICR], IR)
-    clear pins[IRQ]
+    clear(pins[IRQ])
   
   #  Reset value to that in latch
   registers[TALO] = latches[TALO]
@@ -215,17 +215,17 @@ proc decrement_timer_a =
 # cycle; the underflow code handles setting it high, and this sets it back low on the next
 # clock.
 add_listener pins[PHI2], proc (pin: Pin) =
-  if highp pin:
+  if highp(pin):
     let cra = registers[CRA]
     let crb = registers[CRB]
 
     # Reset PB6 if on and output mode = pulse
     if bit_set(cra, PBON) and bit_clear(cra, OUTMODE):
-      clear pins[PB6]
+      clear(pins[PB6])
 
     # Reset PB7 if on and output mode = pulse
     if bit_set(crb, PBON) and bit_clear(crb, OUTMODE):
-      clear pins[PB7]
+      clear(pins[PB7])
 
     # Decrement Timer A if its input is clock pulses and timer is started
     if bit_set(cra, START) and bit_clear(cra, INMODE):
@@ -236,8 +236,8 @@ add_listener pins[PHI2], proc (pin: Pin) =
       decrement_timer_b()
 
 # Handles decrementing the timers if they're set to use CNT pulses as input.
-add_listener pins[CNT], proc (pin: Pin) =
-  if highp pin:
+add_listener(pins[CNT], proc (pin: Pin) =
+  if highp(pin):
     let cra = registers[CRA]
     let crb = registers[CRB]
 
@@ -247,7 +247,7 @@ add_listener pins[CNT], proc (pin: Pin) =
     
     # Decrement Timer B if its input is CNT pulses
     if bit_set(crb, START) and bit_set(crb, INMODE0) and bit_clear(crb, INMODE1):
-      decrement_timer_b()
+      decrement_timer_b())
 
 # Resets our state object, called by chip-wide reset
 proc timer_reset =

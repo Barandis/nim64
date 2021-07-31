@@ -50,29 +50,29 @@
 # meaning pins designated as input by the DDR or pins designated as timer output pins by the
 # control registers - are not modified one way or the other.
 
-proc set_port_pins(value, mask: uint; pins: seq[Pin]) =
+proc set_port_pins(pins: seq[Pin]; value, mask: uint) =
   for bit in 0..7:
     if bit_set(mask, uint bit):
-      set_level pins[bit], float bit_value(value, bit)
+      set_level(pins[bit], float(bit_value(value, bit)))
 
 proc write_pra(value: uint8) =
   let mask = registers[DDRA]
   registers[PRA] = (registers[PRA] and not mask) or (value and mask)
-  set_port_pins value, mask, pa_pins
+  set_port_pins(pa_pins, value, mask)
 
 proc write_prb(value: uint8) =
   let mask = registers[DDRB] and
     (if bit_set(registers[CRB], PBON): 0x7f else: 0xff) and
     (if bit_set(registers[CRA], PBON): 0xbf else: 0xff)
   registers[PRB] = (registers[PRB] and not mask) or (value and mask)
-  set_port_pins value, mask, pb_pins
-  clear pins[PC]
+  set_port_pins(pb_pins, value, mask)
+  clear(pins[PC])
 
 # A read function is only necessary for port B, and only because reading the register lowers
 # the PC pin for a cycle.
 proc read_prb: uint8 =
   result = registers[PRB]
-  clear pins[PC]
+  clear(pins[PC])
 
 # -------------------------------------------------------------------
 # Data direction registers
@@ -88,7 +88,7 @@ proc read_prb: uint8 =
 proc write_ddra(value: uint8) =
   registers[DDRA] = value
   for bit in 0..7:
-    set_mode pins[&"PA{bit}"], if bit_set(value, uint bit): Output else: Input
+    set_mode(pins[&"PA{bit}"], if bit_set(value, uint(bit)): Output else: Input)
 
 proc write_ddrb(value: uint8) =
   registers[DDRB] = value
@@ -96,23 +96,23 @@ proc write_ddrb(value: uint8) =
     if not (
       (bit == 6 and bit_set(registers[CRA], PBON)) or 
       (bit == 7 and bit_set(registers[CRB], PBON))):
-        set_mode pins[&"PB{bit}"], if bit_set(value, uint bit): Output else: Input
+        set_mode(pins[&"PB{bit}"], if bit_set(value, uint(bit)): Output else: Input)
 
 # Returns a closure that can be used as a listener. That closure sets a particular bit in
 # the the given register if the listened-to pin is high and clears that same bit if the pin
 # is low.
 proc port_listener(index: int, bit: uint): proc (pin: Pin) =
   result = proc (pin: Pin) =
-    if highp pin:
+    if highp(pin):
       registers[index] = set_bit(registers[index], bit)
-    elif lowp pin:
+    elif lowp(pin):
       registers[index] = clear_bit(registers[index], bit)
 
 for i in 0u..7u:
-  add_listener pa_pins[i], port_listener(PRA, i)
-  add_listener pb_pins[i], port_listener(PRB, i)
+  add_listener(pa_pins[i], port_listener(PRA, i))
+  add_listener(pb_pins[i], port_listener(PRB, i))
 
 # Raises the PC pin every cycle, as reading or writing the PB register sets that pin low for
 # one cycle
-add_listener pins[PHI2], proc (pin: Pin) =
-  if highp pin: set pins[PC]
+add_listener(pins[PHI2], proc (pin: Pin) =
+  if highp(pin): set(pins[PC]))

@@ -123,13 +123,13 @@ chip Ic74139:
       let y3pin = pins[&"Y3{demux}"]
 
       result = proc (_: Pin) =
-        if (lowp gpin) and (lowp apin) and (lowp bpin): clear y0pin else: set y0pin
-        if (lowp gpin) and (highp apin) and (lowp bpin): clear y1pin else: set y1pin
-        if (lowp gpin) and (lowp apin) and (highp bpin): clear y2pin else: set y2pin
-        if (lowp gpin) and (highp apin) and (highp bpin): clear y3pin else: set y3pin
+        if lowp(gpin) and lowp(apin) and lowp(bpin): clear(y0pin) else: set(y0pin)
+        if lowp(gpin) and highp(apin) and lowp(bpin): clear(y1pin) else: set(y1pin)
+        if lowp(gpin) and lowp(apin) and highp(bpin): clear(y2pin) else: set(y2pin)
+        if lowp(gpin) and highp(apin) and highp(bpin): clear(y3pin) else: set(y3pin)
     
     for i in 1..2:
-      let listener = data_listener i
-      add_listener pins[&"G{i}"], listener
-      add_listener pins[&"A{i}"], listener
-      add_listener pins[&"B{i}"], listener
+      let listener = data_listener(i)
+      add_listener(pins[&"G{i}"], listener)
+      add_listener(pins[&"A{i}"], listener)
+      add_listener(pins[&"B{i}"], listener)

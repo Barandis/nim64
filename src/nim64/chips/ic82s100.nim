@@ -192,6 +192,7 @@
 
 import sequtils
 import strformat
+import sugar
 import ../utils
 import ../components/[chip, link]
 
@@ -272,25 +273,25 @@ chip Ic82S100:
   
   init:
     proc one_listener(_: Pin) =
-      if highp pins[OE]:
-        tri_pins map(to_seq 0..7, proc (i: int): Pin = pins[&"F{i}"])
+      if highp(pins[OE]):
+        tri_pins(map(to_seq(0..7), i => pins[&"F{i}"]))
       elif lowp pins[OE]:
-        let i0 = highp pins[I0]
-        let i1 = highp pins[I1]
-        let i2 = highp pins[I2]
-        let i3 = highp pins[I3]
-        let i4 = highp pins[I4]
-        let i5 = highp pins[I5]
-        let i6 = highp pins[I6]
-        let i7 = highp pins[I7]
-        let i8 = highp pins[I8]
-        let i9 = highp pins[I9]
-        let i10 = highp pins[I10]
-        let i11 = highp pins[I11]
-        let i12 = highp pins[I12]
-        let i13 = highp pins[I13]
-        let i14 = highp pins[I14]
-        let i15 = highp pins[I15]
+        let i0 = highp(pins[I0])
+        let i1 = highp(pins[I1])
+        let i2 = highp(pins[I2])
+        let i3 = highp(pins[I3])
+        let i4 = highp(pins[I4])
+        let i5 = highp(pins[I5])
+        let i6 = highp(pins[I6])
+        let i7 = highp(pins[I7])
+        let i8 = highp(pins[I8])
+        let i9 = highp(pins[I9])
+        let i10 = highp(pins[I10])
+        let i11 = highp(pins[I11])
+        let i12 = highp(pins[I12])
+        let i13 = highp(pins[I13])
+        let i14 = highp(pins[I14])
+        let i15 = highp(pins[I15])
 
         # These are the product term equations programmed into the PLA for use in a C64. The
         # names for each signal reflect the names of the pins that those signals come from,
@@ -517,15 +518,14 @@ chip Ic82S100:
         # inverted in the level assignment below.
         let s0 = s1 or s2 or s3 or s4 or s5 or s6 or p24 or p25 or p26 or p27 or p28 or p30
 
-        if s0: set pins[F0] else: clear pins[F0]
-        if s1: clear pins[F1] else: set pins[F1]
-        if s2: clear pins[F2] else: set pins[F2]
-        if s3: clear pins[F3] else: set pins[F3]
-        if s7: clear pins[F4] else: set pins[F4]
-        if s4: clear pins[F5] else: set pins[F5]
-        if s5: clear pins[F6] else: set pins[F6]
-        if s6: clear pins[F7] else: set pins[F7]
+        if s0: set(pins[F0]) else: clear(pins[F0])
+        if s1: clear(pins[F1]) else: set(pins[F1])
+        if s2: clear(pins[F2]) else: set(pins[F2])
+        if s3: clear(pins[F3]) else: set(pins[F3])
+        if s7: clear(pins[F4]) else: set(pins[F4])
+        if s4: clear(pins[F5]) else: set(pins[F5])
+        if s5: clear(pins[F6]) else: set(pins[F6])
+        if s6: clear(pins[F7]) else: set(pins[F7])
 
-    add_listener pins[OE], one_listener
-    for i in 0..15:
-      add_listener pins[&"I{i}"], one_listener
+    add_listener(pins[OE], one_listener)
+    for i in 0..15: add_listener(pins[&"I{i}"], one_listener)

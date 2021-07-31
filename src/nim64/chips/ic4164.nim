@@ -89,6 +89,7 @@
 import options
 import sequtils
 import strformat
+import sugar
 import ../utils
 import ../components/[chip, link]
 
@@ -136,7 +137,7 @@ chip Ic4164:
       VSS: 16
   
   init:
-    let addr_pins = map(to_seq 0..7, proc (i: int): Pin = pins[&"A{i}"])
+    let addr_pins = map(to_seq(0..7), i => pins[&"A{i}"])
 
     # One byte is used for each bit of memory. This is a waste of space, but memory is
     # cheap and this avoids the need for time-consuming translation and complex indexing.
@@ -148,31 +149,31 @@ chip Ic4164:
     # can be set to `none`. Checks are not made for `none` in the procs below because those
     # procs should never be called without these latches having a value, so if there is a
     # failure on that count, it's a bug and the program *should* crash.
-    var row = none uint
-    var col = none uint
-    var data = none uint
+    var row = none(uint)
+    var col = none(uint)
+    var data = none(uint)
 
     # Reads the row and col and calculates the specific bit in the memory array to which
     # this row/col combination refers. The first element of the return value is the index of
     # the 32-bit number in the memory array where that bit resides; the second element is
     # the index of the bit within that 32-bit number.
     proc resolve: uint = 
-      result = ((get row) shl 8) or (get col)
+      result = (get(row) shl 8) or get(col)
     
     # Retrieves a single bit from the memory array and sets the level of the Q pin to the
     # value of that bit.
     proc read =
       let index = resolve()
-      set_level pins[Q], float memory[index]
+      set_level(pins[Q], float(memory[index]))
     
     # Writes the value of the D pin to a single bit in the memory array. If the Q pin is
     # also connected, the value is also sent to it; this happens only in RMW mode and keeps
     # the input and output data pins synched.
     proc write =
       let index = resolve()
-      let value = get data
-      memory[index] = uint8 value
-      if not trip pins[Q]: set_level pins[Q], float value
+      let value = get(data)
+      memory[index] = uint8(value)
+      if not trip(pins[Q]): set_level(pins[Q], float(value))
     
     # Invoked when the RAS pin changes level. When it goes low, the current levels of the
     # A0-A7 pins are latched. The address is released when the RAS pin goes high.
@@ -182,10 +183,8 @@ chip Ic4164:
     # can speed up reads and writes within the same page by reducing the amount of setup
     # needed for those reads and writes. (This does not happen in the C64.)
     proc ras_listener(pin: Pin) =
-      if lowp pin:
-        row = some pins_to_value addr_pins
-      elif highp pin:
-        row = none uint
+      if lowp(pin): row = some(pins_to_value(addr_pins))
+      elif highp(pin): row = none(uint)
     
     # Invoked when the CAS pin changes level.
     #
@@ -200,18 +199,18 @@ chip Ic4164:
     # When CAS goes high, the Q pin is tri-stated and the latched column and data (if there
     # is one) values are cleared.
     proc cas_listener(pin: Pin) =
-      if lowp pin:
-        col = some pins_to_value addr_pins
+      if lowp(pin):
+        col = some(pins_to_value(addr_pins))
         let we = pins[WE]
-        if lowp we:
-          data = some uint level pins[D]
+        if lowp(we):
+          data = some(uint(level(pins[D])))
           write()
-        elif highp we:
+        elif highp(we):
           read()
-      elif highp pin:
-        tri pins[Q]
-        col = none uint
-        data = none uint
+      elif highp(pin):
+        tri(pins[Q])
+        col = none(uint)
+        data = none(uint)
     
     # Invoked when the WE pin changes level.
     #
@@ -228,16 +227,16 @@ chip Ic4164:
     # happens until CAS goes low; at that point, the chip goes into write mode (data is
     # written to memory but nothing is available to be read).
     proc write_listener(pin: Pin) =
-      if lowp pin:
+      if lowp(pin):
         let cas = pins[CAS]
-        if lowp cas:
-          data = some uint level pins[D]
+        if lowp(cas):
+          data = some(uint(level(pins[D])))
           write()
-        elif highp cas:
-          tri pins[Q]
-      elif highp pin:
-        data = none uint
+        elif highp(cas):
+          tri(pins[Q])
+      elif highp(pin):
+        data = none(uint)
     
-    add_listener pins[RAS], ras_listener
-    add_listener pins[CAS], cas_listener
-    add_listener pins[WE], write_listener
+    add_listener(pins[RAS], ras_listener)
+    add_listener(pins[CAS], cas_listener)
+    add_listener(pins[WE], write_listener)

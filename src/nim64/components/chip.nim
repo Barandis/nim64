@@ -32,17 +32,17 @@ proc parse_header(header: NimNode): (NimNode, NimNode, NimNode) =
   ## parameter list is included in the constructor function, and variables of those names
   ## and types are made available to the `init` block.
   ## 
-  let chip_name = if (kind header) == nnk_ident: str_val header else: str_val header[0]
-  let chip_type = ident chip_name
-  let pins_type = ident (chip_name & "Pins")
+  let chip_name = if kind(header) == nnk_ident: str_val(header) else: str_val(header[0])
+  let chip_type = ident(chip_name)
+  let pins_type = ident(chip_name & "Pins")
   var params_tree = new_tree(nnk_formal_params, chip_type)
 
-  if (kind header) == nnk_obj_constr:
-    for i in 1..<(len header):
+  if header.kind == nnk_obj_constr:
+    for i in 1..<header.len:
       let param_id = header[i][0]
       let param_type = header[i][1]
       let param = new_ident_defs(param_id, param_type, new_empty_node())
-      add params_tree, param
+      add(params_tree, param)
 
   result = (chip_type, pins_type, params_tree)
 
@@ -53,13 +53,13 @@ proc parse_pin_or_register(node: NimNode): (int, string) =
   ## is called once per pin by `parse_pins` and once per register by `parse_registers`
   ## below.
 
-  let name = str_val node[0]
+  let name = str_val(node[0])
   var number: int = 0
 
-  if node[1][0].kind == nnk_int_lit:
-    # intVal returns a BiggestInteger, which is great but probably just means it needs to
+  if kind(node[1][0]) == nnk_int_lit:
+    # int_val returns a BiggestInteger, which is great but probably just means it needs to
     # be converted approximately everywhere
-    number = int int_val node[1][0]
+    number = int(int_val(node[1][0]))
   else:
     error("Index number must be an integer", node)
   
@@ -70,54 +70,54 @@ proc parse_pins(pins_tree: NimNode): seq[PinInfo] =
   ## pins. Since at this level the mode blocks are still visible, this proc can and does
   ## include mode information as well.
 
-  var input_tree = none NimNode
-  var output_tree = none NimNode
-  var bidi_tree = none NimNode
-  var unc_tree = none NimNode
+  var input_tree = none(NimNode)
+  var output_tree = none(NimNode)
+  var bidi_tree = none(NimNode)
+  var unc_tree = none(NimNode)
 
   for node in children pins_tree:
-    if (kind node) == nnk_call:
-      let ident = str_val node[0]
+    if kind(node) == nnk_call:
+      let ident = str_val(node[0])
       case ident
-      of "input": input_tree = some node[1]
-      of "output": output_tree = some node[1]
-      of "bidi": bidi_tree = some node[1]
-      of "unconnected": unc_tree = some node[1]
+      of "input": input_tree = some(node[1])
+      of "output": output_tree = some(node[1])
+      of "bidi": bidi_tree = some(node[1])
+      of "unconnected": unc_tree = some(node[1])
       else: error("Unknown pin type: " & ident, node)
   
   if is_some input_tree:
-    for stmt_node in children get input_tree:
-      let (number, name) = parse_pin_or_register stmt_node
-      add result, (number, name, bindSym "Input")
+    for stmt_node in children(get(input_tree)):
+      let (number, name) = parse_pin_or_register(stmt_node)
+      add(result, (number, name, bind_sym("Input")))
 
   if is_some output_tree:
-    for stmt_node in children get output_tree:
-      let (number, name) = parse_pin_or_register stmt_node
-      add result, (number, name, bind_sym "Output")
+    for stmt_node in children(get(output_tree)):
+      let (number, name) = parse_pin_or_register(stmt_node)
+      add(result, (number, name, bind_sym("Output")))
   
   if is_some bidi_tree:
-    for stmt_node in children get bidi_tree:
-      let (number, name) = parse_pin_or_register stmt_node
-      add result, (number, name, bind_sym "Bidi")
+    for stmt_node in children(get(bidi_tree)):
+      let (number, name) = parse_pin_or_register(stmt_node)
+      add(result, (number, name, bind_sym("Bidi")))
   
   if is_some unc_tree:
-    for stmt_node in children get unc_tree:
-      let (number, name) = parse_pin_or_register stmt_node
-      add result, (number, name, bind_sym "Unconnected")
+    for stmt_node in children(get(unc_tree)):
+      let (number, name) = parse_pin_or_register(stmt_node)
+      add(result, (number, name, bind_sym("Unconnected")))
   
 proc parse_registers(regs_tree: NimNode): seq[RegInfo] =
-  for stmt_node in children regs_tree:
-    let (number, name) = parse_pin_or_register stmt_node
-    add result, (number, name)
+  for stmt_node in children(regs_tree):
+    let (number, name) = parse_pin_or_register(stmt_node)
+    add(result, (number, name))
 
 proc prelude(chip_type, pins_type: NimNode; num_pins, num_regs: int): NimNode =
   ## Produces the AST for the first part of the macro output. This includes types and the
   ## procs that are attached to those types (indexing and iterators).
 
-  let brackets = new_tree(nnk_acc_quoted, ident "[]")
-  let brequal = newTree(nnk_acc_quoted, ident "[]=")
-  let pin_sym = bind_sym "Pin"
-  let table_sym = bind_sym "TableRef"
+  let brackets = new_tree(nnk_acc_quoted, ident("[]"))
+  let brequal = newTree(nnk_acc_quoted, ident("[]="))
+  let pin_sym = bind_sym("Pin")
+  let table_sym = bind_sym("TableRef")
 
   # This produces a full type (the pins type) that is not exported with indexing and
   # iteration capabilities that are also not exported (though the procs and iterators
@@ -150,14 +150,14 @@ proc prelude(chip_type, pins_type: NimNode; num_pins, num_regs: int): NimNode =
         yield (i, pin)
   
   if num_regs > 0:
-    let regs_type = ident ((str_val chip_type) & "Regs")
+    let regs_type = ident(chip_type.str_val & "Regs")
 
     let regs_def = quote do:
       type `regs_type` = ref object
         registers: array[`num_regs`, uint8]
         lookup: `table_sym`[string, int]
     
-    insert result[0], 0, regs_def[0]
+    insert(result[0], 0, regs_def[0])
     
     let reg_procs = quote do:
       proc `brackets`(regs: `regs_type`, index: int): uint8 {.used, inline.} =
@@ -175,35 +175,35 @@ proc prelude(chip_type, pins_type: NimNode; num_pins, num_regs: int): NimNode =
         for i, value in regs.registers:
           yield (i, value)
     
-    insert result, 1, reg_procs
+    insert(result, 1, reg_procs)
 
 proc constants(pins: seq[PinInfo], registers: seq[RegInfo]): NimNode {.compile_time.} =
   ## Produces the AST for the second part of the macro output. This includes constants based
   ## on the names and numbers of the pins and registers in the macro input.
 
-  result = new_nim_node nnk_const_section
+  result = new_nim_node(nnk_const_section)
 
   for pin in pins:
     let node = new_tree(nnk_const_def,
       new_tree(nnk_postfix,
-        ident "*",
-        ident pin.name,
+        ident("*"),
+        ident(pin.name),
       ),
       new_empty_node(),
-      new_int_lit_node pin.number,
+      new_int_lit_node(pin.number),
     )
-    add result, node
+    add(result, node)
   
   for reg in registers:
     let node = new_tree(nnk_const_def,
       new_tree(nnk_pragma_expr,
-        ident reg.name,
-        new_tree(nnk_pragma, ident "used")
+        ident(reg.name),
+        new_tree(nnk_pragma, ident("used"))
       ),
       new_empty_node(),
-      new_int_lit_node reg.number,
+      new_int_lit_node(reg.number),
     )
-    add result, node
+    add(result, node)
 
 proc init(
   chip_type, pins_type, params_tree, init_tree: NimNode;
@@ -214,16 +214,16 @@ proc init(
   ## no parameters it just contains the return type. `init_tree` is an Empty node if there 
   ## is no `init` section; otherwise it's a StmtList node.
 
-  let proc_name = ident ("new" & str_val chip_type)
-  let new_table_sym = bind_sym "newTable"
-  let pin_sym = bind_sym "Pin"
-  let map_sym = bind_sym "map"
-  let zip_sym = bind_sym "zip"
+  let proc_name = ident("new" & str_val chip_type)
+  let new_table_sym = bind_sym("newTable")
+  let pin_sym = bind_sym("Pin")
+  let map_sym = bind_sym("map")
+  let zip_sym = bind_sym("zip")
 
-  let pins_len = len pins
-  let pins_id = ident "pins"
+  let pins_len = len(pins)
+  let pins_id = ident("pins")
 
-  let regs_len = len regs
+  let regs_len = len(regs)
 
   # There are two things missing from this tree: there are no formal parameters, and the
   # `raw_pins` array is empty. We'll fix both of those next.
@@ -243,8 +243,8 @@ proc init(
   
   # Add in the formal parameters to the proc. If there aren't any, this just swaps out one
   # return-type-only FormalParams node for another.
-  del result, 3
-  insert result, 3, params_tree
+  del(result, 3)
+  insert(result, 3, params_tree)
   
   # This is the node for the brackets in `raw_pins = []`. We use it as an attachment point
   # for the nodes that make up the entries in that array. We're basically returning to a
@@ -254,27 +254,27 @@ proc init(
 
   # Run through the pins sequence by pin number, not by index. This ensures that the array
   # elements are produced in the proper order no matter the order in the macro input.
-  for i in 1..(len pins):
+  for i in 1..len(pins):
     let filtered = filter(pins, proc (pin: PinInfo): bool = pin.number == i)
-    if (len filtered) == 0:
-      error ("Missing pin number " & $i)
-    elif (len filtered) > 1:
-      error ("Duplicate pin number " & $i)
+    if len(filtered) == 0:
+      error("Missing pin number " & $i)
+    elif len(filtered) > 1:
+      error("Duplicate pin number " & $i)
     
     let pin = filtered[0]
-    add brackets, new_call(
-      bind_sym "new_pin",
-      new_int_lit_node pin.number,
-      new_str_lit_node pin.name,
+    add(brackets, new_call(
+      bind_sym("new_pin"),
+      new_int_lit_node(pin.number),
+      new_str_lit_node(pin.name),
       pin.mode
-    )
+    ))
   
   # We're doing registers after pins, even though registers will come first in document
   # order, so the indices to the pin brackets could remain the same whether registers exist
   # or not
   if regs_len > 0:
-    let regs_id = ident "registers"
-    let regs_type = ident ((str_val chip_type) & "Regs")
+    let regs_id = ident("registers")
+    let regs_type = ident(chip_type.str_val & "Regs")
 
     let regs_tree = quote do:
       var raw_regs: array[`regs_len`, uint8]
@@ -286,20 +286,20 @@ proc init(
     
     let reg_brackets = regs_tree[2][2]
     
-    for i in 0..<(len regs):
+    for i in 0..<len(regs):
       let filtered = filter(regs, proc (reg: RegInfo): bool = reg.number == i)
-      if (len filtered) == 0:
-        error ("Missing register number " & $i)
-      elif (len filtered) > 1:
-        error ("Duplicate register number " & $i)
+      if len(filtered) == 0:
+        error("Missing register number " & $i)
+      elif len(filtered) > 1:
+        error("Duplicate register number " & $i)
       
       let reg = filtered[0]
-      add reg_brackets, new_str_lit_node reg.name
+      add(reg_brackets, new_str_lit_node(reg.name))
 
-    insert result[6], 0, regs_tree 
+    insert(result[6], 0, regs_tree)
   
   # Finally, add the `init` section verbatim.
-  add result[6], init_tree
+  add(result[6], init_tree)
 
 macro chip*(header, body: untyped): untyped =
   ## A macro to produce a full definition of a chip from declarative parts.
@@ -477,29 +477,29 @@ macro chip*(header, body: untyped): untyped =
 
   let (chip_type, pins_type, params_tree) = parse_header header
 
-  var pins_tree = none NimNode
-  var regs_tree = none NimNode
-  var init_tree = none NimNode
+  var pins_tree = none(NimNode)
+  var regs_tree = none(NimNode)
+  var init_tree = none(NimNode)
 
-  for node in children body:
-    if (kind node) == nnk_call and (str_val node[0]) == "pins":
-      pins_tree = some node[1]
-    elif (kind node) == nnk_call and (str_val node[0]) == "registers":
-      regs_tree = some node[1]
-    elif (kind node) == nnk_call and (str_val node[0]) == "init":
-      init_tree = some node[1]
-    else: error ("Unknown section: " & str_val node[0])
+  for node in children(body):
+    if kind(node) == nnk_call and str_val(node[0]) == "pins":
+      pins_tree = some(node[1])
+    elif kind(node) == nnk_call and str_val(node[0]) == "registers":
+      regs_tree = some(node[1])
+    elif kind(node) == nnk_call and str_val(node[0]) == "init":
+      init_tree = some(node[1])
+    else: error("Unknown section: " & str_val(node[0]))
 
-  if is_none pins_tree: error "`chip` requires a `pins` section."
-  if is_none regs_tree: regs_tree = some new_empty_node()
-  if is_none init_tree: init_tree = some new_empty_node()
+  if is_none(pins_tree): error("`chip` requires a `pins` section.")
+  if is_none(regs_tree): regs_tree = some(new_empty_node())
+  if is_none(init_tree): init_tree = some(new_empty_node())
   
-  let pin_info = parse_pins get pins_tree
-  let num_pins = len pin_info
+  let pin_info = parse_pins(get(pins_tree))
+  let num_pins = len(pin_info)
 
-  let reg_info = parse_registers get regs_tree
-  let num_regs = len reg_info
+  let reg_info = parse_registers(get(regs_tree))
+  let num_regs = len(reg_info)
 
   result = prelude(chip_type, pins_type, num_pins, num_regs)
-  add result, constants(pin_info, reg_info)
-  add result, init(chip_type, pins_type, params_tree, get init_tree, pin_info, reg_info)
+  add(result, constants(pin_info, reg_info))
+  add(result, init(chip_type, pins_type, params_tree, init_tree.get, pin_info, reg_info))
