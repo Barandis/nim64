@@ -203,7 +203,7 @@ proc setup: (TableRef[string, Pin], seq[Pin], seq[Pin]) =
   discard set(new_trace(u17[pla.I14]))
   discard set(new_trace(u17[pla.I15]))
 
-  discard clear new_trace(u17[pla.OE])
+  discard clear(new_trace(u17[pla.OE]))
 
   let addr_pins = map(to_seq(0..15), proc (i: int): Pin = pins[&"A{i}"])
   let data_pins = map(to_seq(0..7), proc (i: int): Pin = pins[&"D{i}"])
