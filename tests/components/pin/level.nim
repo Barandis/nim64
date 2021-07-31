@@ -12,7 +12,7 @@ proc functions =
 
   tri(pin)
   check:
-    nanp level(pin)
+    nanp(level(pin))
     not highp(pin)
     not lowp(pin)
     trip(pin)
@@ -43,7 +43,7 @@ proc methods =
 
   pin.tri()
   check:
-    nanp pin.level
+    nanp(pin.level)
     not pin.highp
     not pin.lowp
     pin.trip
@@ -71,145 +71,145 @@ proc methods =
 
 proc unconnected =
   let p = new_pin(1, "A", Unconnected)
-  let t = new_trace p
+  let t = new_trace(p)
 
-  set t
+  set(t)
   check:
-    trip p
-    highp t
+    trip(p)
+    highp(t)
   
-  set p
+  set(p)
   check:
-    highp p
-    highp t
+    highp(p)
+    highp(t)
 
-  clear p
+  clear(p)
   check:
-    lowp p
-    highp t
+    lowp(p)
+    highp(t)
   
-  set_level p, -0.35
+  set_level(p, -0.35)
   check:
-    (level p) == -0.35
-    highp t
+    level(p) == -0.35
+    highp(t)
   
-  tri p
+  tri(p)
   check:
-    trip p
-    highp t
+    trip(p)
+    highp(t)
 
 proc input =
   let p = new_pin(1, "A", Input)
   let t = new_trace(p)
 
-  set t
+  set(t)
   check:
-    highp p
-    highp t
+    highp(p)
+    highp(t)
   
-  set p
+  set(p)
   check:
-    highp p
-    highp t
+    highp(p)
+    highp(t)
 
-  clear p
+  clear(p)
   check:
-    highp p
-    highp t
+    highp(p)
+    highp(t)
   
-  set_level p, -0.35
+  set_level(p, -0.35)
   check:
-    highp p
-    highp t
+    highp(p)
+    highp(t)
   
-  tri p
+  tri(p)
   check:
-    highp p
-    highp t
+    highp(p)
+    highp(t)
 
 proc output =
   let p = new_pin(1, "A", Output)
   let t = new_trace(p)
 
-  set t
+  set(t)
   check:
-    trip p
-    highp t
+    trip(p)
+    highp(t)
   
-  set p
+  set(p)
   check:
-    highp p
-    highp t
+    highp(p)
+    highp(t)
 
-  clear p
+  clear(p)
   check:
-    lowp p
-    lowp t
+    lowp(p)
+    lowp(t)
   
-  set_level p, -0.35
+  set_level(p, -0.35)
   check:
-    (level p) == -0.35
-    (level t) == -0.35
+    level(p) == -0.35
+    level(t) == -0.35
   
-  tri p
+  tri(p)
   check:
-    trip p
-    trip t
+    trip(p)
+    trip(t)
 
 proc bidi =
   let p = new_pin(1, "A", Bidi)
   let t = new_trace(p)
 
-  set t
+  set(t)
   check:
-    highp p
-    highp t
+    highp(p)
+    highp(t)
   
-  set p
+  set(p)
   check:
-    highp p
-    highp t
+    highp(p)
+    highp(t)
 
-  clear p
+  clear(p)
   check:
-    lowp p
-    lowp t
+    lowp(p)
+    lowp(t)
   
-  set_level p, -0.35
+  set_level(p, -0.35)
   check:
-    (level p) == -0.35
-    (level t) == -0.35
+    level(p) == -0.35
+    level(t) == -0.35
   
-  tri p
+  tri(p)
   check:
-    trip p
-    trip t
+    trip(p)
+    trip(t)
 
 proc toggle_high =
   let p = new_pin(1, "A")
-  clear p
-  toggle p
-  check (level p) == 1
+  clear(p)
+  toggle(p)
+  check level(p) == 1
 
-  set_level p, -0.35
-  toggle p
-  check (level p) == 1
+  set_level(p, -0.35)
+  toggle(p)
+  check level(p) == 1
 
 proc toggle_low =
   let p = new_pin(1, "A")
-  set p
-  toggle p
-  check (level p) == 0
+  set(p)
+  toggle(p)
+  check level(p) == 0
 
-  set_level p, 1729
-  toggle p
-  check (level p) == 0
+  set_level(p, 1729)
+  toggle(p)
+  check level(p) == 0
 
 proc toggle_tri =
   let p = new_pin(1, "A")
-  tri p
-  toggle p
-  check nanp level p
+  tri(p)
+  toggle(p)
+  check nanp(level(p))
 
 proc all_tests* =
   suite "Pin level":

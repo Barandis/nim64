@@ -17,15 +17,15 @@ proc low_on_high_in =
   let (_, traces) = setup()
 
   for i in 1..6:
-    set traces[&"A{i}"]
-    check lowp traces[&"Y{i}"]
+    set(traces[&"A{i}"])
+    check lowp(traces[&"Y{i}"])
 
 proc high_on_low_in =
   let (_, traces) = setup()
 
   for i in 1..6:
-    clear traces[&"A{i}"]
-    check highp traces[&"Y{i}"]
+    clear(traces[&"A{i}"])
+    check highp(traces[&"Y{i}"])
 
 proc all_tests* =
   suite "7406 hex inverter":

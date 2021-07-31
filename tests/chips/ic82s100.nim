@@ -14,12 +14,12 @@ import ../../src/nim64/utils
 
 proc setup: (Ic82S100, Traces, seq[Trace], seq[Trace]) =
   let chip = new_ic82S100()
-  let traces = device_traces chip
+  let traces = device_traces(chip)
 
-  clear traces[OE] 
+  clear(traces[OE] )
 
-  let in_traces = map(to_seq 0..15, proc (i: int): Trace = traces[&"I{i}"])
-  let out_traces = map(to_seq 0..7, proc (i: int): Trace = traces[&"F{i}"])
+  let in_traces = map(to_seq(0..15), proc (i: int): Trace = traces[&"I{i}"])
+  let out_traces = map(to_seq(0..7), proc (i: int): Trace = traces[&"F{i}"])
 
   (chip, traces, in_traces, out_traces)
 
@@ -111,19 +111,19 @@ proc get_expected(input: uint16): uint8 =
 proc triOnHighOe =
   let (_, traces, _, _) = setup()
 
-  set traces[OE]
+  set(traces[OE])
   for i in 0..7:
-    check trip traces[&"F{i}"]
-  clear traces[OE]
+    check trip(traces[&"F{i}"])
+  clear(traces[OE])
 
 proc combinations =
   let (_, _, in_traces, out_traces) = setup()
 
   for i in 0u16..0xffffu16:
-    let expected = get_expected i
+    let expected = get_expected(i)
 
-    value_to_traces i, in_traces
-    let actual = traces_to_value out_traces
+    value_to_traces(i, in_traces)
+    let actual = traces_to_value(out_traces)
 
     check actual == expected
 
@@ -141,8 +141,8 @@ proc select_basic =
   # Bit 11: 1 = read
   # Bits 12-13: 11 = EXROM and GAME both off, indicating no expansion cartridge
   let input = 0b0011101010111111u16
-  value_to_traces input, in_traces
-  let output = traces_to_value out_traces
+  value_to_traces(input, in_traces)
+  let output = traces_to_value(out_traces)
   # bit 1 low means BASIC ROM
   check output == 0b11111101
 
@@ -160,8 +160,8 @@ proc select_kernal =
   # Bit 11: R/W = read
   # Bits 12-13: EXROM and GAME both off, indicating no expansion cartridge
   let input = 0b0011101011111111u16
-  value_to_traces input, in_traces
-  let output = traces_to_value out_traces
+  value_to_traces(input, in_traces)
+  let output = traces_to_value(out_traces)
   # bit 2 low means KERNAL ROM
   check output == 0b11111011
 
@@ -183,8 +183,8 @@ proc select_basic_write =
   # Bit 11: 0 = write
   # Bits 12-13: 11 = EXROM and GAME both off, indicating no expansion cartridge
   let input = 0b0011001010111110u16
-  value_to_traces input, in_traces
-  let output = traces_to_value out_traces
+  value_to_traces(input, in_traces)
+  let output = traces_to_value(out_traces)
   # bit 0 low means main RAM
   check output == 0b11111110
 

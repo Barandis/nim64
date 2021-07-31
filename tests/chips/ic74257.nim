@@ -11,151 +11,152 @@ import ../../src/nim64/components/link
 proc setup: (Ic74257, Traces) =
   let chip = new_ic74257()
   let traces = device_traces(chip)
-  clear traces[OE]
+  clear(traces[OE])
   result = (chip, traces)
 
 proc mux_1_setup: (Ic74257, Traces) =
   result = setup()
   let (_, traces) = result
-  clear traces[A1]
-  set traces[B1]
+  clear(traces[A1])
+  set(traces[B1])
 
 proc mux_1_select_a =
   let (_, traces) = mux_1_setup()
 
-  clear traces[SEL]
-  check lowp traces[Y1]
+  clear(traces[SEL])
+  check lowp(traces[Y1])
 
-  set traces[A1]
-  check highp traces[Y1]
+  set(traces[A1])
+  check highp(traces[Y1])
 
 proc mux_1_select_b =
   let (_, traces) = mux_1_setup()
 
-  set traces[SEL]
-  check highp traces[Y1]
+  set(traces[SEL])
+  check highp(traces[Y1])
 
-  clear traces[B1]
-  check lowp traces[Y1]
+  clear(traces[B1])
+  check lowp(traces[Y1])
 
 proc mux_1_high_oe =
   let (_, traces) = mux_1_setup()
 
-  set traces[SEL]
-  check highp traces[Y1]
+  set(traces[SEL])
+  check highp(traces[Y1])
 
-  set traces[OE]
-  check trip traces[Y1]
+  set(traces[OE])
+  check trip(traces[Y1])
 
-  clear traces[SEL]
-  check trip traces[Y1]
+  clear(traces[SEL])
+  check trip(traces[Y1])
 
 proc mux_2_setup: (Ic74257, Traces) =
   result = setup()
   let (_, traces) = result
-  clear traces[A2]
-  set traces[B2]
+  clear(traces[A2])
+  set(traces[B2])
 
 proc mux_2_select_a =
   let (_, traces) = mux_2_setup()
 
-  clear traces[SEL]
-  check lowp traces[Y2]
-  set traces[A2]
-  check highp traces[Y2]
+  clear(traces[SEL])
+  check lowp(traces[Y2])
+
+  set(traces[A2])
+  check highp(traces[Y2])
 
 proc mux_2_select_b =
   let (_, traces) = mux_2_setup()
 
-  set traces[SEL]
-  check highp traces[Y2]
+  set(traces[SEL])
+  check highp(traces[Y2])
 
-  clear traces[B2]
-  check lowp traces[Y2]
+  clear(traces[B2])
+  check lowp(traces[Y2])
 
 proc mux_2_high_oe =
   let (_, traces) = mux_2_setup()
 
-  set traces[SEL]
-  check highp traces[Y2]
+  set(traces[SEL])
+  check highp(traces[Y2])
 
-  set traces[OE]
-  check trip traces[Y2]
+  set(traces[OE])
+  check trip(traces[Y2])
 
-  clear traces[SEL]
-  check trip traces[Y2]
+  clear(traces[SEL])
+  check trip(traces[Y2])
 
 proc mux_3_setup: (Ic74257, Traces) =
   result = setup()
   let (_, traces) = result
-  clear traces[A3]
-  set traces[B3]
+  clear(traces[A3])
+  set(traces[B3])
 
 proc mux_3_select_a =
   let (_, traces) = mux_3_setup()
 
-  clear traces[SEL]
-  check lowp traces[Y3]
+  clear(traces[SEL])
+  check lowp(traces[Y3])
 
-  set traces[A3]
-  check highp traces[Y3]
+  set(traces[A3])
+  check highp(traces[Y3])
 
 proc mux_3_select_b =
   let (_, traces) = mux_3_setup()
 
-  set traces[SEL]
-  check highp traces[Y3]
+  set(traces[SEL])
+  check highp(traces[Y3])
 
-  clear traces[B3]
-  check lowp traces[Y3]
+  clear(traces[B3])
+  check lowp(traces[Y3])
 
 proc mux_3_high_oe =
   let (_, traces) = mux_3_setup()
 
-  set traces[SEL]
-  check highp traces[Y3]
+  set(traces[SEL])
+  check highp(traces[Y3])
 
-  set traces[OE]
-  check trip traces[Y3]
+  set(traces[OE])
+  check trip(traces[Y3])
 
-  clear traces[SEL]
-  check trip traces[Y3]
+  clear(traces[SEL])
+  check trip(traces[Y3])
 
 proc mux_4_setup: (Ic74257, Traces) =
   result = setup()
   let (_, traces) = result
-  clear traces[A4]
-  set traces[B4]
+  clear(traces[A4])
+  set(traces[B4])
 
 proc mux_4_select_a =
   let (_, traces) = mux_4_setup()
 
-  clear traces[SEL]
-  check lowp traces[Y4]
+  clear(traces[SEL])
+  check lowp(traces[Y4])
 
-  set traces[A4]
-  check highp traces[Y4]
+  set(traces[A4])
+  check highp(traces[Y4])
 
 proc mux_4_select_b =
   let (_, traces) = mux_4_setup()
 
-  set traces[SEL]
-  check highp traces[Y4]
+  set(traces[SEL])
+  check highp(traces[Y4])
 
-  clear traces[B4]
-  check lowp traces[Y4]
+  clear(traces[B4])
+  check lowp(traces[Y4])
 
 proc mux_4_high_oe =
   let (_, traces) = mux_4_setup()
 
-  set traces[SEL]
-  check highp traces[Y4]
+  set(traces[SEL])
+  check highp(traces[Y4])
 
-  set traces[OE]
-  check trip traces[Y4]
+  set(traces[OE])
+  check trip(traces[Y4])
 
-  clear traces[SEL]
-  check trip traces[Y4]
+  clear(traces[SEL])
+  check trip(traces[Y4])
 
 proc all_tests* =
   suite "74257 quad 2-to-1 multiplexer":

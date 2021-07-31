@@ -66,40 +66,40 @@ proc setup: (TableRef[string, Pin], seq[Pin], seq[Pin]) =
   let pins = new_table[string, Pin]()
 
   # Address bus
-  pins["A0"]  = clear new_pin(0, "A0", Output)
-  pins["A1"]  = clear new_pin(0, "A1", Output)
-  pins["A2"]  = clear new_pin(0, "A2", Output)
-  pins["A3"]  = clear new_pin(0, "A3", Output)
-  pins["A4"]  = clear new_pin(0, "A4", Output)
-  pins["A5"]  = clear new_pin(0, "A5", Output)
-  pins["A6"]  = clear new_pin(0, "A6", Output)
-  pins["A7"]  = clear new_pin(0, "A7", Output)
-  pins["A8"]  = clear new_pin(0, "A8", Output)
-  pins["A9"]  = clear new_pin(0, "A9", Output)
-  pins["A10"] = clear new_pin(0, "A10", Output)
-  pins["A11"] = clear new_pin(0, "A11", Output)
-  pins["A12"] = clear new_pin(0, "A12", Output)
-  pins["A13"] = clear new_pin(0, "A13", Output)
-  pins["A14"] = clear new_pin(0, "A14", Output)
-  pins["A15"] = clear new_pin(0, "A15", Output)
+  pins["A0"]  = clear(new_pin(0, "A0", Output))
+  pins["A1"]  = clear(new_pin(0, "A1", Output))
+  pins["A2"]  = clear(new_pin(0, "A2", Output))
+  pins["A3"]  = clear(new_pin(0, "A3", Output))
+  pins["A4"]  = clear(new_pin(0, "A4", Output))
+  pins["A5"]  = clear(new_pin(0, "A5", Output))
+  pins["A6"]  = clear(new_pin(0, "A6", Output))
+  pins["A7"]  = clear(new_pin(0, "A7", Output))
+  pins["A8"]  = clear(new_pin(0, "A8", Output))
+  pins["A9"]  = clear(new_pin(0, "A9", Output))
+  pins["A10"] = clear(new_pin(0, "A10", Output))
+  pins["A11"] = clear(new_pin(0, "A11", Output))
+  pins["A12"] = clear(new_pin(0, "A12", Output))
+  pins["A13"] = clear(new_pin(0, "A13", Output))
+  pins["A14"] = clear(new_pin(0, "A14", Output))
+  pins["A15"] = clear(new_pin(0, "A15", Output))
 
   # Data bus
-  pins["D0"] = clear new_pin(0, "D0", Output)
-  pins["D1"] = clear new_pin(0, "D1", Output)
-  pins["D2"] = clear new_pin(0, "D2", Output)
-  pins["D3"] = clear new_pin(0, "D3", Output)
-  pins["D4"] = clear new_pin(0, "D4", Output)
-  pins["D5"] = clear new_pin(0, "D5", Output)
-  pins["D6"] = clear new_pin(0, "D6", Output)
-  pins["D7"] = clear new_pin(0, "D7", Output)
+  pins["D0"] = clear(new_pin(0, "D0", Output))
+  pins["D1"] = clear(new_pin(0, "D1", Output))
+  pins["D2"] = clear(new_pin(0, "D2", Output))
+  pins["D3"] = clear(new_pin(0, "D3", Output))
+  pins["D4"] = clear(new_pin(0, "D4", Output))
+  pins["D5"] = clear(new_pin(0, "D5", Output))
+  pins["D6"] = clear(new_pin(0, "D6", Output))
+  pins["D7"] = clear(new_pin(0, "D7", Output))
 
   # Control signals
-  pins["R_W"] = set new_pin(0, "R_W", Output)
-  pins["RAS"] = set new_pin(0, "RAS", Output)
-  pins["CAS"] = set new_pin(0, "CAS", Output)
-  pins["AEC"] = set new_pin(0, "AEC", Output)
-  pins["LORAM"] = set new_pin(0, "LORAM", Output)
-  pins["HIRAM"] = set new_pin(0, "HIRAM", Output)
+  pins["R_W"] = set(new_pin(0, "R_W", Output))
+  pins["RAS"] = set(new_pin(0, "RAS", Output))
+  pins["CAS"] = set(new_pin(0, "CAS", Output))
+  pins["AEC"] = set(new_pin(0, "AEC", Output))
+  pins["LORAM"] = set(new_pin(0, "LORAM", Output))
+  pins["HIRAM"] = set(new_pin(0, "HIRAM", Output))
 
   # Traces
   # --------------------------------------
@@ -205,8 +205,8 @@ proc setup: (TableRef[string, Pin], seq[Pin], seq[Pin]) =
 
   discard clear new_trace(u17[pla.OE])
 
-  let addr_pins = map(to_seq 0..15, proc (i: int): Pin = pins[&"A{i}"])
-  let data_pins = map(to_seq 0..7, proc (i: int): Pin = pins[&"D{i}"])
+  let addr_pins = map(to_seq(0..15), proc (i: int): Pin = pins[&"A{i}"])
+  let data_pins = map(to_seq(0..7), proc (i: int): Pin = pins[&"D{i}"])
 
   (pins, addr_pins, data_pins)
 
@@ -214,34 +214,34 @@ proc read_write_full_ram =
   let (pins, addr_pins, data_pins) = setup()
 
   # makes entire 64k address RAM
-  clear pins["LORAM"]
-  clear pins["HIRAM"]
-  set pins["AEC"]
+  clear(pins["LORAM"])
+  clear(pins["HIRAM"])
+  set(pins["AEC"])
 
   for i in 1..256:
-    let address = uint rand 0xffff
-    value_to_pins address, addr_pins
+    let address = uint(rand(0xffff))
+    value_to_pins(address, addr_pins)
 
-    let data = uint rand 0xff
-    value_to_pins data, data_pins
+    let data = uint(rand(0xff))
+    value_to_pins(data, data_pins)
 
     # write the random value to the random RAM address
-    clear pins["R_W"]
-    clear pins["RAS"]
-    clear pins["CAS"]
+    clear(pins["R_W"])
+    clear(pins["RAS"])
+    clear(pins["CAS"])
     
-    set pins["CAS"]
-    set pins["RAS"]
-    set pins["R_W"]
+    set(pins["CAS"])
+    set(pins["RAS"])
+    set(pins["R_W"])
 
     # read the value from the same random RAM address, confirm it matches
-    mode_to_pins Input, data_pins
-    clear pins["RAS"]
-    clear pins["CAS"]
-    let value = pins_to_value data_pins
-    set pins["CAS"]
-    set pins["RAS"]
-    mode_to_pins Output, data_pins
+    mode_to_pins(Input, data_pins)
+    clear(pins["RAS"])
+    clear(pins["CAS"])
+    let value = pins_to_value(data_pins)
+    set(pins["CAS"])
+    set(pins["RAS"])
+    mode_to_pins(Output, data_pins)
 
     check value == data
 

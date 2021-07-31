@@ -17,7 +17,7 @@ proc base_tests =
       var count = 0
 
       add_listener(p, (_: Pin) => (count += 1))
-      set t
+      set(t)
       check count == 1
 
 proc all_tests* =

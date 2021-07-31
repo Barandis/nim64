@@ -12,11 +12,11 @@ proc base_tests =
   suite "Pin":
     test "number":
       let p = new_pin(1, "A")
-      check (number p) == 1
+      check number(p) == 1
     
     test "name":
       let p = new_pin(1, "A")
-      check (name p) == "A"
+      check name(p) == "A"
 
 proc all_tests* =
   base_tests()

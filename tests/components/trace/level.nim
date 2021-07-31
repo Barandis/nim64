@@ -8,122 +8,122 @@ import unittest
 
 proc direct_unc =
   let t = new_trace()
-  set t
+  set(t)
   check:
-    highp t
-    not lowp t
-    not trip t
+    highp(t)
+    not lowp(t)
+    not trip(t)
 
-  clear t
+  clear(t)
   check:
-    not highp t
-    lowp t
-    not trip t
+    not highp(t)
+    lowp(t)
+    not trip(t)
   
-  tri t
+  tri(t)
   check:
-    not highp t
-    not lowp t
-    trip t
+    not highp(t)
+    not lowp(t)
+    trip(t)
   
-  set_level t, -0.35
-  check (level t) == -0.35
+  set_level(t, -0.35)
+  check level(t) == -0.35
 
 proc direct_in =
   let p = new_pin(1, "A", Input)
-  let t = new_trace p
+  let t = new_trace(p)
 
-  set t
-  check highp t
-  clear t
-  check lowp t
-  tri t
-  check trip t
-  set_level t, -0.35
-  check (level t) == -0.35
+  set(t)
+  check highp(t)
+  clear(t)
+  check lowp(t)
+  tri(t)
+  check trip(t)
+  set_level(t, -0.35)
+  check level(t) == -0.35
 
 proc direct_out_high =
   let p1 = set new_pin(1, "A", Output)
   let p2 = clear new_pin(2, "B", Output)
   let t = new_trace(p1, p2)
 
-  set t
-  check highp t
-  clear t
-  check highp t
-  tri t
-  check highp t
-  set_level t, -0.35
-  check highp t
+  set(t)
+  check highp(t)
+  clear(t)
+  check highp(t)
+  tri(t)
+  check highp(t)
+  set_level(t, -0.35)
+  check highp(t)
 
 proc direct_out_low =
   let p1 = clear new_pin(1, "A", Output)
   let p2 = clear new_pin(2, "B", Output)
   let t = new_trace(p1, p2)
 
-  set t
-  check lowp t
-  clear t
-  check lowp t
-  tri t
-  check lowp t
-  set_level t, -0.35
-  check (level t) == 0
+  set(t)
+  check lowp(t)
+  clear(t)
+  check lowp(t)
+  tri(t)
+  check lowp(t)
+  set_level(t, -0.35)
+  check level(t) == 0
 
 proc direct_out_tri =
   let p1 = tri new_pin(1, "A", Output)
   let p2 = tri new_pin(2, "B", Output)
   let t = new_trace(p1, p2)
 
-  set t
-  check highp t
-  clear t
-  check lowp t
-  tri t
-  check trip t
-  set_level t, -0.35
-  check (level t) == -0.35
+  set(t)
+  check highp(t)
+  clear(t)
+  check lowp(t)
+  tri(t)
+  check trip(t)
+  set_level(t, -0.35)
+  check level(t) == -0.35
 
 proc indirect_unc =
   let p = new_pin(1, "A")
-  let t = clear new_trace p
+  let t = clear(new_trace(p))
 
-  set p
+  set(p)
   check:
-    lowp t
-    highp p
+    lowp(t)
+    highp(p)
 
 proc indirect_in =
   let p = new_pin(1, "A", Input)
-  let t = clear new_trace p
+  let t = clear(new_trace(p))
 
-  set p
+  set(p)
   check:
-    lowp t
-    lowp p
+    lowp(t)
+    lowp(p)
 
 proc indirect_out =
   let p = new_pin(1, "A", Output)
-  let t = clear new_trace p
+  let t = clear(new_trace(p))
 
-  set p
+  set(p)
   check:
-    highp t
-    highp p
+    highp(t)
+    highp(p)
 
 proc indirect_bidi =
   let p = new_pin(1, "A", Bidi)
-  let t = clear new_trace p
+  let t = clear(new_trace(p))
 
-  set p
+  set(p)
   check:
-    highp t
-    highp p
+    highp(t)
+    highp(p)
   
-  tri t
+  tri(t)
   check:
-    trip t
-    trip p
+    trip(t)
+    trip(p)
 
 proc indirect_out_high =
   let p1 = new_pin(1, "A", Output)
@@ -131,8 +131,8 @@ proc indirect_out_high =
   let p3 = set new_pin(3, "C", Output)
   let t = new_trace(p1, p2, p3)
 
-  clear p1
-  check highp t
+  clear(p1)
+  check highp(t)
 
 proc indirect_out_low =
   let p1 = new_pin(1, "A", Output)
@@ -140,8 +140,8 @@ proc indirect_out_low =
   let p3 = clear new_pin(3, "C", Output)
   let t = new_trace(p1, p2, p3)
 
-  clear p1
-  check lowp t
+  clear(p1)
+  check lowp(t)
 
 proc all_tests* =
   suite "Trace level":
