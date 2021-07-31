@@ -195,13 +195,13 @@ proc setup: (TableRef[string, Pin], seq[Pin], seq[Pin]) =
     u24[ram.CAS],
   )
   # pre-set PLA inputs
-  discard set new_trace(u17[pla.I3])
-  discard set new_trace(u17[pla.I4])
-  discard set new_trace(u17[pla.I9])
-  discard set new_trace(u17[pla.I12])
-  discard set new_trace(u17[pla.I13])
-  discard set new_trace(u17[pla.I14])
-  discard set new_trace(u17[pla.I15])
+  discard set(new_trace(u17[pla.I3]))
+  discard set(new_trace(u17[pla.I4]))
+  discard set(new_trace(u17[pla.I9]))
+  discard set(new_trace(u17[pla.I12]))
+  discard set(new_trace(u17[pla.I13]))
+  discard set(new_trace(u17[pla.I14]))
+  discard set(new_trace(u17[pla.I15]))
 
   discard clear new_trace(u17[pla.OE])
 
