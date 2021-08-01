@@ -146,12 +146,13 @@
 ## The `GATE` bit has no effect on the waveform generator; it is used by the envelope
 ## generator that is discussed next.
 ##
-## The high 8 bits of voice 3's waveform generator output are made available in the `RANDOM`
-## register. This is so named because it's common usage to apply a `NOISE` waveform to voice
-## 3 and then use this register to generate pseudo-random numbers. The waveform is available
-## here even if the voice is not used, because it's never gated (see the `GATE` bit of the
-## envelope generator below) or because it's disconnected (see the `DSCNV3` bit in the
-## filter discussion even further below).
+## The high 8 bits of voice 3's waveform generator output are made available in the `OSC3`
+## register. This register has often also been called something like `RANDOM` and has been
+## so named because it's common usage to apply a `NOISE` waveform to voice 3 and then use 
+## this register to generate pseudo-random numbers. The waveform is available here even if
+## the voice is not used, because it's never gated (see the `GATE` bit of the envelope
+## generator below) or because it's disconnected (see the `DSCNV3` bit in the filter
+## discussion even further below).
 ##
 ## ### Envelope Generator
 ##
@@ -342,8 +343,8 @@
 ## rate depending on the value of the resistor (which is a variable resistor - a
 ## potentiometer - that is normally the game paddle itself). The 6581 circuitry reads the
 ## capacitor discharge time and translates it to a value between `0x00` and `0xff`, which is
-## then made available in the appropriate register (`POTX` register for `POTX` pin, and
-## `POTY` register for `POTY` pin). This process takes 512 clock cycles, so the values of
+## then made available in the appropriate register (`POTXR` register for `POTX` pin, and
+## `POTYR` register for `POTY` pin). This process takes 512 clock cycles, so the values of
 ## the registers update that often.
 ##
 ## In this emulation, physical processes like capacitor discharge are not modelled, so the
@@ -354,9 +355,9 @@
 ## ## Read-only versus write-only registers
 ##
 ## The 6581 is unusual in that it has no registers that can be both read and written. The
-## `POTX`, `POTY`, `RANDOM`, and `ENV3` registers are read-only; attempting to write to
-## these registers has no effect. All of the other registers are write-only, and attempting
-## to read them is handled a bit strangely.
+## `POTX`, `POTY`, `OSC3`, and `ENV3` registers are read-only; attempting to write to these
+## registers has no effect. All of the other registers are write-only, and attempting to
+## read them is handled a bit strangely.
 ##
 ## When a register is written to in a physical 6581, the value on the data pins lingers on
 ## the internal data bus for a time. An attempt to read a write-only register would then
@@ -449,6 +450,9 @@ import sequtils
 import strformat
 import ../utils
 import ../components/[chip, link]
+import ./ic6581/voice
+import ./ic6581/filter
+import ./ic6581/external
 
 chip Ic6581:
   pins:
@@ -551,9 +555,10 @@ chip Ic6581:
     RESON: 23
     SIGVOL: 24
 
-    # Read-only registers
-    POTX: 25
-    POTY: 26
+    # Read-only registers. The 'R' is added to the POT registers to give them distinct names
+    # from the pins associated with them.
+    POTXR: 25
+    POTYR: 26
     OSC3: 27
     ENV3: 28
 
@@ -563,8 +568,20 @@ chip Ic6581:
     UNUSED3: 31
   
   init:
+    # Pulling these down so that if they're unconnected (level NaN), they'll put 0 in their
+    # registers
+    pull_down(pins[POTX])
+    pull_down(pins[POTY])
+
     let addr_pins = map(to_seq 0..4, proc (i: int): Pin = pins[&"A{i}"])
     let data_pins = map(to_seq 0..7, proc (i: int): Pin = pins[&"D{i}"])
+
+    # This is the maximum number of cycles for which a write-only register, when read, will
+    # return a value of whatever was last written to *any* register. After that number of
+    # cycles since the last write, any read from a write-only register will result in zero.
+    # This is a simplification of the actual write-only read model, which fades the value
+    # more gradually to zero.
+    const MaxLastWriteTime = 2000
 
     # The spec says that RES must be low for at least 10 cycles before a reset will occur.
     # This variable is set to 0 when RES first goes low, and each φ2 cycle increments it.
@@ -590,3 +607,154 @@ chip Ic6581:
     var last_pot_time = 0
 
     include ./ic6581/constants
+
+    # The three voices, each consisting of an independent waveform generator, envelope
+    # generator, and amplitude modulator.
+    let voice1 = new_voice()
+    let voice2 = new_voice()
+    let voice3 = new_voice()
+
+    sync(voice1, voice3)
+    sync(voice2, voice1)
+    sync(voice3, voice2)
+
+    # The filter for the individual voices, plus the mizer that combines them into one
+    # signal.
+    let filter = new_filter()
+
+    # The external filter. This is actually, as the name suggests, a circuit that is
+    # external to the 6581. It is a high-pass RC filter tuned to 16Hz and a low-pass RC
+    # filter tuned to 16kHz. In a physical C-64, this is the only thing that exists between
+    # the audio out pin of the 6581 and the audio output pin on the audio/video connector,
+    # so it makes sense to have it be a part of a 6581 emulation that is intended only for a
+    # C64 emulation.
+    let external = new_external_filter()
+
+    proc reset =
+      # This is the result of a reset according to the specs of the device. This is pretty
+      # simple since the only outputs are the data lines and the audio out; all registers
+      # are set to zero, audio output is silenced, and data lines are set back to their
+      # normal unconnected state.
+      #
+      # Since the three unused registers always return $FF, we just set that here and keep
+      # it from changing.
+      for i in 0..31:
+        registers[i] = if i >= UNUSED1: 0xff else: 0x00
+      mode_to_pins(Output, data_pins)
+      tri_pins(data_pins)
+
+      reset(voice1)
+      reset(voice2)
+      reset(voice3)
+      reset(filter)
+      reset(external)
+    
+    proc read_register(index: int): uint8 =
+      # Reads a SID register. This only works as expected for the four read-only registers.
+      #
+      # The three unused registers always return $FF. The write-only registers return the
+      # value of the last write made to *any* SID register. However, in the real chip this
+      # last-write value 'fades' over time until, after 2000-4000 clock cycles, it is zero.
+      # The model for this fading is unknown and is not properly emulated here; this
+      # emulation simply returns the last written value as long as the last write has
+      # happened in the last 2000 cycles; otherwise it returns 0.
+      if index < POTXR: last_write_value else: registers[index]
+    
+    proc write_register(index: int, value: uint8) =
+      if index == PWHI1 or index == PWHI2 or index == PWHI3:
+        # Strip the upper four bits
+        registers[index] = value and 0x0f
+      elif index == CUTLO:
+        # Strip the upper five bits
+        registers[index] = value and 0x07
+      elif index < POTXR:
+        registers[index] = value
+      last_write_value = value
+      last_write_time = 0
+
+      case index
+      of FRELO1: frelo(voice1, value)
+      of FREHI1: frehi(voice1, value)
+      of PWLO1:  pwlo(voice1, value)
+      of PWHI1:  pwhi(voice1, value)
+      of VCREG1: vcreg(voice1, value)
+      of ATDCY1: atdcy(voice1, value)
+      of SUREL1: surel(voice1, value)
+      of FRELO2: frelo(voice2, value)
+      of FREHI2: frehi(voice2, value)
+      of PWLO2:  pwlo(voice2, value)
+      of PWHI2:  pwhi(voice2, value)
+      of VCREG2: vcreg(voice2, value)
+      of ATDCY2: atdcy(voice2, value)
+      of SUREL2: surel(voice2, value)
+      of FRELO3: frelo(voice3, value)
+      of FREHI3: frehi(voice3, value)
+      of PWLO3:  pwlo(voice3, value)
+      of PWHI3:  pwhi(voice3, value)
+      of VCREG3: vcreg(voice3, value)
+      of ATDCY3: atdcy(voice3, value)
+      of SUREL3: surel(voice3, value)
+      of CUTLO:  cutlo(filter, value)
+      of CUTHI:  cuthi(filter, value)
+      of RESON:  reson(filter, value)
+      of SIGVOL: sigvol(filter, value)
+      else: discard
+    
+    proc reset_listener(pin: Pin) =
+      if lowp(pin):
+        reset_clock = 0
+        reset(voice1, false)
+        reset(voice2, false)
+        reset(voice3, false)
+      elif highp(pin):
+        has_reset = false
+    
+    proc clock_listener(pin: Pin) =
+      if highp(pin):
+        # Check to see if RES has been held low for 10 cycles; if so, perform the reset
+        if lowp(pins[RES]) and not has_reset:
+          reset_clock += 1
+          if reset_clock >= 10:
+            reset()
+            has_reset = true
+        
+        # Check to see if last written value has bled off the internal data bus yet
+        last_write_time += 1
+        if (last_write_time >= MaxLastWriteTime): last_write_value = 0
+
+        # Check to see if pots should be read (once every 512 clock cycles); if so, load
+        # their registers with the values of the pins
+        last_pot_time += 1
+        if (last_pot_time >= 512):
+          last_pot_time = 0
+          registers[POTXR] = uint8(int(level(pins[POTX])) and 0xff)
+          registers[POTYR] = uint8(int(level(pins[POTY])) and 0xff)
+        
+        # Clock sound components and put their outputs on the AUDIO pin
+        clock(voice1)
+        clock(voice2)
+        clock(voice3)
+        clock(filter, output(voice1), output(voice2), output(voice3), int(level(pins[EXT])))
+        clock(external, output(filter))
+        set_level(pins[AUDIO], float(output(external)))
+
+        # Dump the voice 3 oscillator and envelope values into their registers
+        registers[OSC3] = uint8((waveform_output(voice3) shr 4) and 0xff)
+        registers[ENV3] = uint8(envelope_output(voice3))
+      
+    proc enable_listener(pin: Pin) =
+      if highp(pin):
+        mode_to_pins(Output, data_pins)
+        tri_pins(data_pins)
+      elif lowp(pin):
+        let index = pins_to_value(addr_pins)
+        if highp(pins[R_W]):
+          value_to_pins(read_register(int(index)), data_pins)
+        elif lowp(pins[R_W]):
+          mode_to_pins(Input, data_pins)
+          write_register(int(index), uint8(pins_to_value(data_pins)))
+    
+    add_listener(pins[RES], reset_listener)
+    add_listener(pins[PHI2], clock_listener)
+    add_listener(pins[CS], enable_listener)
+    
