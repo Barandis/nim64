@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
@@ -9,17 +9,17 @@ import sequtils
 import options
 import ./link
 
-type 
+type
   PinInfo = tuple
-    ## A tuple of the information that can be gleaned about a pin from the macro input. This 
-    ## is simply the number, name, and mode, which are what's necessary to construct a pin. 
-    ## The mode is kept as a `NimNode` because it immediately has `bindSym` applied to it; it 
-    ## makes things easier in the end, and unlike name and number, there is no use for the 
+    ## A tuple of the information that can be gleaned about a pin from the macro input. This
+    ## is simply the number, name, and mode, which are what's necessary to construct a pin.
+    ## The mode is kept as a `NimNode` because it immediately has `bindSym` applied to it; it
+    ## makes things easier in the end, and unlike name and number, there is no use for the
     ## mode other than writing it into the constructor function.
     number: int
     name: string
     mode: NimNode
-  
+
   RegInfo = tuple
     number: int
     name: string
@@ -31,7 +31,7 @@ proc parse_header(header: NimNode): (NimNode, NimNode, NimNode) =
   ## it *can* contain a parameter list in parentheses as well. If it does, that same
   ## parameter list is included in the constructor function, and variables of those names
   ## and types are made available to the `init` block.
-  ## 
+  ##
   let chip_name = if kind(header) == nnk_ident: str_val(header) else: str_val(header[0])
   let chip_type = ident(chip_name)
   let pins_type = ident(chip_name & "Pins")
@@ -47,8 +47,8 @@ proc parse_header(header: NimNode): (NimNode, NimNode, NimNode) =
   result = (chip_type, pins_type, params_tree)
 
 proc parse_pin_or_register(node: NimNode): (int, string) =
-  ## Takes an AST node and parses it for information about a single pin or a single 
-  ## register. This is well inside a mode block for pins, so the only things it can gather 
+  ## Takes an AST node and parses it for information about a single pin or a single
+  ## register. This is well inside a mode block for pins, so the only things it can gather
   ## are number and name, which is all that's needed for a register in the first place. This
   ## is called once per pin by `parse_pins` and once per register by `parse_registers`
   ## below.
@@ -62,7 +62,7 @@ proc parse_pin_or_register(node: NimNode): (int, string) =
     number = int(int_val(node[1][0]))
   else:
     error("Index number must be an integer", node)
-  
+
   result = (number, name)
 
 proc parse_pins(pins_tree: NimNode): seq[PinInfo] =
@@ -84,7 +84,7 @@ proc parse_pins(pins_tree: NimNode): seq[PinInfo] =
       of "bidi": bidi_tree = some(node[1])
       of "unconnected": unc_tree = some(node[1])
       else: error("Unknown pin type: " & ident, node)
-  
+
   if is_some input_tree:
     for stmt_node in children(get(input_tree)):
       let (number, name) = parse_pin_or_register(stmt_node)
@@ -94,17 +94,17 @@ proc parse_pins(pins_tree: NimNode): seq[PinInfo] =
     for stmt_node in children(get(output_tree)):
       let (number, name) = parse_pin_or_register(stmt_node)
       add(result, (number, name, bind_sym("Output")))
-  
+
   if is_some bidi_tree:
     for stmt_node in children(get(bidi_tree)):
       let (number, name) = parse_pin_or_register(stmt_node)
       add(result, (number, name, bind_sym("Bidi")))
-  
+
   if is_some unc_tree:
     for stmt_node in children(get(unc_tree)):
       let (number, name) = parse_pin_or_register(stmt_node)
       add(result, (number, name, bind_sym("Unconnected")))
-  
+
 proc parse_registers(regs_tree: NimNode): seq[RegInfo] =
   for stmt_node in children(regs_tree):
     let (number, name) = parse_pin_or_register(stmt_node)
@@ -124,7 +124,7 @@ proc prelude(chip_type, pins_type: NimNode; num_pins, num_regs: int): NimNode =
   # attached to the chip itself *are* exported and do the same thing). These are created
   # just to be available with the `pins` variable in the `init` block.
   result = quote do:
-    type 
+    type
       `pins_type` = ref object
         by_number: array[1..`num_pins`, `pin_sym`]
         by_name: `table_sym`[string, `pin_sym`]
@@ -148,7 +148,11 @@ proc prelude(chip_type, pins_type: NimNode; num_pins, num_regs: int): NimNode =
     iterator pairs*(chip: `chip_type`): tuple[a: int, b: `pin_sym`] =
       for i, pin in chip.pins:
         yield (i, pin)
-  
+    proc pins*(chip: `chip_type`): seq[`pin_sym`] =
+      add(result, nil)
+      for pin in chip.pins:
+        add(result, pin)
+
   if num_regs > 0:
     let regs_type = ident(chip_type.str_val & "Regs")
 
@@ -156,9 +160,9 @@ proc prelude(chip_type, pins_type: NimNode; num_pins, num_regs: int): NimNode =
       type `regs_type` = ref object
         registers: array[`num_regs`, uint8]
         lookup: `table_sym`[string, int]
-    
+
     insert(result[0], 0, regs_def[0])
-    
+
     let reg_procs = quote do:
       proc `brackets`(regs: `regs_type`, index: int): uint8 {.used, inline.} =
         regs.registers[index]
@@ -174,7 +178,7 @@ proc prelude(chip_type, pins_type: NimNode; num_pins, num_regs: int): NimNode =
       iterator pairs(regs: `regs_type`): tuple[a: int, b: uint8] {.used.} =
         for i, value in regs.registers:
           yield (i, value)
-    
+
     insert(result, 1, reg_procs)
 
 proc constants(pins: seq[PinInfo], registers: seq[RegInfo]): NimNode {.compile_time.} =
@@ -193,7 +197,7 @@ proc constants(pins: seq[PinInfo], registers: seq[RegInfo]): NimNode {.compile_t
       new_int_lit_node(pin.number),
     )
     add(result, node)
-  
+
   for reg in registers:
     let node = new_tree(nnk_const_def,
       new_tree(nnk_pragma_expr,
@@ -210,8 +214,8 @@ proc init(
   pins: seq[PinInfo], regs: seq[RegInfo]): NimNode =
   ## Produces the AST for the third part of the macro output. This is the constructor proc
   ## that will create a new instance of the chip once the type is defined. `chip_type` and
-  ## `pins_type` are always Ident nodes. `params_tree` is a FormalParams node; if there are 
-  ## no parameters it just contains the return type. `init_tree` is an Empty node if there 
+  ## `pins_type` are always Ident nodes. `params_tree` is a FormalParams node; if there are
+  ## no parameters it just contains the return type. `init_tree` is an Empty node if there
   ## is no `init` section; otherwise it's a StmtList node.
 
   let proc_name = ident("new" & str_val chip_type)
@@ -229,23 +233,23 @@ proc init(
   # `raw_pins` array is empty. We'll fix both of those next.
   result = quote do:
     proc `proc_name`*: `chip_type` =
-      let 
+      let
         raw_pins: array[1..`pins_len`, `pin_sym`] = []
         pin_table = `new_table_sym`[string, `pin_sym`]()
         names = `map_sym`(raw_pins, proc (pin: `pin_sym`): string = pin.name)
-      
+
       for pairs in `zip_sym`(names, raw_pins):
         let (name, pin) = pairs
         pin_table[name] = pin
-      
+
       let `pins_id` = `pins_type`(by_number: raw_pins, by_name: pin_table)
       result = `chip_type`(pins: `pins_id`)
-  
+
   # Add in the formal parameters to the proc. If there aren't any, this just swaps out one
   # return-type-only FormalParams node for another.
   del(result, 3)
   insert(result, 3, params_tree)
-  
+
   # This is the node for the brackets in `raw_pins = []`. We use it as an attachment point
   # for the nodes that make up the entries in that array. We're basically returning to a
   # node we already created to insert some more stuff into it, which is of course fine
@@ -260,7 +264,7 @@ proc init(
       error("Missing pin number " & $i)
     elif len(filtered) > 1:
       error("Duplicate pin number " & $i)
-    
+
     let pin = filtered[0]
     add(brackets, new_call(
       bind_sym("new_pin"),
@@ -268,7 +272,7 @@ proc init(
       new_str_lit_node(pin.name),
       pin.mode
     ))
-  
+
   # We're doing registers after pins, even though registers will come first in document
   # order, so the indices to the pin brackets could remain the same whether registers exist
   # or not
@@ -283,66 +287,66 @@ proc init(
       for i, reg in []: reg_table[reg] = i
 
       let `regs_id` {.used.} = `regs_type`(registers: raw_regs, lookup: reg_table)
-    
+
     let reg_brackets = regs_tree[2][2]
-    
+
     for i in 0..<len(regs):
       let filtered = filter(regs, proc (reg: RegInfo): bool = reg.number == i)
       if len(filtered) == 0:
         error("Missing register number " & $i)
       elif len(filtered) > 1:
         error("Duplicate register number " & $i)
-      
+
       let reg = filtered[0]
       add(reg_brackets, new_str_lit_node(reg.name))
 
     insert(result[6], 0, regs_tree)
-  
+
   # Finally, add the `init` section verbatim.
   add(result[6], init_tree)
 
 macro chip*(header, body: untyped): untyped =
   ## A macro to produce a full definition of a chip from declarative parts.
-  ## 
-  ## The macro takes the form of a block definition, with other blocks inside of it. The 
+  ##
+  ## The macro takes the form of a block definition, with other blocks inside of it. The
   ## name of the new chip must be included before the first block begins, right after the
   ## `chip` identifier:
-  ## 
+  ##
   ## ```
   ## chip Ic7406:
   ## ```
-  ## 
+  ##
   ## Optionally, a list of parameters can be included in parentheses after the name of the
   ## new chip. These must include the name and the type, like normal for parameter lists.
-  ## 
+  ##
   ## ```
   ## chip Ic2364(memory: array[8192, uint8]):
   ## ```
-  ## 
+  ##
   ## Inside this `chip` block there can be one to three other blocks.
-  ## 
+  ##
   ## ## `pins`
-  ## 
+  ##
   ## The `pins` block is *required*. It provides all of the information that the macro needs
   ## to produce the chip's pins. These pins are separated into blocks named after the four
   ## modes: `input`, `output`, `bidi`, and `unconnected`. There can only be one instance of
   ## a given block; later blocks with the same name will overwrite the first one, which is
   ## not something you want.
-  ## 
+  ##
   ## Within each mode block are the pin definitions, which are exceedingly simple: they are
   ## the name of the pin, followed by a colon, followed by the number of that pin.
-  ## 
+  ##
   ## It is important that the pin numbers are complete and unique. The smallest pin number
   ## must be 1, and the largest must be the same as the number of total pins. If any pins
   ## are missing in the sequence, or if the same number is used by more than one pin, an
   ## error will be thrown and compilation will fail.
-  ## 
+  ##
   ## It is also important that all of the names be legal identifiers in Nim. These names are
   ## used to create constants and the compiler won't allow it if those constants are not
   ## legally named.
-  ## 
+  ##
   ## Here is an example `pins` block, one that would be used in a 7406 hex inverter.
-  ## 
+  ##
   ## ```nim
   ## pins:
   ##   input:
@@ -352,7 +356,7 @@ macro chip*(header, body: untyped): untyped =
   ##     A4: 9
   ##     A5: 11
   ##     A6: 13
-  ##  
+  ##
   ##   output:
   ##     Y1: 2
   ##     Y2: 4
@@ -360,29 +364,29 @@ macro chip*(header, body: untyped): untyped =
   ##     Y4: 8
   ##     Y5: 10
   ##     Y6: 12
-  ##  
+  ##
   ##   unconnected:
   ##     VCC: 14
   ##     GND: 7
   ## ```
-  ## 
+  ##
   ## ## `registers`
-  ## 
+  ##
   ## This optional block is used to define registers for those chips that have them. Unlike
   ## the `pins` block, this does not have any sub-blocks; all register definitions go
   ## directly under `registers`. Definitions are the same as in the `pins` block though:
   ## the register name is followed by a colon and then the register index.
-  ## 
+  ##
   ## Registers begin from index 0, and like the pins, there must be no missing or duplicate
   ## indexes. Furthermore, no register can share a name with another register or with a pin.
   ## Constants are created for both pins and registers, and constants must have unique
   ## names.
-  ## 
+  ##
   ## If a `registers` block is provided, then a `registers` variable will be available in
   ## the `init` section (see below).
-  ## 
+  ##
   ## Here is a sample `registers` block, one from a 6526 CIA.
-  ## 
+  ##
   ## ```nim
   ## registers:
   ##   PRA: 0
@@ -402,39 +406,39 @@ macro chip*(header, body: untyped): untyped =
   ##   CRA: 14
   ##   CRB: 15
   ## ```
-  ## 
+  ##
   ## ## `init`
-  ## 
-  ## The final possible block is also optional: the `init` block. This simply contains code 
+  ##
+  ## The final possible block is also optional: the `init` block. This simply contains code
   ## that runs when a new instance of the chip is created. This code runs after the pins and
   ## registers (if any) are created, and it has access to those pins via the `pins` variable
   ## and those registers via the `registers` variable. It's used for whatever initialization
   ## is necessary; that includes setting handlers on pins, which is where the functionality
   ## of a chip comes from in the first place. So the `init` block can essentially be used to
   ## define the entire behavior of a chip.
-  ## 
+  ##
   ## Both `pins` and `registers` can be indexed by either integer (the index) or string (the
   ## name). `pins` is read-only (though of course the returned pin can be modified freely),
   ## but `registers` also is assignable by both integer and string index. Both have
   ## iterators for both `items` and `pairs`.
-  ## 
+  ##
   ## If a parameter list was included after the chip name (see above), then variables of
   ## those names and types are *also* made available in the `init` block. They will be set
   ## to the value provided to the generated constructor proc (see below) when a chip is
   ## actually created.
-  ## 
-  ## If no `init` block exists, there will still be a constructor proc created, but it'll 
+  ##
+  ## If no `init` block exists, there will still be a constructor proc created, but it'll
   ## only create the chip and return it with no custom functionality.
-  ## 
+  ##
   ## Here is a sample `init` block, this time from a 2364 ROM. The 2364 definition does not
   ## have a `registers` block so no `registers` variable is available here, but it does have
   ## a parameter named `memory` with the type `array[8192, uint8]` that is available in this
   ## block (and is in fact referenced in the `read` proc). The chip definition shown above
   ## for the 2364 shows that parameter.
-  ## 
+  ##
   ## (Any symbol other than `pins` and `memory` in this code comes either from a local
   ## definition or from an import.)
-  ## 
+  ##
   ## ```nim
   ## init:
   ##   let addr_pins = map(to_seq 0..12, proc (i: int): Pin = pins[&"A{i}"])
@@ -442,15 +446,15 @@ macro chip*(header, body: untyped): untyped =
   ##
   ##   proc read =
   ##     value_to_pins memory[pins_to_value addr_pins], data_pins
-  ##  
+  ##
   ##   proc enable_listener(pin: Pin) =
   ##     if lowp pin: read() elif highp pin: tri_pins data_pins
-  ##  
+  ##
   ##   add_listener pins[CS], enable_listener
   ## ```
-  ## 
+  ##
   ## With all of that for input, this macro provides quite a lot.
-  ## 
+  ##
   ## * A type with the same name as appeared after `chip` is created and exported. It has no
   ##   exported properties, but it does have exported overloads of the `[]` operator. These
   ##   let a chip instance be indexed by pin number or pin name, and the pin of that number
@@ -466,7 +470,7 @@ macro chip*(header, body: untyped): untyped =
   ## * One or two unexported types are created. The first will be the type for the `pins`
   ##   variable in the `init` block; the other is the type of the `registers` variable and
   ##   will only be present if there is a `registers` block.
-  ## * Iterators and the `[]` operator (using either number or name for the index) are 
+  ## * Iterators and the `[]` operator (using either number or name for the index) are
   ##   provided for both types, but they are not exported and are only available within the
   ##   `init` block.  The `registers` variable will also have `[]=` available to assign to
   ##   a register by number or name index.
@@ -493,7 +497,7 @@ macro chip*(header, body: untyped): untyped =
   if is_none(pins_tree): error("`chip` requires a `pins` section.")
   if is_none(regs_tree): regs_tree = some(new_empty_node())
   if is_none(init_tree): init_tree = some(new_empty_node())
-  
+
   let pin_info = parse_pins(get(pins_tree))
   let num_pins = len(pin_info)
 

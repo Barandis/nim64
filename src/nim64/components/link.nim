@@ -326,6 +326,19 @@ proc tri*(pin: Pin): Pin {.discardable, inline.} =
   result = pin
   set_level(pin, NaN)
 
+proc toggle*(pin: Pin): Pin {.discardable, inline.} =
+  ## Toggles the pin's level. This will treat that level as digital; if it is "high" (0.5 or
+  ## over), the pin will be set to 0, and if it's "low" (less than 0.5), the pin will be set
+  ## to 1. This has no effect on pins with `NaN` levels.
+  result = pin
+  if highp(pin): clear(pin) elif lowp(pin): set(pin)
+
+proc cycle*(pin: Pin): Pin {.discardable, inline.} =
+  ## Toggles the pin's level twice. This is useful for clocking; often an entire clock cycle
+  ## is desired, and this is more convenient than calling `toggle` twice.
+  result = pin
+  if highp(pin): set(clear(pin)) elif lowp(pin): clear(set(pin))
+
 proc set*(trace: Trace): Trace {.discardable, inline.} =
   ## Sets the trace's value to 1. This will only have an effect if no higher-leveled output
   ## pins are connected to the trace.
@@ -344,12 +357,18 @@ proc tri*(trace: Trace): Trace {.discardable, inline.} =
   result = trace
   set_level(trace, NaN)
 
-proc toggle*(pin: Pin): Pin {.discardable.} =
+proc toggle*(trace: Trace): Trace {.discardable, inline.} =
   ## Toggles the pin's level. This will treat that level as digital; if it is "high" (0.5 or
   ## over), the pin will be set to 0, and if it's "low" (less than 0.5), the pin will be set
   ## to 1. This has no effect on pins with `NaN` levels.
-  result = pin
-  if highp(pin): clear(pin) elif lowp(pin): set(pin)
+  result = trace
+  if highp(trace): clear(trace) elif lowp(trace): set(trace)
+
+proc cycle*(trace: Trace): Trace {.discardable, inline.} =
+  ## Toggles the trace's level twice. This is useful for clocking; often an entire clock cycle
+  ## is desired, and this is more convenient than calling `toggle` twice.
+  result = trace
+  if highp(trace): set(clear(trace)) elif lowp(trace): clear(set(trace))
 
 proc set_mode*(pin: Pin, mode: Mode): Pin {.discardable.} =
   ## Sets the pin's mode. This will also account for the values that the pin and its
