@@ -1,0 +1,193 @@
+<!--
+ Copyright (c) 2020 Thomas J. Otterson
+
+ This software is released under the MIT License.
+ https://opensource.org/licenses/MIT
+-->
+
+<html lang="en">
+
+<head>
+  <title>Test waveforms</title>
+  <meta charset="utf-8">
+</head>
+
+<body>
+  <div id="sawtoothA4"></div>
+  <div id="sawtoothA7"></div>
+  <div id="triangleA4"></div>
+  <div id="triangleA7"></div>
+  <div id="pulse25A4"></div>
+  <div id="pulse25A7"></div>
+  <div id="pulse50A4"></div>
+  <div id="pulse50A7"></div>
+  <div id="pulse75A4"></div>
+  <div id="pulse75A7"></div>
+  <div id="noiseA4"></div>
+  <div id="noiseA7"></div>
+  <div id="sawTriA4"></div>
+  <div id="sawTriA7"></div>
+  <div id="sawPulA4"></div>
+  <div id="sawPulA7"></div>
+  <div id="triPulA4"></div>
+  <div id="triPulA7"></div>
+  <div id="sawTriPulA4"></div>
+  <div id="sawTriPulA7"></div>
+
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="./waveform/sawtoothA4.js"></script>
+  <script src="./waveform/sawtoothA7.js"></script>
+  <script src="./waveform/triangleA4.js"></script>
+  <script src="./waveform/triangleA7.js"></script>
+  <script src="./waveform/pulse25A4.js"></script>
+  <script src="./waveform/pulse25A7.js"></script>
+  <script src="./waveform/pulse50A4.js"></script>
+  <script src="./waveform/pulse50A7.js"></script>
+  <script src="./waveform/pulse75A4.js"></script>
+  <script src="./waveform/pulse75A7.js"></script>
+  <script src="./waveform/noiseA4.js"></script>
+  <script src="./waveform/noiseA7.js"></script>
+  <script src="./waveform/sawTriA4.js"></script>
+  <script src="./waveform/sawTriA7.js"></script>
+  <script src="./waveform/sawPulA4.js"></script>
+  <script src="./waveform/sawPulA7.js"></script>
+  <script src="./waveform/triPulA4.js"></script>
+  <script src="./waveform/triPulA7.js"></script>
+  <script src="./waveform/sawTriPulA4.js"></script>
+  <script src="./waveform/sawTriPulA7.js"></script>
+  <script>
+    function* range(end) {
+      let current = 0
+      /* eslint-disable require-atomic-updates */
+      while (current < end) {
+        yield current
+        current += 1
+      }
+      /* eslint-enable require-atomic-updates */
+    }
+
+    const sawA4 = {
+      x: [...range(25000)],
+      y: sawtoothA4,
+      mode: "lines",
+    }
+    const sawA7 = {
+      x: [...range(25000)],
+      y: sawtoothA7,
+      mode: "lines",
+    }
+    const triA4 = {
+      x: [...range(25000)],
+      y: triangleA4,
+      mode: "lines",
+    }
+    const triA7 = {
+      x: [...range(25000)],
+      y: triangleA7,
+      mode: "lines",
+    }
+    const p25A4 = {
+      x: [...range(25000)],
+      y: pulse25A4,
+      mode: "lines",
+    }
+    const p25A7 = {
+      x: [...range(25000)],
+      y: pulse25A7,
+      mode: "lines",
+    }
+    const p50A4 = {
+      x: [...range(25000)],
+      y: pulse50A4,
+      mode: "lines",
+    }
+    const p50A7 = {
+      x: [...range(25000)],
+      y: pulse50A7,
+      mode: "lines",
+    }
+    const p75A4 = {
+      x: [...range(25000)],
+      y: pulse75A4,
+      mode: "lines",
+    }
+    const p75A7 = {
+      x: [...range(25000)],
+      y: pulse75A7,
+      mode: "lines",
+    }
+    const noiA4 = {
+      x: [...range(25000)],
+      y: noiseA4,
+      mode: "lines",
+    }
+    const noiA7 = {
+      x: [...range(25000)],
+      y: noiseA7,
+      mode: "lines",
+    }
+    const stA4 = {
+      x: [...range(25000)],
+      y: sawTriA4,
+      mode: "lines",
+    }
+    const stA7 = {
+      x: [...range(25000)],
+      y: sawTriA7,
+      mode: "lines",
+    }
+    const spA4 = {
+      x: [...range(25000)],
+      y: sawPulA4,
+      mode: "lines",
+    }
+    const spA7 = {
+      x: [...range(25000)],
+      y: sawPulA7,
+      mode: "lines",
+    }
+    const tpA4 = {
+      x: [...range(25000)],
+      y: triPulA4,
+      mode: "lines",
+    }
+    const tpA7 = {
+      x: [...range(25000)],
+      y: triPulA7,
+      mode: "lines",
+    }
+    const stpA4 = {
+      x: [...range(25000)],
+      y: sawTriPulA4,
+      mode: "lines",
+    }
+    const stpA7 = {
+      x: [...range(25000)],
+      y: sawTriPulA7,
+      mode: "lines",
+    }
+
+    Plotly.newPlot("sawtoothA4", [sawA4], { title: "Sawtooth (A4)" })
+    Plotly.newPlot("sawtoothA7", [sawA7], { title: "Sawtooth (A7)" })
+    Plotly.newPlot("triangleA4", [triA4], { title: "Triangle (A4)" })
+    Plotly.newPlot("triangleA7", [triA7], { title: "Triangle (A7)" })
+    Plotly.newPlot("pulse25A4", [p25A4], { title: "25% Pulse (A4)" })
+    Plotly.newPlot("pulse25A7", [p25A7], { title: "25% Pulse (A7)" })
+    Plotly.newPlot("pulse50A4", [p50A4], { title: "50% Pulse (A4)" })
+    Plotly.newPlot("pulse50A7", [p50A7], { title: "50% Pulse (A7)" })
+    Plotly.newPlot("pulse75A4", [p75A4], { title: "75% Pulse (A4)" })
+    Plotly.newPlot("pulse75A7", [p75A7], { title: "75% Pulse (A7)" })
+    Plotly.newPlot("noiseA4", [noiA4], { title: "Noise (A4)" })
+    Plotly.newPlot("noiseA7", [noiA7], { title: "Noise (A7)" })
+    Plotly.newPlot("sawTriA4", [stA4], { title: "Sawtooth/Triangle (A4)" })
+    Plotly.newPlot("sawTriA7", [stA7], { title: "Sawtooth/Triangle (A7)" })
+    Plotly.newPlot("sawPulA4", [spA4], { title: "Sawtooth/50% Pulse (A4)" })
+    Plotly.newPlot("sawPulA7", [spA7], { title: "Sawtooth/50% Pulse (A7)" })
+    Plotly.newPlot("triPulA4", [tpA4], { title: "Triangle/50% Pulse (A4)" })
+    Plotly.newPlot("triPulA7", [tpA7], { title: "Triangle/50% Pulse (A7)" })
+    Plotly.newPlot("sawTriPulA4", [stpA4], { title: "Sawtooth/Triangle/50% Pulse (A4)" })
+    Plotly.newPlot("sawTriPulA7", [stpA7], { title: "Sawtooth/Triangle/50% Pulse (A7)" })
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,97 @@
+<!--
+ Copyright (c) 2020 Thomas J. Otterson
+
+ This software is released under the MIT License.
+ https://opensource.org/licenses/MIT
+-->
+
+<html lang="en">
+
+<head>
+  <title>Test envelopes</title>
+  <meta charset="utf-8">
+</head>
+
+<body>
+  <div id="adsr0080"></div>
+  <div id="adsr0000"></div>
+  <div id="adsr00f0"></div>
+  <div id="adsr1080"></div>
+  <div id="adsr0180"></div>
+  <div id="adsr0081"></div>
+  <div id="adsr2080"></div>
+  <div id="wrapbug"></div>
+
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="./envelope/adsr0080.js"></script>
+  <script src="./envelope/adsr0000.js"></script>
+  <script src="./envelope/adsr00f0.js"></script>
+  <script src="./envelope/adsr1080.js"></script>
+  <script src="./envelope/adsr0180.js"></script>
+  <script src="./envelope/adsr0081.js"></script>
+  <script src="./envelope/adsr2080.js"></script>
+  <script src="./envelope/wrapbug.js"></script>
+  <script>
+    function* range(end) {
+      let current = 0
+      /* eslint-disable require-atomic-updates */
+      while (current < end) {
+        yield current
+        current += 1
+      }
+      /* eslint-enable require-atomic-updates */
+    }
+
+    const a0080 = {
+      x: [...range(25000)],
+      y: adsr0080,
+      mode: "lines",
+    }
+    const a0000 = {
+      x: [...range(25000)],
+      y: adsr0000,
+      mode: "lines",
+    }
+    const a00f0 = {
+      x: [...range(25000)],
+      y: adsr00f0,
+      mode: "lines",
+    }
+    const a1080 = {
+      x: [...range(25000)],
+      y: adsr1080,
+      mode: "lines",
+    }
+    const a0180 = {
+      x: [...range(25000)],
+      y: adsr0180,
+      mode: "lines",
+    }
+    const a0081 = {
+      x: [...range(25000)],
+      y: adsr0081,
+      mode: "lines",
+    }
+    const a2080 = {
+      x: [...range(25000)],
+      y: adsr2080,
+      mode: "lines",
+    }
+    const wrap = {
+      x: [...range(25000)],
+      y: wrapbug,
+      mode: "lines",
+    }
+
+    Plotly.newPlot("adsr0080", [a0080], { title: "Minimum attack, decay, release; half sustain" })
+    Plotly.newPlot("adsr0000", [a0000], { title: "Minimum attack, decay, release; no sustain" })
+    Plotly.newPlot("adsr00f0", [a00f0], { title: "Minimum attack, decay, release; full sustain" })
+    Plotly.newPlot("adsr1080", [a1080], { title: "Fast attack; minimum decay, release; half sustain" })
+    Plotly.newPlot("adsr0180", [a0180], { title: "Fast decay; minimum attack, release; half sustain" })
+    Plotly.newPlot("adsr0081", [a0081], { title: "Fast release; minimum attack, decay; half sustain" })
+    Plotly.newPlot("adsr2080", [a2080], { title: "Slow attack interrupted by gate off; minimum release" })
+    Plotly.newPlot("wrapbug", [wrap], { title: "Attack with immediate release (counter wrap bug)" })
+  </script>
+</body>
+
+</html>

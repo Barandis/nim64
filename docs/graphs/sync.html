@@ -1,0 +1,129 @@
+<!--
+ Copyright (c) 2020 Thomas J. Otterson
+
+ This software is released under the MIT License.
+ https://opensource.org/licenses/MIT
+-->
+
+<html lang="en">
+
+<head>
+  <title>Test synched and ring modulated waveforms</title>
+  <meta charset="utf-8">
+</head>
+
+<body>
+  <div id="sawtoothA4C4"></div>
+  <div id="sawtoothA7C4"></div>
+  <div id="sawtoothA7C7"></div>
+  <div id="triangleA4C4"></div>
+  <div id="triangleA7C4"></div>
+  <div id="triangleA7C7"></div>
+  <div id="pulseA4C4"></div>
+  <div id="pulseA7C4"></div>
+  <div id="pulseA7C7"></div>
+  <div id="ringA4C4"></div>
+  <div id="ringA7C4"></div>
+  <div id="ringA7C7"></div>
+
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="./sync/sawtoothA4C4.js"></script>
+  <script src="./sync/sawtoothA7C4.js"></script>
+  <script src="./sync/sawtoothA7C7.js"></script>
+  <script src="./sync/triangleA4C4.js"></script>
+  <script src="./sync/triangleA7C4.js"></script>
+  <script src="./sync/triangleA7C7.js"></script>
+  <script src="./sync/pulseA4C4.js"></script>
+  <script src="./sync/pulseA7C4.js"></script>
+  <script src="./sync/pulseA7C7.js"></script>
+  <script src="./sync/ringA4C4.js"></script>
+  <script src="./sync/ringA7C4.js"></script>
+  <script src="./sync/ringA7C7.js"></script>
+  <script>
+    function* range(end) {
+      let current = 0
+      /* eslint-disable require-atomic-updates */
+      while (current < end) {
+        yield current
+        current += 1
+      }
+      /* eslint-enable require-atomic-updates */
+    }
+
+    const sawA4C4 = {
+      x: [...range(25000)],
+      y: sawtoothA4C4,
+      mode: "lines",
+    }
+    const sawA7C4 = {
+      x: [...range(25000)],
+      y: sawtoothA7C4,
+      mode: "lines",
+    }
+    const sawA7C7 = {
+      x: [...range(25000)],
+      y: sawtoothA7C7,
+      mode: "lines",
+    }
+    const triA4C4 = {
+      x: [...range(25000)],
+      y: triangleA4C4,
+      mode: "lines",
+    }
+    const triA7C4 = {
+      x: [...range(25000)],
+      y: triangleA7C4,
+      mode: "lines",
+    }
+    const triA7C7 = {
+      x: [...range(25000)],
+      y: triangleA7C7,
+      mode: "lines",
+    }
+    const pulA4C4 = {
+      x: [...range(25000)],
+      y: pulseA4C4,
+      mode: "lines",
+    }
+    const pulA7C4 = {
+      x: [...range(25000)],
+      y: pulseA7C4,
+      mode: "lines",
+    }
+    const pulA7C7 = {
+      x: [...range(25000)],
+      y: pulseA7C7,
+      mode: "lines",
+    }
+    const rinA4C4 = {
+      x: [...range(25000)],
+      y: ringA4C4,
+      mode: "lines",
+    }
+    const rinA7C4 = {
+      x: [...range(25000)],
+      y: ringA7C4,
+      mode: "lines",
+    }
+    const rinA7C7 = {
+      x: [...range(25000)],
+      y: ringA7C7,
+      mode: "lines",
+    }
+
+    Plotly.newPlot("sawtoothA4C4", [sawA4C4], { title: "Sawtooth (A4) synched with C4" })
+    Plotly.newPlot("sawtoothA7C4", [sawA7C4], { title: "Sawtooth (A7) synched with C4" })
+    Plotly.newPlot("sawtoothA7C7", [sawA7C7], { title: "Sawtooth (A7) synched with C7" })
+    Plotly.newPlot("triangleA4C4", [triA4C4], { title: "Triangle (A4) synched with C4" })
+    Plotly.newPlot("triangleA7C4", [triA7C4], { title: "Triangle (A7) synched with C4" })
+    Plotly.newPlot("triangleA7C7", [triA7C7], { title: "Triangle (A7) synched with C7" })
+    Plotly.newPlot("pulseA4C4", [pulA4C4], { title: "50% Pulse (A4) synched with C4" })
+    Plotly.newPlot("pulseA7C4", [pulA7C4], { title: "50% Pulse (A7) synched with C4" })
+    Plotly.newPlot("pulseA7C7", [pulA7C7], { title: "50% Pulse (A7) synched with C7" })
+    Plotly.newPlot("ringA4C4", [rinA4C4], { title: "Triangle (A4) ring modulated with C4" })
+    Plotly.newPlot("ringA7C4", [rinA7C4], { title: "Triangle (A7) ring modulated with C4" })
+    Plotly.newPlot("ringA7C7", [rinA7C7], { title: "Triangle (A7) ring modulated with C7" })
+  </script>
+</body>
+
+</html>

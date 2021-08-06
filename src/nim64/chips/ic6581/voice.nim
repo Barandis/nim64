@@ -20,7 +20,7 @@ const WaveformZero = 0x380
 # measured directly on a physical 6581 to be about this value.
 const VoiceOffset = 0x800 * 0xff
 
-type Voice = ref object
+type Voice* = ref object
   ## An emulation of a single 6581 voice, including a waveform generator, an envelope
   ## generator, and an amplitude modulator. The waveform and envelope generators are created
   ## from their respective types, while the amplitude modulator is built into this type

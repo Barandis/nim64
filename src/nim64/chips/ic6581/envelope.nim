@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https:#opensource.org/licenses/MIT
 
@@ -47,33 +47,34 @@ const SustainLevels = [
 type
   Phase = enum
     Attack
-    DecaySustain
+    Decay
+    Sustain
     Release
-  
+
   Envelope* = ref object
     ## A single envelope generator, one of three that appears on a 6581 SID.
     ##
     ## The envelope generator is used to modify the amplitude of the sound that comes from
     ## one of the oscillator/waveform generators. It takes the flat, single-amplitude sound
-    ## that the oscillator generates and adds dynamics depending on parameters in the 
+    ## that the oscillator generates and adds dynamics depending on parameters in the
     ## `ATDCY` and `SUREL` registers that are associated with that envelope generator (there
-    ## are three envelope generators, so there is an `ATDCY1` register, an `ATDCY2` 
+    ## are three envelope generators, so there is an `ATDCY1` register, an `ATDCY2`
     ## register, and so on).
     ##
     ## Each envelope generator is in one of four phases: attack, decay, sustain, or release.
     ## The attack phase begins when the `GATE` bit of the `VCREG` register is set to `1`.
-    ## The envelope counter then increases linearly at a rate determined by the value of the 
+    ## The envelope counter then increases linearly at a rate determined by the value of the
     ## high 4 bits of the `ATDCY` register until it reaches the maximum value of `0xff`, and
     ## that's when the decay phase begins. The envelope counter then decreases, this time at
     ## the rate determined by the value of the *low* four bits of the `ATDCY` register. When
-    ## it reaches the level determined by the high 4 bits of the `SUREL` register, the 
-    ## envelope counter stops decreasing and holds steady (the sustain phase) until the 
-    ## `GATE` bit of the `VCREG` register is set to `0`. At that point the release phase 
+    ## it reaches the level determined by the high 4 bits of the `SUREL` register, the
+    ## envelope counter stops decreasing and holds steady (the sustain phase) until the
+    ## `GATE` bit of the `VCREG` register is set to `0`. At that point the release phase
     ## begins, and the envelope counter again descencds (this time at a rate determined by
     ## the bottom 4 bits of `SUREL`) until it reaches `0x00`.
     ##
-    ## Unlike in the attack phase, the envelope counter does not change linearly in the 
-    ## decay or release phases. Instead, the rate falls off step by step to simulate a 
+    ## Unlike in the attack phase, the envelope counter does not change linearly in the
+    ## decay or release phases. Instead, the rate falls off step by step to simulate a
     ## smooth exponential curve.
     ##
     ## The actual 6581 uses a pair of shift register/PLA combos to provide the logic to
@@ -83,11 +84,11 @@ type
     ## implemented as a counter and a set of tables to provide targets.
 
     envelope_counter: uint ## The envelope counter. The purpose of the envelope generator is
-                           ## to calculate this number, which is then readable via the 
+                           ## to calculate this number, which is then readable via the
                            ## `output` proc.
     attack: uint ## The 4-bit attack value. Each value corresponds to an attack of a certain
                  ## length, which is derived from the `RateTargets` array above.
-    decay: uint ## The 4-bit decay value. Each value corresponds to a decay of a certain 
+    decay: uint ## The 4-bit decay value. Each value corresponds to a decay of a certain
                 ## length, assuming a sustain level of `0x00` (the decay will be cut short
                 ## if a higher sustain level is reached first). This is given in the
                 ## `RateTargets` table, except that exponentiation causes the true decay
@@ -103,12 +104,12 @@ type
     gate: bool ## The value of the `GATE` bit of this envelope generator's `VCREG` register.
                ## When this changes from `false` to `true`, a new attack begins; when it
                ## changes from `true` to `false`, release begins.
-    rate_counter: uint ## The internal counter that determines when the envelope counter 
+    rate_counter: uint ## The internal counter that determines when the envelope counter
                        ## changes. Each time this value reaches its target, the envelope
                        ## counter is increased (on attack) or decreased by `1`.
     falloff_counter: uint ## A separate counter that can cause the envelope counter to take
                           ## multiple rate counter periods before it decrements (between 1
-                          ## period and 30). This is used to gradually slow the 
+                          ## period and 30). This is used to gradually slow the
                           ## decay/release into a simulated exponential curve.
     rate_target: uint ## The target value for the rate counter to reach before the envelope
                       ## counter can be incremented. This will always be one of the values
@@ -141,7 +142,8 @@ proc vcreg*(env: Envelope, value: uint) =
     # If the GATE bit has just been cleared, then just start the release phase.
     env.phase = Release
     env.rate_target = RateTargets[env.release]
-  
+    env.rate_counter = 0
+
   env.gate = next_gate
 
 proc atdcy*(env: Envelope, value: uint) =
@@ -154,7 +156,7 @@ proc atdcy*(env: Envelope, value: uint) =
 
   if env.phase == Attack:
     env.rate_target = RateTargets[env.attack]
-  elif env.phase == DecaySustain:
+  elif env.phase == Decay:
     env.rate_target = RateTargets[env.decay]
 
 proc surel*(env: Envelope, value: uint) =
@@ -212,7 +214,7 @@ proc clock*(env: Envelope) =
   ##    This exponential curve also happens to take three times longer to complete than a
   ##    linear curve; hence all of the SID documentation giving values for decay/release as
   ##    three times the length of attack.
-  
+
   # If we reach 0x8000 on the rate counter, we wrap it back around to 0 and keep going. This
   # is the implementation of the ADSR delay bug...if a parameter is changed so that the rate
   # target changes, and the rate counter has not yet reached the original target, and the
@@ -240,21 +242,26 @@ proc clock*(env: Envelope) =
             # phase changes to the decay/sustain phase.
             env.envelope_counter = (env.envelope_counter + 1) and 0xff
             if env.envelope_counter == 0xff:
-              env.phase = DecaySustain
+              env.phase = Decay
               env.rate_target = RateTargets[env.decay]
-          
-          of DecaySustain:
+
+          of Decay:
             # Decrement the envelope counter by one unless it's already reached the sustain
             # level.
-            if env.envelope_counter != SustainLevels[env.sustain]: env.envelope_counter -= 1
-          
+            if env.envelope_counter == SustainLevels[env.sustain]: env.phase = Sustain
+            else: env.envelope_counter -= 1
+
+          of Sustain:
+            # Nothing happens; the envelope counter stays steady
+            discard
+
           of Release:
             # Decrement the envelope counter until it reaches zero (the stop at zero is
             # enforced by the next switch block). The bitwise AND is here because if the
             # phase is shifted to Attack and then immediately to Release, the envelope
             # counter will set to 0xff and begin counting from there.
             env.envelope_counter = (env.envelope_counter - 1) and 0xff
-        
+
         # Change the value of the exponential target each time the envelope counter reaches
         # a certain breakpoint. There is not a separate curve for decay and release; they
         # both share the same set of breakpoints. This breakpoint/target combination is

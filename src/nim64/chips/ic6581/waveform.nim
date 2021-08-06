@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https:##opensource.org/licenses/MIT
 
@@ -34,15 +34,15 @@ import options
 import ../../utils
 
 
-const ACC_MSB = 23 ## The position of the most significant bit of the accumulator. The SID 
+const ACC_MSB = 23 ## The position of the most significant bit of the accumulator. The SID
                    ## uses a 24-bit accumulator.
 
-const LFSR_CLOCK = 19 ## The position of the accumulator bit used to provide the clock to 
+const LFSR_CLOCK = 19 ## The position of the accumulator bit used to provide the clock to
                       ## the shift register. When this bit changes state (`0` to `1` or `1`
                       ## to `0`), the shift register calculates its next generation.
 
 const
-  ## The positions of the shift register bits that are fed back to the beginning of the 
+  ## The positions of the shift register bits that are fed back to the beginning of the
   ## shift register on clock. If either the `RES` pin is low or the `TEST` bit of `VCREG` is
   ## set, then the inverse of the bit value at `LFSR_TAP_1` becomes the new value pushed
   ## into bit 0 of the shift register. Otherwise, these two bit values are xored, and that
@@ -51,7 +51,7 @@ const
   LFSR_TAP_2 = 22
 
 const
-  ## The positions of the shift register bits that are used as output for the noise 
+  ## The positions of the shift register bits that are used as output for the noise
   ## waveform. Eight bits are used and then shifted four bits to the left to create a 12-bit
   ## value with 0's in the lower four bits.
   LFSR_OUT_0 = 0
@@ -76,13 +76,13 @@ type Waveform* = ref object
   ## that oscillator into a waveform of a particular shape.
   ##
   ## A phase accumulator is simply a 23-bit value to which a certain number is added on
-  ## every clock cycle (each time the `PHI2` pin transitions high). The accumulator is 
-  ## allowed to overflow and lose the most significant bit, which has the result of 
-  ## "resetting" it to near zero on a regular basis. This produces a sawtooth-shaped 
+  ## every clock cycle (each time the `PHI2` pin transitions high). The accumulator is
+  ## allowed to overflow and lose the most significant bit, which has the result of
+  ## "resetting" it to near zero on a regular basis. This produces a sawtooth-shaped
   ## waveform.
   ##
   ## The number that is added to the PAO on each clock cycle is the value in the `FREHI` and
-  ## `FRELO` registers. A higher number will cause the oscillator to overflow more 
+  ## `FRELO` registers. A higher number will cause the oscillator to overflow more
   ## frequently, producing a waveform of a higher frequency.
   ##
   ## This is known as a "phase accumulator" because the normal *next* step in waveform
@@ -98,9 +98,9 @@ type Waveform* = ref object
   ## done, the output value at each clock cycle is the values of all enabled waveform
   ## generators, logically ANDed together.
 
-  acc: uint ## The current value of the phase accumulator used to determine the oscillator 
+  acc: uint ## The current value of the phase accumulator used to determine the oscillator
             ## output.
-  lfsr: uint  ## The current value of the linear feedback shift register  used to produce 
+  lfsr: uint  ## The current value of the linear feedback shift register  used to produce
               ## pseudo-random noise. The LFSR is  constructed like this:
               ## ```
               ##       +---XOR------------------+
@@ -114,25 +114,25 @@ type Waveform* = ref object
               ## 11, 14, 18, and 20 of the shift register. On shift, each bit value is moved
               ## one to the left, and then the values of bits 17 and 22 are exclusive-ored
               ## and used for the new value of bit 0 (unless the `TEST` bit of `VCREG` is
-              ## high, or the `RES` pin is low, in which case bit 0 will always take the 
+              ## high, or the `RES` pin is low, in which case bit 0 will always take the
               ## value of `1`).
               ##
-              ## A shift will occur each time the value of bit 19 of the accumulator 
-              ## transitions from `0` to `1`. Since that frequency is determined by the 
+              ## A shift will occur each time the value of bit 19 of the accumulator
+              ## transitions from `0` to `1`. Since that frequency is determined by the
               ## values of `FREHI` and `FRELO`, the "pitch" of the noise can be tuned just
               ## like the pitch of any of the other waveforms.
   prev_msb: bool ## Tracks the previous value of the most significant bit of the oscillator
                  ## to which this oscillator is synched. If sync is enabled, this oscillator
                  ## will be forcibly reset each time the synched oscillator's MSB changes.
-  last_clock: bool ## Tracks the previous value of the 19th bit of the phase accumulator. 
-                   ## This bit is used as a clock by the LFSR. Each time this bit 
+  last_clock: bool ## Tracks the previous value of the 19th bit of the phase accumulator.
+                   ## This bit is used as a clock by the LFSR. Each time this bit
                    ## transitions high, the LFSR shifts once.
-  freq: uint ## The value of the SID's frequency registers. This is the number that is 
+  freq: uint ## The value of the SID's frequency registers. This is the number that is
              ## added to the accumulator on each clock cycle.
-  pw: uint ## The value of the SID's pulse width registers. This is a 12-bit number that 
+  pw: uint ## The value of the SID's pulse width registers. This is a 12-bit number that
            ## determines when a pulse waveform's value shifts from zero to max.
-  test: bool ## The value of the `TEST` bit of the control register, as a boolean. If this 
-             ## is `true`, the accumulator value will always be `0`, `1`s will be shifted 
+  test: bool ## The value of the `TEST` bit of the control register, as a boolean. If this
+             ## is `true`, the accumulator value will always be `0`, `1`s will be shifted
              ## into the noise LFSR, and the pulse waveform output will be all `1`s.
   ring: bool ## The value of the `RING` bit of the control register, as a boolean. If this
              ## is `true`, the frequency of the synched oscillator will be used to
@@ -142,28 +142,28 @@ type Waveform* = ref object
              ## synched oscillator's accumulator transitions from `0` to `1`.
   waveform: uint ## The top four bits of the control register, which determine the
                  ## waveform(s) produced. This is stored as a combined number (rather than
-                 ## as a series of `bool`s) because it makes the output selection a bit 
+                 ## as a series of `bool`s) because it makes the output selection a bit
                  ## easier.
   resetting: bool ## Indicates whether the generator is in the process of resetting. This
                   ## corresponds to the time when the chip's `RES` pin is held low. The LFSR
                   ## acts differently during this time.
   sync_target: Option[Waveform] ## The generator to which this generator is synched. This is
-                                ## predetermined on the 6581; generator 1 is synched to 
-                                ## generator 3, 2 to 1, and 3 to 2. This value will be set 
+                                ## predetermined on the 6581; generator 1 is synched to
+                                ## generator 3, 2 to 1, and 3 to 2. This value will be set
                                 ## by the Ic6581 code itself after all three generators are
-                                ## created, so it should never be `none` during actual 
+                                ## created, so it should never be `none` during actual
                                 ## operation.
 
 proc accumulate(wv: Waveform) =
   ## Advances the accumulator by adding the word comprised of the values of `FREHI` and
   ## `FRELO`. This method handles the `TEST` bit (which sets the output of the oscillator to
-  ## 0 as long as it is set) and the `SYNC` bit (which causes the synched oscillator to 
-  ## reset the accumulator when its MSB changes) of the `VCREG` control register. Any bits 
-  ## beyond the 24 that make up the accumulator are discarded, meaning that when the 
+  ## 0 as long as it is set) and the `SYNC` bit (which causes the synched oscillator to
+  ## reset the accumulator when its MSB changes) of the `VCREG` control register. Any bits
+  ## beyond the 24 that make up the accumulator are discarded, meaning that when the
   ## accumulator overflows, it returns to a value near zero.
   let curr_msb = if is_some(wv.sync_target):
     bit_set(get(wv.sync_target).acc, ACC_MSB)
-  else: 
+  else:
     false
   let reset = wv.test or (wv.sync and curr_msb and not wv.prev_msb)
   wv.prev_msb = curr_msb
@@ -213,17 +213,17 @@ proc sawtooth(wv: Waveform): uint =
   (wv.acc shr 12) and 0xfff
 
 proc triangle(wv: Waveform): uint =
-  ## For the triangle waveform, the MSB is xored against the other 11 of the top 12 bits 
+  ## For the triangle waveform, the MSB is xored against the other 11 of the top 12 bits
   ## from the phase accumulator. Those 11 bits are then shifted one to the left. When the
-  ## MSB is high, this results in a reversal of the upward slope of the waveform, resulting 
-  ## in a triangle. The shift means that the triangle retains the same frequency and 
-  ## amplitude of the sawtooth original, but the fact that it's 11 bits means that it has 
+  ## MSB is high, this results in a reversal of the upward slope of the waveform, resulting
+  ## in a triangle. The shift means that the triangle retains the same frequency and
+  ## amplitude of the sawtooth original, but the fact that it's 11 bits means that it has
   ## half the resolution.
   ##
   ## If the RING bit in `VCREG` is set, then the MSB of the synched oscillator is used to
   ## potentially invert the slope one more time. Having the frequencies of the two
   ## oscillators differ will produce complex waveforms. This is "ring modulation". Ring
-  ## modulation only works on the triangle waveform, and only if the synched oscillator has 
+  ## modulation only works on the triangle waveform, and only if the synched oscillator has
   ## a non-zero frequency set. No other attribute of the synched oscillator is used.
   let msb = bit_set(if wv.ring: wv.acc xor get(wv.sync_target).acc else: wv.acc, ACC_MSB)
   ((if msb: not wv.acc else: wv.acc) shr 11) and 0xfff
@@ -238,7 +238,7 @@ proc pulse(wv: Waveform): uint =
   if wv.test or ((wv.acc shr 12) and 0xfff) < wv.pw: 0xfff else: 0x000
 
 proc noise(wv: Waveform): uint =
-  ## Generates a pseudo-random noise waveform. This takes 8 particular bits from the LFSR 
+  ## Generates a pseudo-random noise waveform. This takes 8 particular bits from the LFSR
   ## and uses them as the top 8 of the 12 produced by the waveform generator (the bottom 4
   ## bits are zeros).
   uint(bit_set(wv.lfsr, LFSR_OUT_0)) shl 4 or
@@ -310,18 +310,18 @@ proc output*(wv: Waveform): uint =
   ##
   ## A lot of documentation says that if more than one waveform is selected, the output is
   ## the bitwise AND of the selected waveforms. This real picture is much more complex; zero
-  ## bits, for example, can bleed into adjacent one bits and flip them to zero. The 
+  ## bits, for example, can bleed into adjacent one bits and flip them to zero. The
   ## mechanism by which this happens is not currently known.
   ##
   ## This isn't modeled directly as the details aren't known. Instead, for combined
   ## waveforms, samples of actual data from the `ENV3` register of a physical 6581 are used.
   ## These are 4096-entry tables, one for each of the possible output values from the single
-  ## waveform generators. The result is an 8-bit number that is shifted into a 12-bit 
-  ## number, so the bottom four bits are lost and therefore this is not an exact 
+  ## waveform generators. The result is an 8-bit number that is shifted into a 12-bit
+  ## number, so the bottom four bits are lost and therefore this is not an exact
   ## reproduction. But it's all you can get from the `ENV3` register.
   ##
   ## Noise is handled differently. When noise is combined with any other waveform, the
-  ## result (after a short time) is always values of 0. It is conjectured that this is 
+  ## result (after a short time) is always values of 0. It is conjectured that this is
   ## because combining noise with another waveform causes the shift register to fill with
   ## zeros, meaning the noise waveform itself will be all zeroes. In the real 6581, this
   ## actually necessitates a chip reset in order for the shift register to be able to have
@@ -335,7 +335,7 @@ proc output*(wv: Waveform): uint =
   of 2: sawtooth(wv)
   of 3: (uint(wavetable_st[sawtooth(wv)])) shl 4
   of 4: pulse(wv)
-  of 5: ((uint(wavetable_pt[sawtooth(wv)])) shl 4) and pulse(wv)
+  of 5: ((uint(wavetable_pt[triangle(wv)])) shl 4) and pulse(wv)
   of 6: ((uint(wavetable_ps[sawtooth(wv)])) shl 4) and pulse(wv)
   of 7: ((uint(wavetable_pst[sawtooth(wv)])) shl 4) and pulse(wv)
   of 8: noise(wv)
