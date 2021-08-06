@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
@@ -16,7 +16,7 @@ proc reset =
 
   # set some random register values
   for i in 0..15: write_register(uint(i), uint8(rand(0xff)))
-  
+
   # reset!
   clear(traces[RES])
   set(traces[RES])
@@ -31,7 +31,7 @@ proc reset =
   #
   # * Note that pins PA0-PA7 and PB0-PB7 are pulled up by internal resistors, which is
   #   emulated, so the PCR registers will read all 1's for unconnected lines on reset.
-  
+
   check:
     mode(chip[SP]) == Input
     mode(chip[CNT]) == Input
@@ -81,5 +81,5 @@ proc all_tests* =
     test "if flag not set, FLG set on lowering FLAG but no IRQ fired": irq_unset_flag()
     test "if flag set, FLG and IR set on lowering FLAG, IRQ fired": irq_set_flag()
 
-if is_main_module:
+when is_main_module:
   all_tests()

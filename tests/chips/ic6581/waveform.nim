@@ -211,5 +211,5 @@ proc all_tests* =
     test "synched sawtooth wave for multiple frequencies": sync()
     test "ring modulated triangle wave for multiple frequencies": ring()
 
-if is_main_module:
+when is_main_module:
   all_tests()

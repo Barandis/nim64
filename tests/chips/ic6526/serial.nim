@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
@@ -16,7 +16,7 @@ proc serial_in =
     set_level(traces[SP], float(data shr i and 1))
     set(traces[CNT])
     clear(traces[CNT])
-  
+
   check read_register(SDR) == 0x2fu8
 
 proc serial_in_overwrite =
@@ -28,7 +28,7 @@ proc serial_in_overwrite =
     set_level(traces[SP], float(data shr i and 1))
     set(traces[CNT])
     clear(traces[CNT])
-  
+
   check read_register(SDR) == 0x2fu8
 
 proc serial_out =
@@ -52,7 +52,7 @@ proc serial_out =
     check:
       highp(traces[CNT])
       level(traces[SP]) == float(data shr bit and 1)
-    
+
     # second underflow, CNT drops (excpet on the last pass, as CNT stays high after a value
     # is done being set), SP retains its value
     for _ in 1..2:
@@ -65,7 +65,7 @@ proc serial_out =
 proc serial_ready =
   setup()
   let data = 0xac
-  
+
   # set timer A to 0x0002, set serial port to output
   write_register(TALO, 0x02)
   write_register(TAHI, 0x00)
@@ -92,7 +92,7 @@ proc serial_ready =
   for _ in 1..31:
     set(traces[PHI2])
     clear(traces[PHI2])
-  
+
   # At this point, `data` is ready to shift out. We don't need to do anything to make that
   # happen since it was already in the SDR when the first byte completed. So we just do the
   # 8 loops.
@@ -104,7 +104,7 @@ proc serial_ready =
     check:
       highp(traces[CNT])
       level(traces[SP]) == float(data shr bit and 1)
-    
+
     # second underflow, CNT drops (excpet on the last pass, as CNT stays high after a value
     # is done being set), SP retains its value
     for _ in 1..2:
@@ -123,7 +123,7 @@ proc irq_unset_in =
     set_level(traces[SP], float(data shr i and 1))
     set(traces[CNT])
     clear(traces[CNT])
-  
+
   # no IRQ has been fired
   check trip(traces[IRQ])
   let icr = read_register(ICR)
@@ -169,7 +169,7 @@ proc irq_set_in =
     set_level(traces[SP], float (data shr i and 1))
     set(traces[CNT])
     clear(traces[CNT])
-  
+
   # IRQ has been fired
   check lowp(traces[IRQ])
   let icr = read_register(ICR)
@@ -226,5 +226,5 @@ proc all_tests* =
     test "if flag set, SP and IR set on byte read, IRQ fired": irq_set_in()
     test "if flag set, SP and IR set on byte write, IRQ fired": irq_set_out()
 
-if is_main_module:
+when is_main_module:
   all_tests()

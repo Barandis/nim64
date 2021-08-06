@@ -211,5 +211,5 @@ proc all_graphs* =
   graph_triangle_a7_c7()
   graph_ring_a7_c7()
 
-if is_main_module:
+when is_main_module:
   all_graphs()

@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
@@ -135,5 +135,5 @@ proc allTests* =
     test "unpulled level with low output pins is low": off_low_output()
     test "unpulled level wtih tri-stated output pins is tri-state": off_tri_output()
 
-if is_main_module:
+when is_main_module:
   all_tests()

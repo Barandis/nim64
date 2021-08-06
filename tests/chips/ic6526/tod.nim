@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
@@ -47,7 +47,7 @@ proc seconds_advance =
     for _ in 1..6:
       set(traces[TOD])
       clear(traces[TOD])
-  
+
   # 60 cycles have happened, clock should read 1 second
   check:
     read_register(TOD10TH) == 0u8
@@ -64,7 +64,7 @@ proc bcd_seconds =
   for _ in 1..6:
     set(traces[TOD])
     clear(traces[TOD])
-  
+
   check:
     read_register(TOD10TH) == 0u8
     # non-BCD would be 10 in decimal, or 0x0a in hex
@@ -82,7 +82,7 @@ proc minutes_advance =
       for _ in 1..6:
         set(traces[TOD])
         clear(traces[TOD])
-  
+
   # 3600 cycles have happened, clock should read 1 minute
   check:
     read_register(TOD10TH) == 0u8
@@ -96,12 +96,12 @@ proc bcd_minutes =
   write_register(TOD10TH, 0x09)
   write_register(TODSEC, 0x59)
   write_register(TODMIN, 0x09)
-  
+
   # 6 clock cycles, so 1 tenth, making the clock read 10 minutes
   for _ in 1..6:
     set(traces[TOD])
     clear(traces[TOD])
-  
+
   check:
     read_register(TOD10TH) == 0u8
     read_register(TODSEC) == 0u8
@@ -122,7 +122,7 @@ proc hours_advance =
         for _ in 1..6:
           set(traces[TOD])
           clear(traces[TOD])
-  
+
   # 216,000 cycles have happened, clock should read 1 hour
   check:
     read_register(TOD10TH) == 0u8
@@ -138,12 +138,12 @@ proc bcd_hours =
   write_register(TODMIN, 0x59)
   write_register(TODSEC, 0x59)
   write_register(TOD10TH, 0x09)
-  
+
   # 6 clock cycles, so 1 tenth, making the clock read 10 hours
   for _ in 1..6:
     set(traces[TOD])
     clear(traces[TOD])
-  
+
   check:
     # non-BCD would be 10 in decimal, or 0x0a in hex
     read_register(TODHR) == 0x10u8
@@ -159,12 +159,12 @@ proc am_to_pm =
   write_register(TODMIN, 0x59)
   write_register(TODSEC, 0x59)
   write_register(TOD10TH, 0x09)
-  
+
   # 6 clock cycles, so 1 tenth, making the clock read noon
   for _ in 1..6:
     set(traces[TOD])
     clear(traces[TOD])
-  
+
   check:
     # bit 7 is the AM/PM flag, set to PM at noon
     read_register(TODHR) == set_bit(0x12u8, 7)
@@ -180,12 +180,12 @@ proc pm_to_am =
   write_register(TODMIN, 0x59)
   write_register(TODSEC, 0x59)
   write_register(TOD10TH, 0x09)
-  
+
   # 6 clock cycles, so 1 tenth, making the clock read midnight
   for _ in 1..6:
     set(traces[TOD])
     clear(traces[TOD])
-  
+
   check:
     # bit 7 is the AM/PM flag, clear to AM at midnight
     read_register(TODHR) == 0x12u8
@@ -207,7 +207,7 @@ proc latch =
   for _ in 1..6:
     set(traces[TOD])
     clear(traces[TOD])
-  
+
   check:
     # current time is 1:00:00.0, register updates did not happen
     read_register(TODHR) == 0x12u8
@@ -232,7 +232,7 @@ proc halt =
   for _ in 1..6:
     set(traces[TOD])
     clear(traces[TOD])
-  
+
   # this write restarts the clock
   write_register(TOD10TH, 0x09)
 
@@ -248,7 +248,7 @@ proc halt =
   for _ in 1..6:
     set(traces[TOD])
     clear(traces[TOD])
-  
+
   check:
     read_register(TODHR) == 0x01u8
     read_register(TODMIN) == 0x00u8
@@ -284,7 +284,7 @@ proc irq_unset_alarm =
   for _ in 1..6:
     set(traces[TOD])
     clear(traces[TOD])
-  
+
   # read IRQ state and ICR into a variable because the read resets both
   let irq = level(traces[IRQ])
   let icr = read_register(ICR)
@@ -334,7 +334,7 @@ proc irq_set_alarm =
   for _ in 1..6:
     set(traces[TOD])
     clear(traces[TOD])
-  
+
   # read IRQ level and ICR into a variable becuase the read resets both
   let irq = level(traces[IRQ])
   let icr = read_register(ICR)
@@ -374,5 +374,5 @@ proc all_tests* =
     test "sets ALRM but does not fire an IRQ when ARLM flag not set": irq_unset_alarm()
     test "sets ALRM and IR, fires IRQ when ALRM flag is set": irq_set_alarm()
 
-if is_main_module:
+when is_main_module:
   all_tests()

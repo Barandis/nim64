@@ -251,5 +251,5 @@ proc all_graphs* =
   graph_saw_tri_pul_a4()
   graph_saw_tri_pul_a7()
 
-if is_main_module:
+when is_main_module:
   all_graphs()

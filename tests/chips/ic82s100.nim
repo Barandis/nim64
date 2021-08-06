@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
@@ -136,7 +136,7 @@ proc select_basic =
   # Bits 1-3: 111 = no ROM banks switched out for RAM
   # Bits 4, 14, 15: 100 = VIC address bus, doesn't matter with BA and AEC both on
   # Bits 5-8: 1010 = main address bus top four bits (address starts with $A)
-  # Bits 9-10: 10 = BA and AEC both on (AEC is inverted in the PLA), meaning CPU has the 
+  # Bits 9-10: 10 = BA and AEC both on (AEC is inverted in the PLA), meaning CPU has the
   #     address bus (and not VIC, hence the VIC address bus not mattering)
   # Bit 11: 1 = read
   # Bits 12-13: 11 = EXROM and GAME both off, indicating no expansion cartridge
@@ -178,7 +178,7 @@ proc select_basic_write =
   # Bits 1-3: 111 = no ROM banks switched out for RAM
   # Bits 4, 14, 15: 100 = VIC address bus, doesn't matter iwth BA and AEC both on
   # Bits 5-8: 1010 = main address bus top four bits (address starts with $A)
-  # Bits 9-10: 10 = BA and AEC both on, meaning CPU has the address bus (and not VIC, hence 
+  # Bits 9-10: 10 = BA and AEC both on, meaning CPU has the address bus (and not VIC, hence
   #     the VIC address bus not mattering)
   # Bit 11: 0 = write
   # Bits 12-13: 11 = EXROM and GAME both off, indicating no expansion cartridge
@@ -196,5 +196,5 @@ proc all_tests* =
     test "selects KERNAL given the expected input for it": select_kernal()
     test "selects RAM given BASIC input except write instead of read": select_basic_write()
 
-if is_main_module:
+when is_main_module:
   all_tests()

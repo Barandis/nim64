@@ -357,5 +357,5 @@ proc all_graphs* =
   bp_mid()
   bp_high()
 
-if is_main_module:
+when is_main_module:
   all_graphs()

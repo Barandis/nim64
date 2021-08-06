@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
@@ -62,15 +62,15 @@ proc decay =
     vcreg(env, 1)
 
     while output(env) < 255: clock(env)
-    
+
     var falloff = 1
-    
+
     for i in countdown(255u, 0u):
       if i in breakpoints: falloff = breakpoints[i]
       check output(env) == i
       for _ in 1..RateTargets[int(dec)]:
         for _ in 1..falloff: clock(env)
-    
+
     vcreg(env, 0)
 
 # Tests that an envelope, after attacking to 255 and decaying to the sustain level,
@@ -86,7 +86,7 @@ proc sustain =
 
     while output(env) < 255: clock(env)
     while output(env) > sus_val: clock(env)
-    
+
     for _ in 1..1024:
       clock(env)
       check output(env) == sus_val
@@ -106,9 +106,9 @@ proc release =
 
     while output(env) < 255: clock(env)
     vcreg(env, 0)
-    
+
     var falloff = 1
-    
+
     for i in countdown(255u, 0u):
       if i in breakpoints: falloff = breakpoints[i]
       check output(env) == i
@@ -122,5 +122,5 @@ proc all_tests* =
     test "all 15 sustain values": sustain()
     test "all 15 release values": release()
 
-if is_main_module:
+when is_main_module:
   all_tests()

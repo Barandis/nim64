@@ -339,5 +339,5 @@ proc all_tests* =
   bpMid()
   bpHigh()
 
-if is_main_module:
+when is_main_module:
   all_tests()

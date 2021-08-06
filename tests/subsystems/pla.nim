@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
@@ -655,5 +655,5 @@ proc all_tests* =
     test "Mode 30": mode_30()
     test "Mode 31": mode_31()
 
-if is_main_module:
+when is_main_module:
   all_tests()

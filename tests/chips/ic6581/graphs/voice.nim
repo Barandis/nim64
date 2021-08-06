@@ -168,5 +168,5 @@ proc all_graphs* =
   pulse_sync()
   triangle_ring()
 
-if is_main_module:
+when is_main_module:
   all_graphs()

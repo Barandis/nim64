@@ -10,5 +10,5 @@ proc all_tests* =
   envelope.all_tests()
   registers.all_tests()
 
-if is_main_module:
+when is_main_module:
   all_tests()

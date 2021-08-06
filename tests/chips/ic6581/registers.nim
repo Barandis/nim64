@@ -257,5 +257,5 @@ proc all_tests* =
     test "envelope 3 register reflects envelope from voice 3": env3_envelope()
     test "reading write-only register returns last written value": read_writable()
 
-if is_main_module:
+when is_main_module:
   all_tests()
