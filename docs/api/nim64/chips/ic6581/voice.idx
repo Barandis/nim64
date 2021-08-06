@@ -1,0 +1,15 @@
+Voice	nim64/chips/ic6581/voice.html#Voice	voice: Voice	
+frelo	nim64/chips/ic6581/voice.html#frelo,Voice,uint	voice: frelo(voice: Voice; value: uint)	
+frehi	nim64/chips/ic6581/voice.html#frehi,Voice,uint	voice: frehi(voice: Voice; value: uint)	
+pwlo	nim64/chips/ic6581/voice.html#pwlo,Voice,uint	voice: pwlo(voice: Voice; value: uint)	
+pwhi	nim64/chips/ic6581/voice.html#pwhi,Voice,uint	voice: pwhi(voice: Voice; value: uint)	
+vcreg	nim64/chips/ic6581/voice.html#vcreg,Voice,uint	voice: vcreg(voice: Voice; value: uint)	
+atdcy	nim64/chips/ic6581/voice.html#atdcy,Voice,uint	voice: atdcy(voice: Voice; value: uint)	
+surel	nim64/chips/ic6581/voice.html#surel,Voice,uint	voice: surel(voice: Voice; value: uint)	
+reset	nim64/chips/ic6581/voice.html#reset,Voice,bool	voice: reset(voice: Voice; value: bool = true)	
+clock	nim64/chips/ic6581/voice.html#clock,Voice	voice: clock(voice: Voice)	
+sync	nim64/chips/ic6581/voice.html#sync,Voice,Voice	voice: sync(voice: Voice; target: Voice)	
+output	nim64/chips/ic6581/voice.html#output,Voice	voice: output(voice: Voice): int	
+waveform_output	nim64/chips/ic6581/voice.html#waveform_output,Voice	voice: waveform_output(voice: Voice): uint	
+envelope_output	nim64/chips/ic6581/voice.html#envelope_output,Voice	voice: envelope_output(voice: Voice): uint	
+new_voice	nim64/chips/ic6581/voice.html#new_voice	voice: new_voice(): Voice	

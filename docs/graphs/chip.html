@@ -1,0 +1,137 @@
+<!--
+ Copyright (c) 2020 Thomas J. Otterson
+
+ This software is released under the MIT License.
+ https://opensource.org/licenses/MIT
+-->
+
+<html lang="en">
+
+<head>
+  <title>Test 6581 SID Output Waveforms</title>
+  <meta charset="utf-8">
+</head>
+
+<body>
+  <div id="sawtooth"></div>
+  <div id="triangle"></div>
+  <div id="pulse"></div>
+  <div id="combined"></div>
+  <div id="lpLow"></div>
+  <div id="lpMid"></div>
+  <div id="lpHigh"></div>
+  <div id="hpLow"></div>
+  <div id="hpMid"></div>
+  <div id="hpHigh"></div>
+  <div id="bpLow"></div>
+  <div id="bpMid"></div>
+  <div id="bpHigh"></div>
+
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="./chip/sawtooth.js"></script>
+  <script src="./chip/triangle.js"></script>
+  <script src="./chip/pulse.js"></script>
+  <script src="./chip/combined.js"></script>
+  <script src="./chip/lpLow.js"></script>
+  <script src="./chip/lpMid.js"></script>
+  <script src="./chip/lpHigh.js"></script>
+  <script src="./chip/hpLow.js"></script>
+  <script src="./chip/hpMid.js"></script>
+  <script src="./chip/hpHigh.js"></script>
+  <script src="./chip/bpLow.js"></script>
+  <script src="./chip/bpMid.js"></script>
+  <script src="./chip/bpHigh.js"></script>
+  <script>
+    function* range(end) {
+      let current = 0
+      /* eslint-disable require-atomic-updates */
+      while (current < end) {
+        yield current
+        current += 1
+      }
+      /* eslint-enable require-atomic-updates */
+    }
+
+    const saw = {
+      x: [...range(25000)],
+      y: sawtooth,
+      mode: "lines",
+    }
+    const tri = {
+      x: [...range(25000)],
+      y: triangle,
+      mode: "lines",
+    }
+    const pul = {
+      x: [...range(25000)],
+      y: pulse,
+      mode: "lines",
+    }
+    const com = {
+      x: [...range(25000)],
+      y: combined,
+      mode: "lines",
+    }
+    const lpl = {
+      x: [...range(25000)],
+      y: lpLow,
+      mode: "lines",
+    }
+    const lpm = {
+      x: [...range(25000)],
+      y: lpMid,
+      mode: "lines",
+    }
+    const lph = {
+      x: [...range(25000)],
+      y: lpHigh,
+      mode: "lines",
+    }
+    const hpl = {
+      x: [...range(25000)],
+      y: hpLow,
+      mode: "lines",
+    }
+    const hpm = {
+      x: [...range(25000)],
+      y: hpMid,
+      mode: "lines",
+    }
+    const hph = {
+      x: [...range(25000)],
+      y: hpHigh,
+      mode: "lines",
+    }
+    const bpl = {
+      x: [...range(25000)],
+      y: bpLow,
+      mode: "lines",
+    }
+    const bpm = {
+      x: [...range(25000)],
+      y: bpMid,
+      mode: "lines",
+    }
+    const bph = {
+      x: [...range(25000)],
+      y: bpHigh,
+      mode: "lines",
+    }
+
+    Plotly.newPlot("sawtooth", [saw], { title: "Voice 1: Sawtooth (A7)" })
+    Plotly.newPlot("triangle", [tri], { title: "Voice 2: Triangle (C7)" })
+    Plotly.newPlot("pulse", [pul], { title: "Voice 3: 50% Pulse (E7)" })
+    Plotly.newPlot("combined", [com], { title: "Three voices combined" })
+    Plotly.newPlot("lpLow", [lpl], { title: "Low pass filter, 420 Hz cutoff frequency" })
+    Plotly.newPlot("lpMid", [lpm], { title: "Low pass filter, 4.6 kHz cutoff frequency" })
+    Plotly.newPlot("lpHigh", [lph], { title: "Low pass filter, 14.5 kHz cutoff frequency" })
+    Plotly.newPlot("hpLow", [hpl], { title: "High pass filter, 420 Hz cutoff frequency" })
+    Plotly.newPlot("hpMid", [hpm], { title: "High pass filter, 4.6 kHz cutoff frequency" })
+    Plotly.newPlot("hpHigh", [hph], { title: "High pass filter, 14.5 kHz cutoff frequency" })
+    Plotly.newPlot("bpLow", [bpl], { title: "Band pass filter, 420 Hz center frequency" })
+    Plotly.newPlot("bpMid", [bpm], { title: "Band pass filter, 4.6 kHz center frequency" })
+    Plotly.newPlot("bpHigh", [bph], { title: "Band pass filter, 14.5 kHz center frequency" })
+  </script>
+</body>
+
+</html>

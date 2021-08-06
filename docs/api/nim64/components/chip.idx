@@ -1,0 +1,4 @@
+pins	nim64/components/chip.html#pins	  <tt class="docutils literal"><span class="pre">pins</span></tt>	
+registers	nim64/components/chip.html#registers	  <tt class="docutils literal"><span class="pre">registers</span></tt>	
+init	nim64/components/chip.html#init	  <tt class="docutils literal"><span class="pre">init</span></tt>	
+chip	nim64/components/chip.html#chip.m,untyped,untyped	chip: chip(header, body: untyped): untyped	

@@ -1,0 +1,22 @@
+Ic4164	nim64/chips/ic4164.html#Ic4164	ic4164: Ic4164	
+`[]`	nim64/chips/ic4164.html#[],Ic4164,int	ic4164: `[]`(chip`gensym0: Ic4164; index`gensym0: int): Pin	
+`[]`	nim64/chips/ic4164.html#[],Ic4164,string	ic4164: `[]`(chip`gensym0: Ic4164; index`gensym0: string): Pin	
+items	nim64/chips/ic4164.html#items.i,Ic4164	ic4164: items(chip`gensym0: Ic4164): Pin	
+pairs	nim64/chips/ic4164.html#pairs.i,Ic4164	ic4164: pairs(chip`gensym0: Ic4164): tuple[a: int, b: Pin]	
+RAS	nim64/chips/ic4164.html#RAS	ic4164: RAS	
+CAS	nim64/chips/ic4164.html#CAS	ic4164: CAS	
+WE	nim64/chips/ic4164.html#WE	ic4164: WE	
+A0	nim64/chips/ic4164.html#A0	ic4164: A0	
+A1	nim64/chips/ic4164.html#A1	ic4164: A1	
+A2	nim64/chips/ic4164.html#A2	ic4164: A2	
+A3	nim64/chips/ic4164.html#A3	ic4164: A3	
+A4	nim64/chips/ic4164.html#A4	ic4164: A4	
+A5	nim64/chips/ic4164.html#A5	ic4164: A5	
+A6	nim64/chips/ic4164.html#A6	ic4164: A6	
+A7	nim64/chips/ic4164.html#A7	ic4164: A7	
+D	nim64/chips/ic4164.html#D	ic4164: D	
+Q	nim64/chips/ic4164.html#Q	ic4164: Q	
+NC	nim64/chips/ic4164.html#NC	ic4164: NC	
+VCC	nim64/chips/ic4164.html#VCC	ic4164: VCC	
+VSS	nim64/chips/ic4164.html#VSS	ic4164: VSS	
+newIc4164	nim64/chips/ic4164.html#newIc4164	ic4164: newIc4164(): Ic4164	

@@ -1,0 +1,20 @@
+Ic7408	nim64/chips/ic7408.html#Ic7408	ic7408: Ic7408	
+`[]`	nim64/chips/ic7408.html#[],Ic7408,int	ic7408: `[]`(chip`gensym0: Ic7408; index`gensym0: int): Pin	
+`[]`	nim64/chips/ic7408.html#[],Ic7408,string	ic7408: `[]`(chip`gensym0: Ic7408; index`gensym0: string): Pin	
+items	nim64/chips/ic7408.html#items.i,Ic7408	ic7408: items(chip`gensym0: Ic7408): Pin	
+pairs	nim64/chips/ic7408.html#pairs.i,Ic7408	ic7408: pairs(chip`gensym0: Ic7408): tuple[a: int, b: Pin]	
+A1	nim64/chips/ic7408.html#A1	ic7408: A1	
+B1	nim64/chips/ic7408.html#B1	ic7408: B1	
+A2	nim64/chips/ic7408.html#A2	ic7408: A2	
+B2	nim64/chips/ic7408.html#B2	ic7408: B2	
+A3	nim64/chips/ic7408.html#A3	ic7408: A3	
+B3	nim64/chips/ic7408.html#B3	ic7408: B3	
+A4	nim64/chips/ic7408.html#A4	ic7408: A4	
+B4	nim64/chips/ic7408.html#B4	ic7408: B4	
+Y1	nim64/chips/ic7408.html#Y1	ic7408: Y1	
+Y2	nim64/chips/ic7408.html#Y2	ic7408: Y2	
+Y3	nim64/chips/ic7408.html#Y3	ic7408: Y3	
+Y4	nim64/chips/ic7408.html#Y4	ic7408: Y4	
+VCC	nim64/chips/ic7408.html#VCC	ic7408: VCC	
+GND	nim64/chips/ic7408.html#GND	ic7408: GND	
+newIc7408	nim64/chips/ic7408.html#newIc7408	ic7408: newIc7408(): Ic7408	

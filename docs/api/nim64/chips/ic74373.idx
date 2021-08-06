@@ -1,0 +1,26 @@
+Ic74373	nim64/chips/ic74373.html#Ic74373	ic74373: Ic74373	
+`[]`	nim64/chips/ic74373.html#[],Ic74373,int	ic74373: `[]`(chip`gensym0: Ic74373; index`gensym0: int): Pin	
+`[]`	nim64/chips/ic74373.html#[],Ic74373,string	ic74373: `[]`(chip`gensym0: Ic74373; index`gensym0: string): Pin	
+items	nim64/chips/ic74373.html#items.i,Ic74373	ic74373: items(chip`gensym0: Ic74373): Pin	
+pairs	nim64/chips/ic74373.html#pairs.i,Ic74373	ic74373: pairs(chip`gensym0: Ic74373): tuple[a: int, b: Pin]	
+OE	nim64/chips/ic74373.html#OE	ic74373: OE	
+LE	nim64/chips/ic74373.html#LE	ic74373: LE	
+D0	nim64/chips/ic74373.html#D0	ic74373: D0	
+D1	nim64/chips/ic74373.html#D1	ic74373: D1	
+D2	nim64/chips/ic74373.html#D2	ic74373: D2	
+D3	nim64/chips/ic74373.html#D3	ic74373: D3	
+D4	nim64/chips/ic74373.html#D4	ic74373: D4	
+D5	nim64/chips/ic74373.html#D5	ic74373: D5	
+D6	nim64/chips/ic74373.html#D6	ic74373: D6	
+D7	nim64/chips/ic74373.html#D7	ic74373: D7	
+Q0	nim64/chips/ic74373.html#Q0	ic74373: Q0	
+Q1	nim64/chips/ic74373.html#Q1	ic74373: Q1	
+Q2	nim64/chips/ic74373.html#Q2	ic74373: Q2	
+Q3	nim64/chips/ic74373.html#Q3	ic74373: Q3	
+Q4	nim64/chips/ic74373.html#Q4	ic74373: Q4	
+Q5	nim64/chips/ic74373.html#Q5	ic74373: Q5	
+Q6	nim64/chips/ic74373.html#Q6	ic74373: Q6	
+Q7	nim64/chips/ic74373.html#Q7	ic74373: Q7	
+VCC	nim64/chips/ic74373.html#VCC	ic74373: VCC	
+GND	nim64/chips/ic74373.html#GND	ic74373: GND	
+newIc74373	nim64/chips/ic74373.html#newIc74373	ic74373: newIc74373(): Ic74373	

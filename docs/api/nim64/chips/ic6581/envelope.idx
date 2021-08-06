@@ -1,0 +1,8 @@
+Envelope	nim64/chips/ic6581/envelope.html#Envelope	envelope: Envelope	
+vcreg	nim64/chips/ic6581/envelope.html#vcreg,Envelope,uint	envelope: vcreg(env: Envelope; value: uint)	
+atdcy	nim64/chips/ic6581/envelope.html#atdcy,Envelope,uint	envelope: atdcy(env: Envelope; value: uint)	
+surel	nim64/chips/ic6581/envelope.html#surel,Envelope,uint	envelope: surel(env: Envelope; value: uint)	
+reset	nim64/chips/ic6581/envelope.html#reset,Envelope,bool	envelope: reset(env: Envelope; value: bool = true)	
+clock	nim64/chips/ic6581/envelope.html#clock,Envelope	envelope: clock(env: Envelope)	
+output	nim64/chips/ic6581/envelope.html#output,Envelope	envelope: output(env: Envelope): uint	
+new_envelope	nim64/chips/ic6581/envelope.html#new_envelope	envelope: new_envelope(): Envelope	

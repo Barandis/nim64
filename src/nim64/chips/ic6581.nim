@@ -49,7 +49,7 @@
 ## `$18`   `SIGVOL`  W      Master volume and filter mode
 ## `$19`   `POTX`    R      Potentiometer X current value
 ## `$1A`   `POTY`    R      Potentiometer Y current value
-## `$1B`   `RANDOM`  R      Voice 3 waveform generator output, high 8 bits
+## `$1B`   `OSC3`    R      Voice 3 waveform generator output, high 8 bits
 ## `$1C`   `ENV3`    R      Voice 3 envelope generator output
 ## ======  ========  =====  ===============================================================
 ##
@@ -148,7 +148,7 @@
 ##
 ## The high 8 bits of voice 3's waveform generator output are made available in the `OSC3`
 ## register. This register has often also been called something like `RANDOM` and has been
-## so named because it's common usage to apply a `NOISE` waveform to voice 3 and then use 
+## so named because it's common usage to apply a `NOISE` waveform to voice 3 and then use
 ## this register to generate pseudo-random numbers. The waveform is available here even if
 ## the voice is not used, because it's never gated (see the `GATE` bit of the envelope
 ## generator below) or because it's disconnected (see the `DSCNV3` bit in the filter
@@ -195,15 +195,15 @@
 ##
 ## The decay continues until the envelope output reaches the sustain level, set by the high
 ## 4 bits of the `SURELx` register. (Note that unlike attack and decay, this setting does
-## not control a *time*, it controls a *level*.) The actual sustain value is derived by 
-## doubling the hexadecimal digit set in the register; setting sustain to `$C`, for 
-## instance, would cause the decay phase to end and the sustain phase to begin once the 
-## envelope output falls to `0xcc`. Nothing terribly interesting happens in the sustain 
+## not control a *time*, it controls a *level*.) The actual sustain value is derived by
+## doubling the hexadecimal digit set in the register; setting sustain to `$C`, for
+## instance, would cause the decay phase to end and the sustain phase to begin once the
+## envelope output falls to `0xcc`. Nothing terribly interesting happens in the sustain
 ## phase; the envelope output simply stays at the same level.
 ##
 ## This phase transitions into the release phase when the `GATE` bit of the `VCREGx`
-## register is set to `0`. The release phase is mechanically exactly the same as the decay 
-## phase, except that it makes the envelope output decrement all the way to zero rather 
+## register is set to `0`. The release phase is mechanically exactly the same as the decay
+## phase, except that it makes the envelope output decrement all the way to zero rather
 ## than to the sustain level. The rate at which this happens is controlled by the low 4 bits
 ## of the `SURELx` register.
 ##
@@ -262,23 +262,23 @@
 ##
 ## The values in `CUTLO` and `CUTHI` do not determine the cutoff frequency directly. In
 ## fact, the curve for frequencies depending on the register setting is complex and even has
-## a discontinuiuty at one point. The cutoff frequency starts at about 220Hz at register 
-## value zero and rises, slowly at first, and then much more quickly as it approaches the 
+## a discontinuiuty at one point. The cutoff frequency starts at about 220Hz at register
+## value zero and rises, slowly at first, and then much more quickly as it approaches the
 ## halfway register value of `$3FF`; at `$3FF`, the frequency is about 6kHz. Then there is a
-## sudden drop to about 4.6kHz at register value `$400`. The frequency then again rises, 
+## sudden drop to about 4.6kHz at register value `$400`. The frequency then again rises,
 ## uickly at first and then slower as it approaches the max register value of `$7FF`, where
 ## the cutoff frequency is about 18kHz. There is no particular model to these values, and
 ## they vary slightly between chips; the values in this emulator are interpolated from 27
 ## sample values taken from a physical 6581 chip.
 ##
 ## The cutoff frequency values also depend on the two capacitors external to the chip. One
-## is attached across `CAP1A` and `CAP1B`, while the other is connected to `CAP2A` and 
+## is attached across `CAP1A` and `CAP1B`, while the other is connected to `CAP2A` and
 ## `CAP2B`. The values selected here assume 470pF capacitors across these pins, as was the
 ## case in the Commodore 64. The CAP pins are otherwise not emulated.
 ##
 ## The other two filter/mixer-related registers have multiple purposes. The `RESON` register
 ## controls resonance and which voices are actually filtered:
-## 
+##
 ## =========  =========  =========  =========  =========  =========  =========  =========
 ## 7          6          5          4          3          2          1          0
 ## =========  =========  =========  =========  =========  =========  =========  =========
@@ -297,7 +297,7 @@
 ## not, and then it's mixed with the signals from the three voices before being output.)
 ##
 ## The type of filter is determined by the settings in the final filter register, `SIGVOL`:
-## 
+##
 ## =========  =========  =========  =========  =========  =========  =========  =========
 ## 7          6          5          4          3          2          1          0
 ## =========  =========  =========  =========  =========  =========  =========  =========
@@ -336,7 +336,7 @@
 ## Completely unrelated to sound production, the 6581 also dedicates two pins and two
 ## registers to potentiometer reading. In practice, these potentiometers are almost always
 ## game paddles, though there is nothing preventing them from being any other kind of device
-## that can send a varying voltage to the `POTX` and `POTY` pins (via Control Ports 1 and 
+## that can send a varying voltage to the `POTX` and `POTY` pins (via Control Ports 1 and
 ## 2).
 ##
 ## The physical 6581 expects these to be RC circuits that charge a capacitor at a varying
@@ -397,7 +397,7 @@
 ## IN and AUDIO OUT. These are all changed here because spaces are inconvenient.
 ##
 ## Pin assignments are explained below.
-## 
+##
 ## =====  =======  ========================================================================
 ## Pin    Name     Description
 ## =====  =======  ========================================================================
@@ -429,13 +429,14 @@
 ## 26     `EXT`    External audio input.
 ## 27     `AUDIO`  Audio output.
 ## 28     `VDD`    +12V power supply. Not emulated.
-## 
+## =====  =======  ========================================================================
+##
 ## Pins `POTX`, `POTY`, `EXT`, and `AUDIO` are all analog pins. `POTX` and `POTY` expect
 ## values from `0x00` to `0xff` on them; if higher values are applied to these pins, the top
 ## bits will be left off until there are 8 left. `AUDIO` is approximately 20 bits wide, and
 ## `EXT` should be about the same to mix evenly with the generated audio.
 ##
-## In the Commodore 64, U18 is a 6581. It responds to addresses from `$D400` to `$D7FF`. 
+## In the Commodore 64, U18 is a 6581. It responds to addresses from `$D400` to `$D7FF`.
 ## This is many more addresses than are necessary to accomodate the 29 registers that are
 ## actually present. These registers repeat every 32 (`$20`) addresses through that space.
 ## For example, writing `$D400`, `$D420`, `$D440`, etc. will all write to the `FRELO1`
@@ -445,7 +446,7 @@
 ##
 ## R7, R38, C13, C37, and Q8 make up the external filter that is not a part of the physical
 ## chip but that is emulated by this type.
- 
+
 import sequtils
 import strformat
 import ../utils
@@ -487,7 +488,7 @@ chip Ic6581:
 
       # Resets the chip on a low signal.
       RES: 5
-    
+
     output:
       # Data pins. These can move data in either direction, but only one direction at a
       # time, dictated by the R_W pin.
@@ -517,7 +518,7 @@ chip Ic6581:
       VDD: 28
       VCC: 25
       GND: 14
-  
+
   registers:
     # These are all described in the large comment at the beginning of this file, so no
     # further description is given here.
@@ -566,7 +567,7 @@ chip Ic6581:
     UNUSED1: 29
     UNUSED2: 30
     UNUSED3: 31
-  
+
   init:
     # Pulling these down so that if they're unconnected (level NaN), they'll put 0 in their
     # registers
@@ -648,7 +649,7 @@ chip Ic6581:
       reset(voice3)
       reset(filter)
       reset(external)
-    
+
     proc read_register(index: int): uint8 =
       # Reads a SID register. This only works as expected for the four read-only registers.
       #
@@ -659,7 +660,7 @@ chip Ic6581:
       # emulation simply returns the last written value as long as the last write has
       # happened in the last 2000 cycles; otherwise it returns 0.
       if index < POTXR: last_write_value else: registers[index]
-    
+
     proc write_register(index: int, value: uint8) =
       if index == PWHI1 or index == PWHI2 or index == PWHI3:
         # Strip the upper four bits
@@ -699,7 +700,7 @@ chip Ic6581:
       of RESON:  reson(filter, value)
       of SIGVOL: sigvol(filter, value)
       else: discard
-    
+
     proc reset_listener(pin: Pin) =
       if lowp(pin):
         reset_clock = 0
@@ -708,7 +709,7 @@ chip Ic6581:
         reset(voice3, false)
       elif highp(pin):
         has_reset = false
-    
+
     proc clock_listener(pin: Pin) =
       if highp(pin):
         # Check to see if RES has been held low for 10 cycles; if so, perform the reset
@@ -717,7 +718,7 @@ chip Ic6581:
           if reset_clock >= 10:
             reset()
             has_reset = true
-        
+
         # Check to see if last written value has bled off the internal data bus yet
         last_write_time += 1
         if (last_write_time >= MaxLastWriteTime): last_write_value = 0
@@ -729,7 +730,7 @@ chip Ic6581:
           last_pot_time = 0
           registers[POTXR] = uint8(int(level(pins[POTX])) and 0xff)
           registers[POTYR] = uint8(int(level(pins[POTY])) and 0xff)
-        
+
         # Clock sound components and put their outputs on the AUDIO pin
         clock(voice1)
         clock(voice2)
@@ -741,7 +742,7 @@ chip Ic6581:
         # Dump the voice 3 oscillator and envelope values into their registers
         registers[OSC3] = uint8((waveform_output(voice3) shr 4) and 0xff)
         registers[ENV3] = uint8(envelope_output(voice3))
-      
+
     proc enable_listener(pin: Pin) =
       if highp(pin):
         mode_to_pins(Output, data_pins)
@@ -753,8 +754,7 @@ chip Ic6581:
         elif lowp(pins[R_W]):
           mode_to_pins(Input, data_pins)
           write_register(int(index), uint8(pins_to_value(data_pins)))
-    
+
     add_listener(pins[RES], reset_listener)
     add_listener(pins[PHI2], clock_listener)
     add_listener(pins[CS], enable_listener)
-    

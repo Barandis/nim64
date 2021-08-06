@@ -1,0 +1,11 @@
+Waveform	nim64/chips/ic6581/waveform.html#Waveform	waveform: Waveform	
+frelo	nim64/chips/ic6581/waveform.html#frelo,Waveform,uint	waveform: frelo(wv: Waveform; value: uint)	
+frehi	nim64/chips/ic6581/waveform.html#frehi,Waveform,uint	waveform: frehi(wv: Waveform; value: uint)	
+pwlo	nim64/chips/ic6581/waveform.html#pwlo,Waveform,uint	waveform: pwlo(wv: Waveform; value: uint)	
+pwhi	nim64/chips/ic6581/waveform.html#pwhi,Waveform,uint	waveform: pwhi(wv: Waveform; value: uint)	
+vcreg	nim64/chips/ic6581/waveform.html#vcreg,Waveform,uint	waveform: vcreg(wv: Waveform; value: uint)	
+reset	nim64/chips/ic6581/waveform.html#reset,Waveform,bool	waveform: reset(wv: Waveform; value: bool = true)	
+clock	nim64/chips/ic6581/waveform.html#clock,Waveform	waveform: clock(wv: Waveform)	
+sync	nim64/chips/ic6581/waveform.html#sync,Waveform,Waveform	waveform: sync(wv: Waveform; target: Waveform)	
+output	nim64/chips/ic6581/waveform.html#output,Waveform	waveform: output(wv: Waveform): uint	
+new_waveform	nim64/chips/ic6581/waveform.html#new_waveform	waveform: new_waveform(): Waveform	

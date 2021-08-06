@@ -1,0 +1,4 @@
+reset	nim64/chips/ic6581/external.html#reset,ExternalFilter	external: reset(ext: ExternalFilter)	
+clock	nim64/chips/ic6581/external.html#clock,ExternalFilter,int	external: clock(ext: ExternalFilter; input: int)	
+output	nim64/chips/ic6581/external.html#output,ExternalFilter	external: output(ext: ExternalFilter): int	
+new_external_filter	nim64/chips/ic6581/external.html#new_external_filter	external: new_external_filter(): ExternalFilter	

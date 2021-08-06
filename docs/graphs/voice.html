@@ -1,0 +1,97 @@
+<!--
+ Copyright (c) 2020 Thomas J. Otterson
+
+ This software is released under the MIT License.
+ https://opensource.org/licenses/MIT
+-->
+
+<html lang="en">
+
+<head>
+  <title>Test voices</title>
+  <meta charset="utf-8">
+</head>
+
+<body>
+  <div id="sawtooth"></div>
+  <div id="triangle"></div>
+  <div id="pulse"></div>
+  <div id="noise"></div>
+  <div id="sawtoothSync"></div>
+  <div id="triangleSync"></div>
+  <div id="pulseSync"></div>
+  <div id="triangleRing"></div>
+
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="./voice/sawtooth.js"></script>
+  <script src="./voice/triangle.js"></script>
+  <script src="./voice/pulse.js"></script>
+  <script src="./voice/noise.js"></script>
+  <script src="./voice/sawtoothSync.js"></script>
+  <script src="./voice/triangleSync.js"></script>
+  <script src="./voice/pulseSync.js"></script>
+  <script src="./voice/triangleRing.js"></script>
+  <script>
+    function* range(end) {
+      let current = 0
+      /* eslint-disable require-atomic-updates */
+      while (current < end) {
+        yield current
+        current += 1
+      }
+      /* eslint-enable require-atomic-updates */
+    }
+
+    const saw = {
+      x: [...range(25000)],
+      y: sawtooth,
+      mode: "lines",
+    }
+    const tri = {
+      x: [...range(25000)],
+      y: triangle,
+      mode: "lines",
+    }
+    const pul = {
+      x: [...range(25000)],
+      y: pulse,
+      mode: "lines",
+    }
+    const noi = {
+      x: [...range(25000)],
+      y: noise,
+      mode: "lines",
+    }
+    const sawsync = {
+      x: [...range(25000)],
+      y: sawtoothSync,
+      mode: "lines",
+    }
+    const trisync = {
+      x: [...range(25000)],
+      y: triangleSync,
+      mode: "lines",
+    }
+    const pulsync = {
+      x: [...range(25000)],
+      y: pulseSync,
+      mode: "lines",
+    }
+    const triring = {
+      x: [...range(25000)],
+      y: triangleRing,
+      mode: "lines",
+    }
+
+    Plotly.newPlot("sawtooth", [saw], { title: "Sawtooth (A7)" })
+    Plotly.newPlot("triangle", [tri], { title: "Triangle (A7)" })
+    Plotly.newPlot("pulse", [pul], { title: "50% Pulse (A7)" })
+    Plotly.newPlot("noise", [noi], { title: "Noise (A7)" })
+    Plotly.newPlot("sawtoothSync", [sawsync], { title: "Sawtooth (A7) synched with C7" })
+    Plotly.newPlot("triangleSync", [trisync], { title: "Triangle (A7) synched with C7" })
+    Plotly.newPlot("pulseSync", [pulsync], { title: "50% Pulse (A7) synched with C7" })
+    Plotly.newPlot("triangleRing", [triring], { title: "Triangle (A7) ring modulated with C7" })
+  </script>
+</body>
+
+</html>

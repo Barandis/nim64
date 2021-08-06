@@ -1,0 +1,43 @@
+Voices	nim64/chips/ic6581.html#voices	  Voices	
+Waveform Generators	nim64/chips/ic6581.html#voices-waveform-generators	   Waveform Generators	
+Envelope Generator	nim64/chips/ic6581.html#voices-envelope-generator	   Envelope Generator	
+Amplitude modulator	nim64/chips/ic6581.html#voices-amplitude-modulator	   Amplitude modulator	
+Filter/mixer	nim64/chips/ic6581.html#filterslashmixer	  Filter/mixer	
+External filter	nim64/chips/ic6581.html#external-filter	  External filter	
+Potentiometers	nim64/chips/ic6581.html#potentiometers	  Potentiometers	
+Read-only versus write-only registers	nim64/chips/ic6581.html#readminusonly-versus-writeminusonly-registers	  Read-only versus write-only registers	
+Pin interface	nim64/chips/ic6581.html#pin-interface	  Pin interface	
+Ic6581	nim64/chips/ic6581.html#Ic6581	ic6581: Ic6581	
+`[]`	nim64/chips/ic6581.html#[],Ic6581,int	ic6581: `[]`(chip`gensym0: Ic6581; index`gensym0: int): Pin	
+`[]`	nim64/chips/ic6581.html#[],Ic6581,string	ic6581: `[]`(chip`gensym0: Ic6581; index`gensym0: string): Pin	
+items	nim64/chips/ic6581.html#items.i,Ic6581	ic6581: items(chip`gensym0: Ic6581): Pin	
+pairs	nim64/chips/ic6581.html#pairs.i,Ic6581	ic6581: pairs(chip`gensym0: Ic6581): tuple[a: int, b: Pin]	
+A0	nim64/chips/ic6581.html#A0	ic6581: A0	
+A1	nim64/chips/ic6581.html#A1	ic6581: A1	
+A2	nim64/chips/ic6581.html#A2	ic6581: A2	
+A3	nim64/chips/ic6581.html#A3	ic6581: A3	
+A4	nim64/chips/ic6581.html#A4	ic6581: A4	
+POTX	nim64/chips/ic6581.html#POTX	ic6581: POTX	
+POTY	nim64/chips/ic6581.html#POTY	ic6581: POTY	
+EXT	nim64/chips/ic6581.html#EXT	ic6581: EXT	
+PHI2	nim64/chips/ic6581.html#PHI2	ic6581: PHI2	
+R_W	nim64/chips/ic6581.html#R_W	ic6581: R_W	
+CS	nim64/chips/ic6581.html#CS	ic6581: CS	
+RES	nim64/chips/ic6581.html#RES	ic6581: RES	
+D0	nim64/chips/ic6581.html#D0	ic6581: D0	
+D1	nim64/chips/ic6581.html#D1	ic6581: D1	
+D2	nim64/chips/ic6581.html#D2	ic6581: D2	
+D3	nim64/chips/ic6581.html#D3	ic6581: D3	
+D4	nim64/chips/ic6581.html#D4	ic6581: D4	
+D5	nim64/chips/ic6581.html#D5	ic6581: D5	
+D6	nim64/chips/ic6581.html#D6	ic6581: D6	
+D7	nim64/chips/ic6581.html#D7	ic6581: D7	
+AUDIO	nim64/chips/ic6581.html#AUDIO	ic6581: AUDIO	
+CAP1A	nim64/chips/ic6581.html#CAP1A	ic6581: CAP1A	
+CAP1B	nim64/chips/ic6581.html#CAP1B	ic6581: CAP1B	
+CAP2A	nim64/chips/ic6581.html#CAP2A	ic6581: CAP2A	
+CAP2B	nim64/chips/ic6581.html#CAP2B	ic6581: CAP2B	
+VDD	nim64/chips/ic6581.html#VDD	ic6581: VDD	
+VCC	nim64/chips/ic6581.html#VCC	ic6581: VCC	
+GND	nim64/chips/ic6581.html#GND	ic6581: GND	
+newIc6581	nim64/chips/ic6581.html#newIc6581	ic6581: newIc6581(): Ic6581	

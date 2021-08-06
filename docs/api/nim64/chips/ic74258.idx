@@ -1,0 +1,22 @@
+Ic74258	nim64/chips/ic74258.html#Ic74258	ic74258: Ic74258	
+`[]`	nim64/chips/ic74258.html#[],Ic74258,int	ic74258: `[]`(chip`gensym0: Ic74258; index`gensym0: int): Pin	
+`[]`	nim64/chips/ic74258.html#[],Ic74258,string	ic74258: `[]`(chip`gensym0: Ic74258; index`gensym0: string): Pin	
+items	nim64/chips/ic74258.html#items.i,Ic74258	ic74258: items(chip`gensym0: Ic74258): Pin	
+pairs	nim64/chips/ic74258.html#pairs.i,Ic74258	ic74258: pairs(chip`gensym0: Ic74258): tuple[a: int, b: Pin]	
+SEL	nim64/chips/ic74258.html#SEL	ic74258: SEL	
+OE	nim64/chips/ic74258.html#OE	ic74258: OE	
+A1	nim64/chips/ic74258.html#A1	ic74258: A1	
+B1	nim64/chips/ic74258.html#B1	ic74258: B1	
+A2	nim64/chips/ic74258.html#A2	ic74258: A2	
+B2	nim64/chips/ic74258.html#B2	ic74258: B2	
+A3	nim64/chips/ic74258.html#A3	ic74258: A3	
+B3	nim64/chips/ic74258.html#B3	ic74258: B3	
+A4	nim64/chips/ic74258.html#A4	ic74258: A4	
+B4	nim64/chips/ic74258.html#B4	ic74258: B4	
+Y1	nim64/chips/ic74258.html#Y1	ic74258: Y1	
+Y2	nim64/chips/ic74258.html#Y2	ic74258: Y2	
+Y3	nim64/chips/ic74258.html#Y3	ic74258: Y3	
+Y4	nim64/chips/ic74258.html#Y4	ic74258: Y4	
+VCC	nim64/chips/ic74258.html#VCC	ic74258: VCC	
+GND	nim64/chips/ic74258.html#GND	ic74258: GND	
+newIc74258	nim64/chips/ic74258.html#newIc74258	ic74258: newIc74258(): Ic74258	

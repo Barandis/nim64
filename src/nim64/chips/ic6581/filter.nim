@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https:#opensource.org/licenses/MIT
 
@@ -21,7 +21,7 @@ include ./constants
 # high register values. There are also repeats around a discontinuity in the middle of the
 # register range (between 1023 and 1024) for the same reason.
 const CutoffSamples = [
-  #[ 
+  #[
   Register  Cutoff
   Value     Freq (Hz)     CUTHI  CUTLO   Notes
   ]#
@@ -72,19 +72,19 @@ type Filter* = ref object
   ## measurements that I cannot make because I don't have a Commodore 64; that includes the
   ## samples of cutoff frequencies that are used to derive all of the cutoff frequencies,
   ## and the measures of DC offsets that affect the output.
-  ## 
+  ##
   ## The 6581 filter is a highly configurable two-integrator-loop biquad filter, as has been
   ## confirmed by Bob Yannes, the 6581's designer. The integrators are not built on op-amps
   ## as normal but instead take advantage of the characteristics of an NMOS inverter if it's
   ## biased just right. This is presumably because of chip-space concerns and doesn't make
   ## any real difference for the emulation.
-  ## 
+  ##
   ## This filter consists of a pair of integrators. The output of the first feeds the input
   ## of the second, while the outputs of both feed a summer which produces the input to
   ## the first. The high-pass output of such a filter is the summer output, the band-pass
   ## output is the output of the first integrator, and the low-pass output is the output of
   ## the second integrator.
-  ## 
+  ##
   ## Here's an attempt at the circuitry in ASCII, which is ugly at best.
   ## ```
   ##           +-----------R---------------------------+
@@ -100,7 +100,7 @@ type Filter* = ref object
   ## IN ---R---+--|>---+--Rc---+--|>---+--Rc---+--|>---+
   ##                   |               |               |
   ##                   HP              BP              LP
-  ## 
+  ##
   ## IN - input
   ## HP - high-pass output
   ## BP - band-pass output
@@ -115,7 +115,7 @@ type Filter* = ref object
   ## takes all of five lines of code. The rest of the code in this module is dedicated
   ## largely either to deriving all of the possible cutoff frequencies by interpolating from
   ## the sample values from reSID and to register handling.
-  ## 
+  ##
   ## .. _libsidplay: https://sourceforge.net/p/sidplay-residfp/wiki/SID%20internals/
   ## .. _here: http://forum.6502.org/viewtopic.php?f=8&t=4150
   ## .. _reSID: https://github.com/simonowen/resid
@@ -259,7 +259,7 @@ proc interpolate: seq[int] =
         # Nothing equal; generic curve.
         k1 = (y2 - y0) / (x2 - x0)
         k2 = (y3 - y1) / (x3 - x1)
-    
+
       forward_difference(x1, y1, x2, y2, k1, k2, result)
 
 let CutoffFreqs = interpolate()
@@ -335,7 +335,7 @@ proc reset*(filter: Filter) =
   calcluate_fc(filter)
   calculate_q(filter)
 
-proc clock*(filter: Filter, voice1, voice2, voice3, external: int) =
+proc clock*(filter: Filter; voice1, voice2, voice3, external: int) =
   ## Runs on each clock cycle. Unlike most `clock` procs, this takes the current values
   ## for each of the voices and for the external input. It then calculates the output
   ## values for each of the filter channels and for the non-filtered output.

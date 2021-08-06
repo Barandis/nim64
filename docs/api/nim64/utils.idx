@@ -1,0 +1,15 @@
+nanp	nim64/utils.html#nanp,float	utils: nanp(n: float): bool	
+value_to_pins	nim64/utils.html#value_to_pins,uint,seq[Pin]	utils: value_to_pins(value: uint; pins: seq[Pin])	
+pins_to_value	nim64/utils.html#pins_to_value,seq[Pin]	utils: pins_to_value(pins: seq[Pin]): uint	
+mode_to_pins	nim64/utils.html#mode_to_pins,Mode,seq[Pin]	utils: mode_to_pins(mode: Mode; pins: seq[Pin])	
+tri_pins	nim64/utils.html#tri_pins,seq[Pin]	utils: tri_pins(pins: seq[Pin])	
+BitRange	nim64/utils.html#BitRange	utils: BitRange	
+bit_set	nim64/utils.html#bit_set,T,BitRange[T: SomeUnsignedInt]	utils: bit_set[T: SomeUnsignedInt](value: T; bit: BitRange[T]): bool	
+bit_clear	nim64/utils.html#bit_clear,T,BitRange[T: SomeUnsignedInt]	utils: bit_clear[T: SomeUnsignedInt](value: T; bit: BitRange[T]): bool	
+bit_value	nim64/utils.html#bit_value,T,BitRange[T: SomeUnsignedInt]	utils: bit_value[T: SomeUnsignedInt](value: T; bit: BitRange[T]): T	
+set_bit	nim64/utils.html#set_bit,T,BitRange[T: SomeUnsignedInt]	utils: set_bit[T: SomeUnsignedInt](value: T; bit: BitRange[T]): T	
+clear_bit	nim64/utils.html#clear_bit,T,BitRange[T: SomeUnsignedInt]	utils: clear_bit[T: SomeUnsignedInt](value: T; bit: BitRange[T]): T	
+toggle_bit	nim64/utils.html#toggle_bit,T,BitRange[T: SomeUnsignedInt]	utils: toggle_bit[T: SomeUnsignedInt](value: T; bit: BitRange[T]): T	
+set_bit_value	nim64/utils.html#set_bit_value,T,BitRange[T: SomeUnsignedInt],uint	utils: set_bit_value[T: SomeUnsignedInt](value: T; bit: BitRange[T]; bit_value: uint): T	
+hi4	nim64/utils.html#hi4,T	utils: hi4[T: SomeUnsignedInt](value: T): T	
+lo4	nim64/utils.html#lo4,T	utils: lo4[T: SomeUnsignedInt](value: T): T	

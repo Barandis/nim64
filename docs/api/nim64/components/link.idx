@@ -1,0 +1,47 @@
+Unconnected	nim64/components/link.html#Unconnected	Mode.Unconnected	
+Input	nim64/components/link.html#Input	Mode.Input	
+Output	nim64/components/link.html#Output	Mode.Output	
+Bidi	nim64/components/link.html#Bidi	Mode.Bidi	
+Mode	nim64/components/link.html#Mode	link: Mode	
+Pin	nim64/components/link.html#Pin	link: Pin	
+Trace	nim64/components/link.html#Trace	link: Trace	
+inputp	nim64/components/link.html#inputp,Mode	link: inputp(mode: Mode): bool	
+outputp	nim64/components/link.html#outputp,Mode	link: outputp(mode: Mode): bool	
+number	nim64/components/link.html#number,Pin	link: number(pin: Pin): int	
+name	nim64/components/link.html#name,Pin	link: name(pin: Pin): string	
+highp	nim64/components/link.html#highp,Pin	link: highp(pin: Pin): bool	
+lowp	nim64/components/link.html#lowp,Pin	link: lowp(pin: Pin): bool	
+trip	nim64/components/link.html#trip,Pin	link: trip(pin: Pin): bool	
+highp	nim64/components/link.html#highp,Trace	link: highp(trace: Trace): bool	
+lowp	nim64/components/link.html#lowp,Trace	link: lowp(trace: Trace): bool	
+trip	nim64/components/link.html#trip,Trace	link: trip(trace: Trace): bool	
+set_level	nim64/components/link.html#set_level,Pin,float	link: set_level(pin: Pin; level: float): Pin	
+set_level	nim64/components/link.html#set_level,Trace,float	link: set_level(trace: Trace; level: float): Trace	
+level	nim64/components/link.html#level,Pin	link: level(pin: Pin): float	
+level=	nim64/components/link.html#level=,Pin,float	link: level=(pin: Pin; level: float): Pin	
+level	nim64/components/link.html#level,Trace	link: level(trace: Trace): float	
+level=	nim64/components/link.html#level=,Trace,float	link: level=(trace: Trace; level: float): Trace	
+set	nim64/components/link.html#set,Pin	link: set(pin: Pin): Pin	
+clear	nim64/components/link.html#clear,Pin	link: clear(pin: Pin): Pin	
+tri	nim64/components/link.html#tri,Pin	link: tri(pin: Pin): Pin	
+set	nim64/components/link.html#set,Trace	link: set(trace: Trace): Trace	
+clear	nim64/components/link.html#clear,Trace	link: clear(trace: Trace): Trace	
+tri	nim64/components/link.html#tri,Trace	link: tri(trace: Trace): Trace	
+toggle	nim64/components/link.html#toggle,Pin	link: toggle(pin: Pin): Pin	
+set_mode	nim64/components/link.html#set_mode,Pin,Mode	link: set_mode(pin: Pin; mode: Mode): Pin	
+mode	nim64/components/link.html#mode,Pin	link: mode(pin: Pin): Mode	
+mode=	nim64/components/link.html#mode=,Pin,Mode	link: mode=(pin: Pin; mode: Mode): Pin	
+inputp	nim64/components/link.html#inputp,Pin	link: inputp(pin: Pin): bool	
+outputp	nim64/components/link.html#outputp,Pin	link: outputp(pin: Pin): bool	
+add_listener	nim64/components/link.html#add_listener,Pin,	link: add_listener(pin: Pin; listener: Pin -&gt; void): Pin	
+remove_listener	nim64/components/link.html#remove_listener,Pin,	link: remove_listener(pin: Pin; listener: Pin -&gt; void): Pin	
+pull_up	nim64/components/link.html#pull_up,Pin	link: pull_up(pin: Pin): Pin	
+pull_down	nim64/components/link.html#pull_down,Pin	link: pull_down(pin: Pin): Pin	
+pull_off	nim64/components/link.html#pull_off,Pin	link: pull_off(pin: Pin): Pin	
+pull_up	nim64/components/link.html#pull_up,Trace	link: pull_up(trace: Trace): Trace	
+pull_down	nim64/components/link.html#pull_down,Trace	link: pull_down(trace: Trace): Trace	
+pull_off	nim64/components/link.html#pull_off,Trace	link: pull_off(trace: Trace): Trace	
+add_pin	nim64/components/link.html#add_pin,Trace,Pin	link: add_pin(trace: Trace; pin: Pin): Trace	
+add_pins	nim64/components/link.html#add_pins,Trace,varargs[Pin]	link: add_pins(trace: Trace; pins: varargs[Pin]): Trace	
+new_pin	nim64/components/link.html#new_pin,int,string,Mode	link: new_pin(number: int; name: string; mode: Mode = Unconnected): Pin	
+new_trace	nim64/components/link.html#new_trace,varargs[Pin]	link: new_trace(pins: varargs[Pin]): Trace	

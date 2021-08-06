@@ -1,0 +1,30 @@
+Ic2364	nim64/chips/ic2364.html#Ic2364	ic2364: Ic2364	
+`[]`	nim64/chips/ic2364.html#[],Ic2364,int	ic2364: `[]`(chip`gensym0: Ic2364; index`gensym0: int): Pin	
+`[]`	nim64/chips/ic2364.html#[],Ic2364,string	ic2364: `[]`(chip`gensym0: Ic2364; index`gensym0: string): Pin	
+items	nim64/chips/ic2364.html#items.i,Ic2364	ic2364: items(chip`gensym0: Ic2364): Pin	
+pairs	nim64/chips/ic2364.html#pairs.i,Ic2364	ic2364: pairs(chip`gensym0: Ic2364): tuple[a: int, b: Pin]	
+A0	nim64/chips/ic2364.html#A0	ic2364: A0	
+A1	nim64/chips/ic2364.html#A1	ic2364: A1	
+A2	nim64/chips/ic2364.html#A2	ic2364: A2	
+A3	nim64/chips/ic2364.html#A3	ic2364: A3	
+A4	nim64/chips/ic2364.html#A4	ic2364: A4	
+A5	nim64/chips/ic2364.html#A5	ic2364: A5	
+A6	nim64/chips/ic2364.html#A6	ic2364: A6	
+A7	nim64/chips/ic2364.html#A7	ic2364: A7	
+A8	nim64/chips/ic2364.html#A8	ic2364: A8	
+A9	nim64/chips/ic2364.html#A9	ic2364: A9	
+A10	nim64/chips/ic2364.html#A10	ic2364: A10	
+A11	nim64/chips/ic2364.html#A11	ic2364: A11	
+A12	nim64/chips/ic2364.html#A12	ic2364: A12	
+CS	nim64/chips/ic2364.html#CS	ic2364: CS	
+D0	nim64/chips/ic2364.html#D0	ic2364: D0	
+D1	nim64/chips/ic2364.html#D1	ic2364: D1	
+D2	nim64/chips/ic2364.html#D2	ic2364: D2	
+D3	nim64/chips/ic2364.html#D3	ic2364: D3	
+D4	nim64/chips/ic2364.html#D4	ic2364: D4	
+D5	nim64/chips/ic2364.html#D5	ic2364: D5	
+D6	nim64/chips/ic2364.html#D6	ic2364: D6	
+D7	nim64/chips/ic2364.html#D7	ic2364: D7	
+VCC	nim64/chips/ic2364.html#VCC	ic2364: VCC	
+GND	nim64/chips/ic2364.html#GND	ic2364: GND	
+newIc2364	nim64/chips/ic2364.html#newIc2364,array[,uint8]	ic2364: newIc2364(memory: array[8192, uint8]): Ic2364	

@@ -1,0 +1,22 @@
+Ic74139	nim64/chips/ic74139.html#Ic74139	ic74139: Ic74139	
+`[]`	nim64/chips/ic74139.html#[],Ic74139,int	ic74139: `[]`(chip`gensym0: Ic74139; index`gensym0: int): Pin	
+`[]`	nim64/chips/ic74139.html#[],Ic74139,string	ic74139: `[]`(chip`gensym0: Ic74139; index`gensym0: string): Pin	
+items	nim64/chips/ic74139.html#items.i,Ic74139	ic74139: items(chip`gensym0: Ic74139): Pin	
+pairs	nim64/chips/ic74139.html#pairs.i,Ic74139	ic74139: pairs(chip`gensym0: Ic74139): tuple[a: int, b: Pin]	
+G1	nim64/chips/ic74139.html#G1	ic74139: G1	
+A1	nim64/chips/ic74139.html#A1	ic74139: A1	
+B1	nim64/chips/ic74139.html#B1	ic74139: B1	
+G2	nim64/chips/ic74139.html#G2	ic74139: G2	
+A2	nim64/chips/ic74139.html#A2	ic74139: A2	
+B2	nim64/chips/ic74139.html#B2	ic74139: B2	
+Y01	nim64/chips/ic74139.html#Y01	ic74139: Y01	
+Y11	nim64/chips/ic74139.html#Y11	ic74139: Y11	
+Y21	nim64/chips/ic74139.html#Y21	ic74139: Y21	
+Y31	nim64/chips/ic74139.html#Y31	ic74139: Y31	
+Y02	nim64/chips/ic74139.html#Y02	ic74139: Y02	
+Y12	nim64/chips/ic74139.html#Y12	ic74139: Y12	
+Y22	nim64/chips/ic74139.html#Y22	ic74139: Y22	
+Y32	nim64/chips/ic74139.html#Y32	ic74139: Y32	
+VCC	nim64/chips/ic74139.html#VCC	ic74139: VCC	
+GND	nim64/chips/ic74139.html#GND	ic74139: GND	
+newIc74139	nim64/chips/ic74139.html#newIc74139	ic74139: newIc74139(): Ic74139	

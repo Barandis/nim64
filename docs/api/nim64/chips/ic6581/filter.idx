@@ -1,0 +1,9 @@
+Filter	nim64/chips/ic6581/filter.html#Filter	filter: Filter	
+cutlo	nim64/chips/ic6581/filter.html#cutlo,Filter,uint	filter: cutlo(filter: Filter; value: uint)	
+cuthi	nim64/chips/ic6581/filter.html#cuthi,Filter,uint	filter: cuthi(filter: Filter; value: uint)	
+reson	nim64/chips/ic6581/filter.html#reson,Filter,uint	filter: reson(filter: Filter; value: uint)	
+sigvol	nim64/chips/ic6581/filter.html#sigvol,Filter,uint	filter: sigvol(filter: Filter; value: uint)	
+reset	nim64/chips/ic6581/filter.html#reset,Filter	filter: reset(filter: Filter)	
+clock	nim64/chips/ic6581/filter.html#clock,Filter,int,int,int,int	filter: clock(filter: Filter; voice1, voice2, voice3, external: int)	
+output	nim64/chips/ic6581/filter.html#output,Filter	filter: output(filter: Filter): int	
+new_filter	nim64/chips/ic6581/filter.html#new_filter	filter: new_filter(): Filter	

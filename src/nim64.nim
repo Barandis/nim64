@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
@@ -14,6 +14,7 @@ import nim64/chips/[
   ic4066,
   ic4164,
   ic6526,
+  ic6581,
   ic7406,
   ic7408,
   ic74139,
