@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https:#opensource.org/licenses/MIT
 
@@ -74,8 +74,8 @@ proc handle_sp_out =
           sp.shift = 0
 
           # Set the interrupt bit and then fire off an interrupt if the ICR says to
-          registers[ICR] = set_bit(registers[ICR], SPT)
-          if bit_set(latches[ICR], SPT):
+          registers[ICR] = set_bit(registers[ICR], SPI)
+          if bit_set(latches[ICR], SPI):
             registers[ICR] = set_bit(registers[ICR], IR)
             clear pins[IRQ]
 
@@ -108,8 +108,8 @@ proc serial_listener(pin: Pin) =
     if sp.bit == 0:
       registers[SDR] = sp.shift
       sp.shift = 0
-      registers[ICR] = set_bit(registers[ICR], SPT)
-      if bit_set(latches[ICR], SPT):
+      registers[ICR] = set_bit(registers[ICR], SPI)
+      if bit_set(latches[ICR], SPI):
         registers[ICR] = set_bit(registers[ICR], IR)
         clear pins[IRQ]
 
@@ -129,13 +129,13 @@ proc underflow_timer_b =
   if bit_set(crb, PBON):
     if bit_set(crb, OUTMODE): toggle pins[PB7]
     else: set pins[PB7]
-  
+
   #  Set the interrupt bit, and fire interrupt if the ICR says so
   registers[ICR] = set_bit(registers[ICR], TB)
   if bit_set(latches[ICR], TB):
     registers[ICR] = set_bit(registers[ICR], IR)
     clear pins[IRQ]
-  
+
   # Reset register value to match the latch
   registers[TBLO] = latches[TBLO]
   registers[TBHI] = latches[TBHI]
@@ -175,11 +175,11 @@ proc underflow_timer_a =
   if bit_set(cra, PBON):
     if bit_set(cra, OUTMODE): toggle(pins[PB6])
     else: set(pins[PB6])
-  
+
   # Decrement timer B if CRB says so
   if bit_set(crb, INMODE1):
     if (if bit_set(crb, INMODE0): highp(pins[CNT]) else: true): decrement_timer_b()
-  
+
   # Potentially send a bit out the serial port if it is set to output mode and if the timer
   # is set to run continuously
   if bit_set(cra, SPMODE) and bit_clear(cra, RUNMODE): handle_sp_out()
@@ -189,7 +189,7 @@ proc underflow_timer_a =
   if bit_set(latches[ICR], TA):
     registers[ICR] = set_bit(registers[ICR], IR)
     clear(pins[IRQ])
-  
+
   #  Reset value to that in latch
   registers[TALO] = latches[TALO]
   registers[TAHI] = latches[TAHI]
@@ -244,7 +244,7 @@ add_listener(pins[CNT], proc (pin: Pin) =
     # Decrement Timer A if its input is CNT pulses
     if bit_set(cra, START) and bit_set(cra, INMODE):
       decrement_timer_a()
-    
+
     # Decrement Timer B if its input is CNT pulses
     if bit_set(crb, START) and bit_set(crb, INMODE0) and bit_clear(crb, INMODE1):
       decrement_timer_b())

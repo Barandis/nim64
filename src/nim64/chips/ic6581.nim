@@ -455,6 +455,9 @@ import ./ic6581/voice
 import ./ic6581/filter
 import ./ic6581/external
 
+import ./ic6581/constants
+export constants
+
 chip Ic6581:
   pins:
     input:
@@ -532,7 +535,7 @@ chip Ic6581:
     ATDCY1: 5
     SUREL1: 6
 
-    # Voice 1
+    # Voice 2
     FRELO2: 7
     FREHI2: 8
     PWLO2: 9
@@ -606,8 +609,6 @@ chip Ic6581:
     # The number of cycles since the last time the potentiometer pins were read and their
     # values stored in the pot registers. This resets after 512 cycles.
     var last_pot_time = 0
-
-    include ./ic6581/constants
 
     # The three voices, each consisting of an independent waveform generator, envelope
     # generator, and amplitude modulator.

@@ -1,30 +1,31 @@
-Ic2332	nim64/chips/ic2332.html#Ic2332	ic2332: Ic2332	
-`[]`	nim64/chips/ic2332.html#[],Ic2332,int	ic2332: `[]`(chip`gensym0: Ic2332; index`gensym0: int): Pin	
-`[]`	nim64/chips/ic2332.html#[],Ic2332,string	ic2332: `[]`(chip`gensym0: Ic2332; index`gensym0: string): Pin	
-items	nim64/chips/ic2332.html#items.i,Ic2332	ic2332: items(chip`gensym0: Ic2332): Pin	
-pairs	nim64/chips/ic2332.html#pairs.i,Ic2332	ic2332: pairs(chip`gensym0: Ic2332): tuple[a: int, b: Pin]	
-A0	nim64/chips/ic2332.html#A0	ic2332: A0	
-A1	nim64/chips/ic2332.html#A1	ic2332: A1	
-A2	nim64/chips/ic2332.html#A2	ic2332: A2	
-A3	nim64/chips/ic2332.html#A3	ic2332: A3	
-A4	nim64/chips/ic2332.html#A4	ic2332: A4	
-A5	nim64/chips/ic2332.html#A5	ic2332: A5	
-A6	nim64/chips/ic2332.html#A6	ic2332: A6	
 A7	nim64/chips/ic2332.html#A7	ic2332: A7	
-A8	nim64/chips/ic2332.html#A8	ic2332: A8	
-A9	nim64/chips/ic2332.html#A9	ic2332: A9	
-A10	nim64/chips/ic2332.html#A10	ic2332: A10	
-A11	nim64/chips/ic2332.html#A11	ic2332: A11	
-CS1	nim64/chips/ic2332.html#CS1	ic2332: CS1	
-CS2	nim64/chips/ic2332.html#CS2	ic2332: CS2	
+A6	nim64/chips/ic2332.html#A6	ic2332: A6	
+A5	nim64/chips/ic2332.html#A5	ic2332: A5	
+A4	nim64/chips/ic2332.html#A4	ic2332: A4	
+A3	nim64/chips/ic2332.html#A3	ic2332: A3	
+A2	nim64/chips/ic2332.html#A2	ic2332: A2	
+A1	nim64/chips/ic2332.html#A1	ic2332: A1	
+A0	nim64/chips/ic2332.html#A0	ic2332: A0	
 D0	nim64/chips/ic2332.html#D0	ic2332: D0	
 D1	nim64/chips/ic2332.html#D1	ic2332: D1	
 D2	nim64/chips/ic2332.html#D2	ic2332: D2	
+GND	nim64/chips/ic2332.html#GND	ic2332: GND	
 D3	nim64/chips/ic2332.html#D3	ic2332: D3	
 D4	nim64/chips/ic2332.html#D4	ic2332: D4	
 D5	nim64/chips/ic2332.html#D5	ic2332: D5	
 D6	nim64/chips/ic2332.html#D6	ic2332: D6	
 D7	nim64/chips/ic2332.html#D7	ic2332: D7	
+A11	nim64/chips/ic2332.html#A11	ic2332: A11	
+A10	nim64/chips/ic2332.html#A10	ic2332: A10	
+CS1	nim64/chips/ic2332.html#CS1	ic2332: CS1	
+CS2	nim64/chips/ic2332.html#CS2	ic2332: CS2	
+A9	nim64/chips/ic2332.html#A9	ic2332: A9	
+A8	nim64/chips/ic2332.html#A8	ic2332: A8	
 VCC	nim64/chips/ic2332.html#VCC	ic2332: VCC	
-GND	nim64/chips/ic2332.html#GND	ic2332: GND	
+Ic2332	nim64/chips/ic2332.html#Ic2332	ic2332: Ic2332	
+`[]`	nim64/chips/ic2332.html#[],Ic2332,int	ic2332: `[]`(chip`gensym0: Ic2332; index`gensym0: int): Pin	
+`[]`	nim64/chips/ic2332.html#[],Ic2332,string	ic2332: `[]`(chip`gensym0: Ic2332; index`gensym0: string): Pin	
+items	nim64/chips/ic2332.html#items.i,Ic2332	ic2332: items(chip`gensym0: Ic2332): Pin	
+pairs	nim64/chips/ic2332.html#pairs.i,Ic2332	ic2332: pairs(chip`gensym0: Ic2332): (int, Pin)	
+pins	nim64/chips/ic2332.html#pins,Ic2332	ic2332: pins(chip`gensym0: Ic2332): seq[PinInfo]	
 newIc2332	nim64/chips/ic2332.html#newIc2332,array[,uint8]	ic2332: newIc2332(memory: array[4096, uint8]): Ic2332	

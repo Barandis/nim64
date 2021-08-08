@@ -8,48 +8,10 @@ Control Register A (CRA)	nim64/chips/ic6526.html#control-registers-control-regis
 Control Register B (CRB)	nim64/chips/ic6526.html#control-registers-control-register-b-crb	   Control Register B (<tt class="docutils literal"><span class="pre">CRB</span></tt>)	
 Pin Interface	nim64/chips/ic6526.html#pin-interface	  Pin Interface	
 Ic6526	nim64/chips/ic6526.html#Ic6526	ic6526: Ic6526	
+registers	nim64/chips/ic6526.html#registers,Ic6526	ic6526: registers(chip`gensym1: Ic6526): seq[RegisterInfo]	
 `[]`	nim64/chips/ic6526.html#[],Ic6526,int	ic6526: `[]`(chip`gensym0: Ic6526; index`gensym0: int): Pin	
 `[]`	nim64/chips/ic6526.html#[],Ic6526,string	ic6526: `[]`(chip`gensym0: Ic6526; index`gensym0: string): Pin	
 items	nim64/chips/ic6526.html#items.i,Ic6526	ic6526: items(chip`gensym0: Ic6526): Pin	
-pairs	nim64/chips/ic6526.html#pairs.i,Ic6526	ic6526: pairs(chip`gensym0: Ic6526): tuple[a: int, b: Pin]	
-A0	nim64/chips/ic6526.html#A0	ic6526: A0	
-A1	nim64/chips/ic6526.html#A1	ic6526: A1	
-A2	nim64/chips/ic6526.html#A2	ic6526: A2	
-A3	nim64/chips/ic6526.html#A3	ic6526: A3	
-PA0	nim64/chips/ic6526.html#PA0	ic6526: PA0	
-PA1	nim64/chips/ic6526.html#PA1	ic6526: PA1	
-PA2	nim64/chips/ic6526.html#PA2	ic6526: PA2	
-PA3	nim64/chips/ic6526.html#PA3	ic6526: PA3	
-PA4	nim64/chips/ic6526.html#PA4	ic6526: PA4	
-PA5	nim64/chips/ic6526.html#PA5	ic6526: PA5	
-PA6	nim64/chips/ic6526.html#PA6	ic6526: PA6	
-PA7	nim64/chips/ic6526.html#PA7	ic6526: PA7	
-PB0	nim64/chips/ic6526.html#PB0	ic6526: PB0	
-PB1	nim64/chips/ic6526.html#PB1	ic6526: PB1	
-PB2	nim64/chips/ic6526.html#PB2	ic6526: PB2	
-PB3	nim64/chips/ic6526.html#PB3	ic6526: PB3	
-PB4	nim64/chips/ic6526.html#PB4	ic6526: PB4	
-PB5	nim64/chips/ic6526.html#PB5	ic6526: PB5	
-PB6	nim64/chips/ic6526.html#PB6	ic6526: PB6	
-PB7	nim64/chips/ic6526.html#PB7	ic6526: PB7	
-FLAG	nim64/chips/ic6526.html#FLAG	ic6526: FLAG	
-R_W	nim64/chips/ic6526.html#R_W	ic6526: R_W	
-SP	nim64/chips/ic6526.html#SP	ic6526: SP	
-CNT	nim64/chips/ic6526.html#CNT	ic6526: CNT	
-PHI2	nim64/chips/ic6526.html#PHI2	ic6526: PHI2	
-TOD	nim64/chips/ic6526.html#TOD	ic6526: TOD	
-CS	nim64/chips/ic6526.html#CS	ic6526: CS	
-RES	nim64/chips/ic6526.html#RES	ic6526: RES	
-D0	nim64/chips/ic6526.html#D0	ic6526: D0	
-D1	nim64/chips/ic6526.html#D1	ic6526: D1	
-D2	nim64/chips/ic6526.html#D2	ic6526: D2	
-D3	nim64/chips/ic6526.html#D3	ic6526: D3	
-D4	nim64/chips/ic6526.html#D4	ic6526: D4	
-D5	nim64/chips/ic6526.html#D5	ic6526: D5	
-D6	nim64/chips/ic6526.html#D6	ic6526: D6	
-D7	nim64/chips/ic6526.html#D7	ic6526: D7	
-PC	nim64/chips/ic6526.html#PC	ic6526: PC	
-IRQ	nim64/chips/ic6526.html#IRQ	ic6526: IRQ	
-VCC	nim64/chips/ic6526.html#VCC	ic6526: VCC	
-VSS	nim64/chips/ic6526.html#VSS	ic6526: VSS	
+pairs	nim64/chips/ic6526.html#pairs.i,Ic6526	ic6526: pairs(chip`gensym0: Ic6526): (int, Pin)	
+pins	nim64/chips/ic6526.html#pins,Ic6526	ic6526: pins(chip`gensym0: Ic6526): seq[PinInfo]	
 newIc6526	nim64/chips/ic6526.html#newIc6526	ic6526: newIc6526(): Ic6526	

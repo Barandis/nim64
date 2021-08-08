@@ -3,6 +3,10 @@ Input	nim64/components/link.html#Input	Mode.Input
 Output	nim64/components/link.html#Output	Mode.Output	
 Bidi	nim64/components/link.html#Bidi	Mode.Bidi	
 Mode	nim64/components/link.html#Mode	link: Mode	
+Off	nim64/components/link.html#Off	Pull.Off	
+Up	nim64/components/link.html#Up	Pull.Up	
+Down	nim64/components/link.html#Down	Pull.Down	
+Pull	nim64/components/link.html#Pull	link: Pull	
 Pin	nim64/components/link.html#Pin	link: Pin	
 Trace	nim64/components/link.html#Trace	link: Trace	
 inputp	nim64/components/link.html#inputp,Mode	link: inputp(mode: Mode): bool	
@@ -24,10 +28,13 @@ level=	nim64/components/link.html#level=,Trace,float	link: level=(trace: Trace; 
 set	nim64/components/link.html#set,Pin	link: set(pin: Pin): Pin	
 clear	nim64/components/link.html#clear,Pin	link: clear(pin: Pin): Pin	
 tri	nim64/components/link.html#tri,Pin	link: tri(pin: Pin): Pin	
+toggle	nim64/components/link.html#toggle,Pin	link: toggle(pin: Pin): Pin	
+cycle	nim64/components/link.html#cycle,Pin	link: cycle(pin: Pin): Pin	
 set	nim64/components/link.html#set,Trace	link: set(trace: Trace): Trace	
 clear	nim64/components/link.html#clear,Trace	link: clear(trace: Trace): Trace	
 tri	nim64/components/link.html#tri,Trace	link: tri(trace: Trace): Trace	
-toggle	nim64/components/link.html#toggle,Pin	link: toggle(pin: Pin): Pin	
+toggle	nim64/components/link.html#toggle,Trace	link: toggle(trace: Trace): Trace	
+cycle	nim64/components/link.html#cycle,Trace	link: cycle(trace: Trace): Trace	
 set_mode	nim64/components/link.html#set_mode,Pin,Mode	link: set_mode(pin: Pin; mode: Mode): Pin	
 mode	nim64/components/link.html#mode,Pin	link: mode(pin: Pin): Mode	
 mode=	nim64/components/link.html#mode=,Pin,Mode	link: mode=(pin: Pin; mode: Mode): Pin	
@@ -35,9 +42,11 @@ inputp	nim64/components/link.html#inputp,Pin	link: inputp(pin: Pin): bool
 outputp	nim64/components/link.html#outputp,Pin	link: outputp(pin: Pin): bool	
 add_listener	nim64/components/link.html#add_listener,Pin,	link: add_listener(pin: Pin; listener: Pin -&gt; void): Pin	
 remove_listener	nim64/components/link.html#remove_listener,Pin,	link: remove_listener(pin: Pin; listener: Pin -&gt; void): Pin	
+pull	nim64/components/link.html#pull,Pin	link: pull(pin: Pin): Pull	
 pull_up	nim64/components/link.html#pull_up,Pin	link: pull_up(pin: Pin): Pin	
 pull_down	nim64/components/link.html#pull_down,Pin	link: pull_down(pin: Pin): Pin	
 pull_off	nim64/components/link.html#pull_off,Pin	link: pull_off(pin: Pin): Pin	
+pull	nim64/components/link.html#pull,Trace	link: pull(trace: Trace): Pull	
 pull_up	nim64/components/link.html#pull_up,Trace	link: pull_up(trace: Trace): Trace	
 pull_down	nim64/components/link.html#pull_down,Trace	link: pull_down(trace: Trace): Trace	
 pull_off	nim64/components/link.html#pull_off,Trace	link: pull_off(trace: Trace): Trace	

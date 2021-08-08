@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
@@ -61,7 +61,7 @@
 ##         +----------+
 ## ```
 ## These pin assignments are explained below.
-## 
+##
 ## =====  =====  ==========================================================================
 ## Pin    Name   Description
 ## =====  =====  ==========================================================================
@@ -92,6 +92,24 @@ import strformat
 import sugar
 import ../utils
 import ../components/[chip, link]
+
+const
+  NC*  = 1   ## The pin assignment for the no-contact pin.
+  D*   = 2   ## The pin assignment for the data input pin.
+  WE*  = 3   ## The pin assignment for the write enable pin.
+  RAS* = 4   ## The pin assignment for the row address strobe pin.
+  A0*  = 5   ## The pin assignment for address pin 0.
+  A2*  = 6   ## The pin assignment for address pin 2.
+  A1*  = 7   ## The pin assignment for address pin 1.
+  VCC* = 8   ## The pin assignment for the +5V power supply pin.
+  A7*  = 9   ## The pin assignment for address pin 7.
+  A5*  = 10  ## The pin assignment for address pin 5.
+  A4*  = 11  ## The pin assignment for address pin 4.
+  A3*  = 12  ## The pin assignment for address pin 3.
+  A6*  = 13  ## The pin assignment for address pin 6
+  Q*   = 14  ## The pin assignment for the data output pin.
+  CAS* = 15  ## The pin assignment for the column address strobe pin.
+  VSS* = 16  ## The pin assignment for the ground pin.
 
 chip Ic4164:
   pins:
@@ -129,13 +147,13 @@ chip Ic4164:
       # value of the bit at the address latched by RAS and CAS. In write mode, it is
       # tri-stated.
       Q: 14
-    
+
     unconnected:
       # Power supply and no-contact pins. These are not emulated.
       NC: 1
       VCC: 8
       VSS: 16
-  
+
   init:
     let addr_pins = map(to_seq(0..7), i => pins[&"A{i}"])
 
@@ -157,15 +175,15 @@ chip Ic4164:
     # this row/col combination refers. The first element of the return value is the index of
     # the 32-bit number in the memory array where that bit resides; the second element is
     # the index of the bit within that 32-bit number.
-    proc resolve: uint = 
+    proc resolve: uint =
       result = (get(row) shl 8) or get(col)
-    
+
     # Retrieves a single bit from the memory array and sets the level of the Q pin to the
     # value of that bit.
     proc read =
       let index = resolve()
       set_level(pins[Q], float(memory[index]))
-    
+
     # Writes the value of the D pin to a single bit in the memory array. If the Q pin is
     # also connected, the value is also sent to it; this happens only in RMW mode and keeps
     # the input and output data pins synched.
@@ -174,7 +192,7 @@ chip Ic4164:
       let value = get(data)
       memory[index] = uint8(value)
       if not trip(pins[Q]): set_level(pins[Q], float(value))
-    
+
     # Invoked when the RAS pin changes level. When it goes low, the current levels of the
     # A0-A7 pins are latched. The address is released when the RAS pin goes high.
     #
@@ -185,7 +203,7 @@ chip Ic4164:
     proc ras_listener(pin: Pin) =
       if lowp(pin): row = some(pins_to_value(addr_pins))
       elif highp(pin): row = none(uint)
-    
+
     # Invoked when the CAS pin changes level.
     #
     # When CAS goes low, the current levels of the A0-A7 pins are latched in a smiliar way
@@ -211,7 +229,7 @@ chip Ic4164:
         tri(pins[Q])
         col = none(uint)
         data = none(uint)
-    
+
     # Invoked when the WE pin changes level.
     #
     # When WE is high, read mode is enabled (though the actual read will not be available
@@ -236,7 +254,7 @@ chip Ic4164:
           tri(pins[Q])
       elif highp(pin):
         data = none(uint)
-    
+
     add_listener(pins[RAS], ras_listener)
     add_listener(pins[CAS], cas_listener)
     add_listener(pins[WE], write_listener)

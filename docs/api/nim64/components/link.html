@@ -100,6 +100,11 @@ function main() {
   Input,                    ## Levels will propagate from a trace to the pin, but not vice versa.
   Output,                   ## Levels will propagate from the pin to a trace, but not vice versa.
   Bidi                       ## Levels will propagate both from the pin to a trace and vice versa.">Mode</a></li>
+  <li><a class="reference" href="#Pull"
+    title="Pull = enum
+  Off,                      ## The level of a level-NaN pin or trace will remain NaN.
+  Up,                       ## The level of a level-NaN pin or trace will instead be set to 1.0.
+  Down                       ## The level of a level-NaN pin or trace will instead be set to 0.0.">Pull</a></li>
   <li><a class="reference" href="#Pin"
     title="Pin = ref object
   number: int ## The pin number. This is normally defined in chip or port
@@ -149,6 +154,13 @@ function main() {
     title="inputp(mode: Mode): bool">inputp,<wbr>Mode</a></li>
   <li><a class="reference" href="#inputp%2CPin"
     title="inputp(pin: Pin): bool">inputp,<wbr>Pin</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">pull
+      <li><a class="reference" href="#pull%2CPin"
+    title="pull(pin: Pin): Pull">pull,<wbr>Pin</a></li>
+  <li><a class="reference" href="#pull%2CTrace"
+    title="pull(trace: Trace): Pull">pull,<wbr>Trace</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">pull_off
@@ -231,6 +243,8 @@ function main() {
   <ul class="simple nested-toc-section">toggle
       <li><a class="reference" href="#toggle%2CPin"
     title="toggle(pin: Pin): Pin">toggle,<wbr>Pin</a></li>
+  <li><a class="reference" href="#toggle%2CTrace"
+    title="toggle(trace: Trace): Trace">toggle,<wbr>Trace</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">trip
@@ -264,6 +278,13 @@ function main() {
   <ul class="simple nested-toc-section">mode=
       <li><a class="reference" href="#mode%3D%2CPin%2CMode"
     title="mode=(pin: Pin; mode: Mode): Pin">mode=,<wbr>Pin,<wbr>Mode</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">cycle
+      <li><a class="reference" href="#cycle%2CPin"
+    title="cycle(pin: Pin): Pin">cycle,<wbr>Pin</a></li>
+  <li><a class="reference" href="#cycle%2CTrace"
+    title="cycle(trace: Trace): Trace">cycle,<wbr>Trace</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">clear
@@ -328,6 +349,16 @@ let pin = newPin(1, &quot;A&quot;, Output).set().pullUp().addListener(listener)
 The direction in which levels are propagated through the pin.
 
 </dd>
+<a id="Pull"></a>
+<dt><pre><a href="link.html#Pull"><span class="Identifier">Pull</span></a> <span class="Other">=</span> <span class="Keyword">enum</span>
+  <span class="Identifier">Off</span><span class="Other">,</span>                      <span class="Comment">## The level of a level-NaN pin or trace will remain NaN.</span>
+  <span class="Identifier">Up</span><span class="Other">,</span>                       <span class="Comment">## The level of a level-NaN pin or trace will instead be set to 1.0.</span>
+  <span class="Identifier">Down</span>                       <span class="Comment">## The level of a level-NaN pin or trace will instead be set to 0.0.</span></pre></dt>
+<dd>
+
+Optionally sets the level of a pin or trace that has no level set (that level is NaN). This simulates the effect of pull-up and pull-down resistors.
+
+</dd>
 <a id="Pin"></a>
 <dt><pre><a href="link.html#Pin"><span class="Identifier">Pin</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
   <span class="Identifier">number</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Comment">## The pin number. This is normally defined in chip or port</span>
@@ -341,7 +372,7 @@ The direction in which levels are propagated through the pin.
                <span class="Comment">## either).</span>
   <span class="Identifier">mode</span><span class="Other">:</span> <a href="link.html#Mode"><span class="Identifier">Mode</span></a> <span class="Comment">## The mode of the pin, a description of which direction</span>
              <span class="Comment">## data is propagating through it.</span>
-  <span class="Identifier">pull</span><span class="Other">:</span> <span class="Identifier">Pull</span> <span class="Comment">## The level that the pin will take if its level is set to</span>
+  <span class="Identifier">pull</span><span class="Other">:</span> <a href="link.html#Pull"><span class="Identifier">Pull</span></a> <span class="Comment">## The level that the pin will take if its level is set to</span>
              <span class="Comment">## `NaN`. This value is set by `pullUp`, `pullDown`, and</span>
              <span class="Comment">## `pullOff`</span>
   <span class="Identifier">level</span><span class="Other">:</span> <span class="Identifier">float</span> <span class="Comment">## The level of the pin. If the pin has no level (i.e., it's</span>
@@ -365,7 +396,7 @@ The direction in which levels are propagated through the pin.
 <a id="Trace"></a>
 <dt><pre><a href="link.html#Trace"><span class="Identifier">Trace</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
   <span class="Identifier">pins</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="link.html#Pin"><span class="Identifier">Pin</span></a><span class="Other">]</span>             <span class="Comment">## A list of all of the pins that are connected to this trace.</span>
-  <span class="Identifier">pull</span><span class="Other">:</span> <span class="Identifier">Pull</span> <span class="Comment">## The level that the trace will take if its level is set to `NaN` and</span>
+  <span class="Identifier">pull</span><span class="Other">:</span> <a href="link.html#Pull"><span class="Identifier">Pull</span></a> <span class="Comment">## The level that the trace will take if its level is set to `NaN` and</span>
              <span class="Comment">## there are no output pins with levels that will override this. This</span>
              <span class="Comment">## value is set by `pullUp`, `pullDown`, and `pullOff`.</span>
   <span class="Identifier">level</span><span class="Other">:</span> <span class="Identifier">float</span> <span class="Comment">## The level of the trace. If the trace has no level (i.e., it has no</span>
@@ -534,6 +565,22 @@ Sets the pin's level to 0. This will have no effect if the pin's mode is <tt cla
 Sets the pin's level to <tt class="docutils literal"><span class="pre">NaN</span></tt>, tri-stating it. This will have no effect if the pin's mode is <tt class="docutils literal"><span class="pre">Input</span></tt> and if the pin is connected to a trace. If the pin has been pulled up or down, it will take on the level associated with that pull instead.
 
 </dd>
+<a id="toggle,Pin"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#toggle%2CPin"><span class="Identifier">toggle</span></a><span class="Other">(</span><span class="Identifier">pin</span><span class="Other">:</span> <a href="link.html#Pin"><span class="Identifier">Pin</span></a><span class="Other">)</span><span class="Other">:</span> <a href="link.html#Pin"><span class="Identifier">Pin</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">discardable</span><span class="Other">,</span> <span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
+                             <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Toggles the pin's level. This will treat that level as digital; if it is &quot;high&quot; (0.5 or over), the pin will be set to 0, and if it's &quot;low&quot; (less than 0.5), the pin will be set to 1. This has no effect on pins with <tt class="docutils literal"><span class="pre">NaN</span></tt> levels.
+
+</dd>
+<a id="cycle,Pin"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#cycle%2CPin"><span class="Identifier">cycle</span></a><span class="Other">(</span><span class="Identifier">pin</span><span class="Other">:</span> <a href="link.html#Pin"><span class="Identifier">Pin</span></a><span class="Other">)</span><span class="Other">:</span> <a href="link.html#Pin"><span class="Identifier">Pin</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">discardable</span><span class="Other">,</span> <span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
+                            <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Toggles the pin's level twice. This is useful for clocking; often an entire clock cycle is desired, and this is more convenient than calling <tt class="docutils literal"><span class="pre">toggle</span></tt> twice.
+
+</dd>
 <a id="set,Trace"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#set%2CTrace"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">trace</span><span class="Other">:</span> <a href="link.html#Trace"><span class="Identifier">Trace</span></a><span class="Other">)</span><span class="Other">:</span> <a href="link.html#Trace"><span class="Identifier">Trace</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">discardable</span><span class="Other">,</span> <span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
                                 <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
@@ -558,12 +605,20 @@ Sets the trace's value to 0. This will only have an effect if no higher-leveled 
 Sets the trace's value to <tt class="docutils literal"><span class="pre">NaN</span></tt>, which represents no level at all. This will only have an effect if no leveled output pins are connected to the trace.
 
 </dd>
-<a id="toggle,Pin"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#toggle%2CPin"><span class="Identifier">toggle</span></a><span class="Other">(</span><span class="Identifier">pin</span><span class="Other">:</span> <a href="link.html#Pin"><span class="Identifier">Pin</span></a><span class="Other">)</span><span class="Other">:</span> <a href="link.html#Pin"><span class="Identifier">Pin</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">discardable</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
-                             <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="toggle,Trace"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#toggle%2CTrace"><span class="Identifier">toggle</span></a><span class="Other">(</span><span class="Identifier">trace</span><span class="Other">:</span> <a href="link.html#Trace"><span class="Identifier">Trace</span></a><span class="Other">)</span><span class="Other">:</span> <a href="link.html#Trace"><span class="Identifier">Trace</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">discardable</span><span class="Other">,</span> <span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
+                                   <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Toggles the pin's level. This will treat that level as digital; if it is &quot;high&quot; (0.5 or over), the pin will be set to 0, and if it's &quot;low&quot; (less than 0.5), the pin will be set to 1. This has no effect on pins with <tt class="docutils literal"><span class="pre">NaN</span></tt> levels.
+
+</dd>
+<a id="cycle,Trace"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#cycle%2CTrace"><span class="Identifier">cycle</span></a><span class="Other">(</span><span class="Identifier">trace</span><span class="Other">:</span> <a href="link.html#Trace"><span class="Identifier">Trace</span></a><span class="Other">)</span><span class="Other">:</span> <a href="link.html#Trace"><span class="Identifier">Trace</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">discardable</span><span class="Other">,</span> <span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
+                                  <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Toggles the trace's level twice. This is useful for clocking; often an entire clock cycle is desired, and this is more convenient than calling <tt class="docutils literal"><span class="pre">toggle</span></tt> twice.
 
 </dd>
 <a id="set_mode,Pin,Mode"></a>
@@ -619,6 +674,13 @@ Adds a new listener function to the list of listeners that the pin will call whe
 Removes the provided listener function from the list of listeners that the pin will call when its trace updates it. If the listener is already not in this list, this function will do noting.
 
 </dd>
+<a id="pull,Pin"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#pull%2CPin"><span class="Identifier">pull</span></a><span class="Other">(</span><span class="Identifier">pin</span><span class="Other">:</span> <a href="link.html#Pin"><span class="Identifier">Pin</span></a><span class="Other">)</span><span class="Other">:</span> <a href="link.html#Pull"><span class="Identifier">Pull</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Returns the current pull setting for the pin.
+
+</dd>
 <a id="pull_up,Pin"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#pull_up%2CPin"><span class="Identifier">pull_up</span></a><span class="Other">(</span><span class="Identifier">pin</span><span class="Other">:</span> <a href="link.html#Pin"><span class="Identifier">Pin</span></a><span class="Other">)</span><span class="Other">:</span> <a href="link.html#Pin"><span class="Identifier">Pin</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">discardable</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
@@ -638,6 +700,13 @@ Sets the pin to be pulled down. This pin will then take on a level of 0 any time
 <dd>
 
 Removes any pull status from the pin. The pin will then take on a level of <tt class="docutils literal"><span class="pre">NaN</span></tt> if it is set to that level.
+
+</dd>
+<a id="pull,Trace"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#pull%2CTrace"><span class="Identifier">pull</span></a><span class="Other">(</span><span class="Identifier">trace</span><span class="Other">:</span> <a href="link.html#Trace"><span class="Identifier">Trace</span></a><span class="Other">)</span><span class="Other">:</span> <a href="link.html#Pull"><span class="Identifier">Pull</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Returns the current pull setting for the trace.
 
 </dd>
 <a id="pull_up,Trace"></a>
@@ -706,7 +775,7 @@ Creates a new <tt class="docutils literal"><span class="pre">Trace</span></tt> f
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-08-06 09:41:16 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-08-08 11:46:13 UTC</small>
       </div>
     </div>
   </div>

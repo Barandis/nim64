@@ -1,22 +1,23 @@
+SEL	nim64/chips/ic74257.html#SEL	ic74257: SEL	
+A1	nim64/chips/ic74257.html#A1	ic74257: A1	
+B1	nim64/chips/ic74257.html#B1	ic74257: B1	
+Y1	nim64/chips/ic74257.html#Y1	ic74257: Y1	
+A2	nim64/chips/ic74257.html#A2	ic74257: A2	
+B2	nim64/chips/ic74257.html#B2	ic74257: B2	
+Y2	nim64/chips/ic74257.html#Y2	ic74257: Y2	
+GND	nim64/chips/ic74257.html#GND	ic74257: GND	
+Y3	nim64/chips/ic74257.html#Y3	ic74257: Y3	
+B3	nim64/chips/ic74257.html#B3	ic74257: B3	
+A3	nim64/chips/ic74257.html#A3	ic74257: A3	
+Y4	nim64/chips/ic74257.html#Y4	ic74257: Y4	
+B4	nim64/chips/ic74257.html#B4	ic74257: B4	
+A4	nim64/chips/ic74257.html#A4	ic74257: A4	
+OE	nim64/chips/ic74257.html#OE	ic74257: OE	
+VCC	nim64/chips/ic74257.html#VCC	ic74257: VCC	
 Ic74257	nim64/chips/ic74257.html#Ic74257	ic74257: Ic74257	
 `[]`	nim64/chips/ic74257.html#[],Ic74257,int	ic74257: `[]`(chip`gensym0: Ic74257; index`gensym0: int): Pin	
 `[]`	nim64/chips/ic74257.html#[],Ic74257,string	ic74257: `[]`(chip`gensym0: Ic74257; index`gensym0: string): Pin	
 items	nim64/chips/ic74257.html#items.i,Ic74257	ic74257: items(chip`gensym0: Ic74257): Pin	
-pairs	nim64/chips/ic74257.html#pairs.i,Ic74257	ic74257: pairs(chip`gensym0: Ic74257): tuple[a: int, b: Pin]	
-SEL	nim64/chips/ic74257.html#SEL	ic74257: SEL	
-OE	nim64/chips/ic74257.html#OE	ic74257: OE	
-A1	nim64/chips/ic74257.html#A1	ic74257: A1	
-B1	nim64/chips/ic74257.html#B1	ic74257: B1	
-A2	nim64/chips/ic74257.html#A2	ic74257: A2	
-B2	nim64/chips/ic74257.html#B2	ic74257: B2	
-A3	nim64/chips/ic74257.html#A3	ic74257: A3	
-B3	nim64/chips/ic74257.html#B3	ic74257: B3	
-A4	nim64/chips/ic74257.html#A4	ic74257: A4	
-B4	nim64/chips/ic74257.html#B4	ic74257: B4	
-Y1	nim64/chips/ic74257.html#Y1	ic74257: Y1	
-Y2	nim64/chips/ic74257.html#Y2	ic74257: Y2	
-Y3	nim64/chips/ic74257.html#Y3	ic74257: Y3	
-Y4	nim64/chips/ic74257.html#Y4	ic74257: Y4	
-VCC	nim64/chips/ic74257.html#VCC	ic74257: VCC	
-GND	nim64/chips/ic74257.html#GND	ic74257: GND	
+pairs	nim64/chips/ic74257.html#pairs.i,Ic74257	ic74257: pairs(chip`gensym0: Ic74257): (int, Pin)	
+pins	nim64/chips/ic74257.html#pins,Ic74257	ic74257: pins(chip`gensym0: Ic74257): seq[PinInfo]	
 newIc74257	nim64/chips/ic74257.html#newIc74257	ic74257: newIc74257(): Ic74257	

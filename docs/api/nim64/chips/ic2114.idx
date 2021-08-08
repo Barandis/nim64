@@ -1,24 +1,25 @@
+A6	nim64/chips/ic2114.html#A6	ic2114: A6	
+A5	nim64/chips/ic2114.html#A5	ic2114: A5	
+A4	nim64/chips/ic2114.html#A4	ic2114: A4	
+A3	nim64/chips/ic2114.html#A3	ic2114: A3	
+A0	nim64/chips/ic2114.html#A0	ic2114: A0	
+A1	nim64/chips/ic2114.html#A1	ic2114: A1	
+A2	nim64/chips/ic2114.html#A2	ic2114: A2	
+CS	nim64/chips/ic2114.html#CS	ic2114: CS	
+GND	nim64/chips/ic2114.html#GND	ic2114: GND	
+WE	nim64/chips/ic2114.html#WE	ic2114: WE	
+D3	nim64/chips/ic2114.html#D3	ic2114: D3	
+D2	nim64/chips/ic2114.html#D2	ic2114: D2	
+D1	nim64/chips/ic2114.html#D1	ic2114: D1	
+D0	nim64/chips/ic2114.html#D0	ic2114: D0	
+A9	nim64/chips/ic2114.html#A9	ic2114: A9	
+A8	nim64/chips/ic2114.html#A8	ic2114: A8	
+A7	nim64/chips/ic2114.html#A7	ic2114: A7	
+VCC	nim64/chips/ic2114.html#VCC	ic2114: VCC	
 Ic2114	nim64/chips/ic2114.html#Ic2114	ic2114: Ic2114	
 `[]`	nim64/chips/ic2114.html#[],Ic2114,int	ic2114: `[]`(chip`gensym0: Ic2114; index`gensym0: int): Pin	
 `[]`	nim64/chips/ic2114.html#[],Ic2114,string	ic2114: `[]`(chip`gensym0: Ic2114; index`gensym0: string): Pin	
 items	nim64/chips/ic2114.html#items.i,Ic2114	ic2114: items(chip`gensym0: Ic2114): Pin	
-pairs	nim64/chips/ic2114.html#pairs.i,Ic2114	ic2114: pairs(chip`gensym0: Ic2114): tuple[a: int, b: Pin]	
-A0	nim64/chips/ic2114.html#A0	ic2114: A0	
-A1	nim64/chips/ic2114.html#A1	ic2114: A1	
-A2	nim64/chips/ic2114.html#A2	ic2114: A2	
-A3	nim64/chips/ic2114.html#A3	ic2114: A3	
-A4	nim64/chips/ic2114.html#A4	ic2114: A4	
-A5	nim64/chips/ic2114.html#A5	ic2114: A5	
-A6	nim64/chips/ic2114.html#A6	ic2114: A6	
-A7	nim64/chips/ic2114.html#A7	ic2114: A7	
-A8	nim64/chips/ic2114.html#A8	ic2114: A8	
-A9	nim64/chips/ic2114.html#A9	ic2114: A9	
-D0	nim64/chips/ic2114.html#D0	ic2114: D0	
-D1	nim64/chips/ic2114.html#D1	ic2114: D1	
-D2	nim64/chips/ic2114.html#D2	ic2114: D2	
-D3	nim64/chips/ic2114.html#D3	ic2114: D3	
-CS	nim64/chips/ic2114.html#CS	ic2114: CS	
-WE	nim64/chips/ic2114.html#WE	ic2114: WE	
-VCC	nim64/chips/ic2114.html#VCC	ic2114: VCC	
-GND	nim64/chips/ic2114.html#GND	ic2114: GND	
+pairs	nim64/chips/ic2114.html#pairs.i,Ic2114	ic2114: pairs(chip`gensym0: Ic2114): (int, Pin)	
+pins	nim64/chips/ic2114.html#pins,Ic2114	ic2114: pins(chip`gensym0: Ic2114): seq[PinInfo]	
 newIc2114	nim64/chips/ic2114.html#newIc2114	ic2114: newIc2114(): Ic2114	

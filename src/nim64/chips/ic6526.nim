@@ -451,6 +451,9 @@ import sugar
 import ../utils
 import ../components/[chip, link]
 
+import ./ic6526/constants
+export constants
+
 chip Ic6526:
   pins:
     input:
@@ -577,7 +580,6 @@ chip Ic6526:
     # which interrupts are enabled.
     var latches: array[16, uint8]
 
-    include ./ic6526/constants
     include ./ic6526/ports
     include ./ic6526/timers
     include ./ic6526/tod

@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
@@ -51,7 +51,7 @@
 ##         +----------+
 ## ```
 ## These pin assignments are explained below.
-## 
+##
 ## =====  =====  ==========================================================================
 ## Pin    Name   Description
 ## =====  =====  ==========================================================================
@@ -83,6 +83,26 @@ import strformat
 import sugar
 import ../utils
 import ../components/[chip, link]
+
+const
+  A6*  = 1   ## The pin assignment for address pin 6.
+  A5*  = 2   ## The pin assignment for address pin 5.
+  A4*  = 3   ## The pin assignment for address pin 4.
+  A3*  = 4   ## The pin assignment for address pin 3.
+  A0*  = 5   ## The pin assignment for address pin 0.
+  A1*  = 6   ## The pin assignment for address pin 1.
+  A2*  = 7   ## The pin assignment for address pin 2.
+  CS*  = 8   ## The pin assignment for the chip select pin.
+  GND* = 9   ## The pin assignment for the ground pin.
+  WE*  = 10  ## The pin assignment for the write enable pin.
+  D3*  = 11  ## The pin assignment for data pin 3.
+  D2*  = 12  ## The pin assignment for data pin 2.
+  D1*  = 13  ## The pin assignment for data pin 1.
+  D0*  = 14  ## The pin assignment for data pin 0.
+  A9*  = 15  ## The pin assignment for address pin 9.
+  A8*  = 16  ## The pin assignment for address pin 8.
+  A7*  = 17  ## The pin assignment for address pin 7.
+  VCC* = 18  ## The pin assignment for the +5V power supply pin.
 
 chip Ic2114:
   pins:
@@ -116,7 +136,7 @@ chip Ic2114:
       # Power suppply and ground pins. Not emulated.
       VCC: 18
       GND: 9
-  
+
   init:
     let addr_pins = map(to_seq(0..9), i => pins[&"A{i}"])
     let data_pins = map(to_seq(0..3), i => pins[&"D{i}"])
@@ -133,7 +153,7 @@ chip Ic2114:
       let address = pins_to_value(addr_pins)
       let value = memory[address]
       value_to_pins(value, dataPins)
-    
+
     # Resolves the address on the address pins and then puts the value from the data pins
     # into that memory location.
     proc write =
@@ -141,18 +161,18 @@ chip Ic2114:
       let address = pins_to_value(addr_pins)
       let value = pins_to_value(data_pins)
       memory[address] = uint8(value)
-    
+
     proc enable_listener(pin: Pin) =
       if highp(pin): mode_to_pins(Input, data_pins)
       elif lowp(pin):
         if highp(pins[WE]): read()
         elif lowp(pins[WE]): write()
-    
+
     proc write_listener(pin: Pin) =
       if lowp(pins[CS]):
         if highp(pin): read()
         elif lowp(pin): write()
-    
+
     proc address_listener(_: Pin) =
       if lowp(pins[CS]):
         if highp(pins[WE]): read()

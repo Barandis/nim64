@@ -48,7 +48,7 @@ type
     Output      ## Levels will propagate from the pin to a trace, but not vice versa.
     Bidi        ## Levels will propagate both from the pin to a trace and vice versa.
 
-  Pull = enum
+  Pull* = enum
     ## Optionally sets the level of a pin or trace that has no level set (that level is
     ## NaN). This simulates the effect of pull-up and pull-down resistors.
     Off   ## The level of a level-NaN pin or trace will remain NaN.
@@ -421,6 +421,10 @@ proc remove_listener*(pin: Pin, listener: Pin -> void): Pin {.discardable.} =
   result = pin
   keep_if(pin.listeners, l => l != listener)
 
+proc pull*(pin: Pin): Pull {.inline.} =
+  ## Returns the current pull setting for the pin.
+  pin.pull
+
 proc pull_up*(pin: Pin): Pin {.discardable.} =
   ## Sets the pin to be pulled up. This pin will then take on a level of 1 any time its
   ## level is set to `NaN`.
@@ -441,6 +445,10 @@ proc pull_off*(pin: Pin): Pin {.discardable.} =
   result = pin
   pin.pull = Off
   pin.level = normalize(pin, pin.level)
+
+proc pull*(trace: Trace): Pull {.inline.} =
+  ## Returns the current pull setting for the trace.
+  trace.pull
 
 proc pull_up*(trace: Trace): Trace {.discardable.} =
   ## Sets the trace to be pulled up. This trace will then take on a level of 1 any time its

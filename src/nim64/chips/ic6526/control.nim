@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https:#opensource.org/licenses/MIT
 
@@ -52,13 +52,13 @@ proc write_cra(value: uint8) =
     clear(pins[PB6])
   else:
     set_mode(pins[PB6], if bit_set(registers[DDRA], 6): Output else: Input)
-  
+
   # If LOAD is set, the contents of the timer latch are forced into the timer register
   # immediately (normally the latches are loaded into the register on underflow).
   if bit_set(value, LOAD):
     registers[TALO] = latches[TALO]
     registers[TAHI] = latches[TAHI]
-  
+
   # If SPMODE is set, the SP pin is set to output. Since the CNT pin is then used to signal
   # new data, it must also be set to output.
   if bit_set(value, SPMODE):
@@ -81,7 +81,7 @@ proc write_crb(value: uint8) =
     clear(pins[PB7])
   else:
     set_mode(pins[PB7], if bit_set(registers[DDRB], 6): Output else: Input)
-  
+
   # If LOAD is set, the contents of the timer latch are forced into the timer register
   # immediately (normally the latches are loaded into the register on underflow).
   if bit_set(value, LOAD):

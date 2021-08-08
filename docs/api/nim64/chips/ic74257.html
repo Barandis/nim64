@@ -102,7 +102,7 @@ function main() {
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#Ic74257"
     title="Ic74257 = ref object
-  pins: Ic74257Pins">Ic74257</a></li>
+  pins: Pins">Ic74257</a></li>
 
   </ul>
 </li>
@@ -111,43 +111,48 @@ function main() {
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#SEL"
     title="SEL = 1">SEL</a></li>
-  <li><a class="reference" href="#OE"
-    title="OE = 15">OE</a></li>
   <li><a class="reference" href="#A1"
     title="A1 = 2">A1</a></li>
   <li><a class="reference" href="#B1"
     title="B1 = 3">B1</a></li>
+  <li><a class="reference" href="#Y1"
+    title="Y1 = 4">Y1</a></li>
   <li><a class="reference" href="#A2"
     title="A2 = 5">A2</a></li>
   <li><a class="reference" href="#B2"
     title="B2 = 6">B2</a></li>
-  <li><a class="reference" href="#A3"
-    title="A3 = 11">A3</a></li>
-  <li><a class="reference" href="#B3"
-    title="B3 = 10">B3</a></li>
-  <li><a class="reference" href="#A4"
-    title="A4 = 14">A4</a></li>
-  <li><a class="reference" href="#B4"
-    title="B4 = 13">B4</a></li>
-  <li><a class="reference" href="#Y1"
-    title="Y1 = 4">Y1</a></li>
   <li><a class="reference" href="#Y2"
     title="Y2 = 7">Y2</a></li>
-  <li><a class="reference" href="#Y3"
-    title="Y3 = 9">Y3</a></li>
-  <li><a class="reference" href="#Y4"
-    title="Y4 = 12">Y4</a></li>
-  <li><a class="reference" href="#VCC"
-    title="VCC = 16">VCC</a></li>
   <li><a class="reference" href="#GND"
     title="GND = 8">GND</a></li>
+  <li><a class="reference" href="#Y3"
+    title="Y3 = 9">Y3</a></li>
+  <li><a class="reference" href="#B3"
+    title="B3 = 10">B3</a></li>
+  <li><a class="reference" href="#A3"
+    title="A3 = 11">A3</a></li>
+  <li><a class="reference" href="#Y4"
+    title="Y4 = 12">Y4</a></li>
+  <li><a class="reference" href="#B4"
+    title="B4 = 13">B4</a></li>
+  <li><a class="reference" href="#A4"
+    title="A4 = 14">A4</a></li>
+  <li><a class="reference" href="#OE"
+    title="OE = 15">OE</a></li>
+  <li><a class="reference" href="#VCC"
+    title="VCC = 16">VCC</a></li>
 
   </ul>
 </li>
 <li>
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
-      <ul class="simple nested-toc-section">newIc74257
+      <ul class="simple nested-toc-section">pins
+      <li><a class="reference" href="#pins%2CIc74257"
+    title="pins(chip`gensym0: Ic74257): seq[PinInfo]">pins,<wbr>Ic74257</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">newIc74257
       <li><a class="reference" href="#newIc74257"
     title="newIc74257(): Ic74257">newIc74257</a></li>
 
@@ -168,7 +173,7 @@ function main() {
       <li><a class="reference" href="#items.i%2CIc74257"
     title="items(chip`gensym0: Ic74257): Pin">items</a></li>
   <li><a class="reference" href="#pairs.i%2CIc74257"
-    title="pairs(chip`gensym0: Ic74257): tuple[a: int, b: Pin]">pairs</a></li>
+    title="pairs(chip`gensym0: Ic74257): (int, Pin)">pairs</a></li>
 
   </ul>
 </li>
@@ -207,14 +212,14 @@ function main() {
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
 <dl class="item">
-<a class="reference external" href="../components/chip.html">../components/chip</a>, <a class="reference external" href="../components/link.html">../components/link</a>
+<a class="reference external" href="../components/chip.html">../components/chip</a>, <a class="reference external" href="../components/link.html">../components/link</a>, <a class="reference external" href="../components/pins.html">../components/pins</a>
 </dl></div>
 <div class="section" id="7">
 <h1><a class="toc-backref" href="#7">Types</a></h1>
 <dl class="item">
 <a id="Ic74257"></a>
 <dt><pre><a href="ic74257.html#Ic74257"><span class="Identifier">Ic74257</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
-  <span class="Identifier">pins</span><span class="Other">:</span> <span class="Identifier">Ic74257Pins</span>
+  <span class="Identifier">pins</span><span class="Other">:</span> <a href="../components/pins.html#Pins"><span class="Identifier">Pins</span></a>
 </pre></dt>
 <dd>
 
@@ -230,112 +235,112 @@ function main() {
 <dt><pre><a href="ic74257.html#SEL"><span class="Identifier">SEL</span></a> <span class="Other">=</span> <span class="DecNumber">1</span></pre></dt>
 <dd>
 
-
-
-</dd>
-<a id="OE"></a>
-<dt><pre><a href="ic74257.html#OE"><span class="Identifier">OE</span></a> <span class="Other">=</span> <span class="DecNumber">15</span></pre></dt>
-<dd>
-
-
+The pin assignment for the select pin.
 
 </dd>
 <a id="A1"></a>
 <dt><pre><a href="ic74257.html#A1"><span class="Identifier">A1</span></a> <span class="Other">=</span> <span class="DecNumber">2</span></pre></dt>
 <dd>
 
-
+The pin assignment for multiplexer 1's first input pin.
 
 </dd>
 <a id="B1"></a>
 <dt><pre><a href="ic74257.html#B1"><span class="Identifier">B1</span></a> <span class="Other">=</span> <span class="DecNumber">3</span></pre></dt>
 <dd>
 
-
-
-</dd>
-<a id="A2"></a>
-<dt><pre><a href="ic74257.html#A2"><span class="Identifier">A2</span></a> <span class="Other">=</span> <span class="DecNumber">5</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="B2"></a>
-<dt><pre><a href="ic74257.html#B2"><span class="Identifier">B2</span></a> <span class="Other">=</span> <span class="DecNumber">6</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="A3"></a>
-<dt><pre><a href="ic74257.html#A3"><span class="Identifier">A3</span></a> <span class="Other">=</span> <span class="DecNumber">11</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="B3"></a>
-<dt><pre><a href="ic74257.html#B3"><span class="Identifier">B3</span></a> <span class="Other">=</span> <span class="DecNumber">10</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="A4"></a>
-<dt><pre><a href="ic74257.html#A4"><span class="Identifier">A4</span></a> <span class="Other">=</span> <span class="DecNumber">14</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="B4"></a>
-<dt><pre><a href="ic74257.html#B4"><span class="Identifier">B4</span></a> <span class="Other">=</span> <span class="DecNumber">13</span></pre></dt>
-<dd>
-
-
+The pin assignment for multiplexer 1's second input pin.
 
 </dd>
 <a id="Y1"></a>
 <dt><pre><a href="ic74257.html#Y1"><span class="Identifier">Y1</span></a> <span class="Other">=</span> <span class="DecNumber">4</span></pre></dt>
 <dd>
 
+The pin assignment for multiplexer 1's output pin.
 
+</dd>
+<a id="A2"></a>
+<dt><pre><a href="ic74257.html#A2"><span class="Identifier">A2</span></a> <span class="Other">=</span> <span class="DecNumber">5</span></pre></dt>
+<dd>
+
+The pin assignment for multiplexer 2's first input pin.
+
+</dd>
+<a id="B2"></a>
+<dt><pre><a href="ic74257.html#B2"><span class="Identifier">B2</span></a> <span class="Other">=</span> <span class="DecNumber">6</span></pre></dt>
+<dd>
+
+The pin assignment for multiplexer 2's second input pin.
 
 </dd>
 <a id="Y2"></a>
 <dt><pre><a href="ic74257.html#Y2"><span class="Identifier">Y2</span></a> <span class="Other">=</span> <span class="DecNumber">7</span></pre></dt>
 <dd>
 
-
-
-</dd>
-<a id="Y3"></a>
-<dt><pre><a href="ic74257.html#Y3"><span class="Identifier">Y3</span></a> <span class="Other">=</span> <span class="DecNumber">9</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="Y4"></a>
-<dt><pre><a href="ic74257.html#Y4"><span class="Identifier">Y4</span></a> <span class="Other">=</span> <span class="DecNumber">12</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="VCC"></a>
-<dt><pre><a href="ic74257.html#VCC"><span class="Identifier">VCC</span></a> <span class="Other">=</span> <span class="DecNumber">16</span></pre></dt>
-<dd>
-
-
+The pin assignment for multiplexer 2's output pin.
 
 </dd>
 <a id="GND"></a>
 <dt><pre><a href="ic74257.html#GND"><span class="Identifier">GND</span></a> <span class="Other">=</span> <span class="DecNumber">8</span></pre></dt>
 <dd>
 
+The pin assignment for the ground pin.
 
+</dd>
+<a id="Y3"></a>
+<dt><pre><a href="ic74257.html#Y3"><span class="Identifier">Y3</span></a> <span class="Other">=</span> <span class="DecNumber">9</span></pre></dt>
+<dd>
+
+The pin assignment for multiplexer 3's output pin.
+
+</dd>
+<a id="B3"></a>
+<dt><pre><a href="ic74257.html#B3"><span class="Identifier">B3</span></a> <span class="Other">=</span> <span class="DecNumber">10</span></pre></dt>
+<dd>
+
+The pin assignment for multiplexer 3's second input pin.
+
+</dd>
+<a id="A3"></a>
+<dt><pre><a href="ic74257.html#A3"><span class="Identifier">A3</span></a> <span class="Other">=</span> <span class="DecNumber">11</span></pre></dt>
+<dd>
+
+The pin assignment for multiplexer 3's first input pin.
+
+</dd>
+<a id="Y4"></a>
+<dt><pre><a href="ic74257.html#Y4"><span class="Identifier">Y4</span></a> <span class="Other">=</span> <span class="DecNumber">12</span></pre></dt>
+<dd>
+
+The pin assignment for multiplexer 4's output pin.
+
+</dd>
+<a id="B4"></a>
+<dt><pre><a href="ic74257.html#B4"><span class="Identifier">B4</span></a> <span class="Other">=</span> <span class="DecNumber">13</span></pre></dt>
+<dd>
+
+The pin assignment for multiplexer 4's second input pin.
+
+</dd>
+<a id="A4"></a>
+<dt><pre><a href="ic74257.html#A4"><span class="Identifier">A4</span></a> <span class="Other">=</span> <span class="DecNumber">14</span></pre></dt>
+<dd>
+
+The pin assignment for multiplexer 4's first input pin.
+
+</dd>
+<a id="OE"></a>
+<dt><pre><a href="ic74257.html#OE"><span class="Identifier">OE</span></a> <span class="Other">=</span> <span class="DecNumber">15</span></pre></dt>
+<dd>
+
+The pin assignment for the output enable pin.
+
+</dd>
+<a id="VCC"></a>
+<dt><pre><a href="ic74257.html#VCC"><span class="Identifier">VCC</span></a> <span class="Other">=</span> <span class="DecNumber">16</span></pre></dt>
+<dd>
+
+The pin assignment for the +5V power supply pin.
 
 </dd>
 
@@ -348,7 +353,7 @@ function main() {
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-
+Looks up a pin by the pin's number.
 
 </dd>
 <a id="[],Ic74257,string"></a>
@@ -356,7 +361,14 @@ function main() {
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
+Looks up a pin by the pin's name.
 
+</dd>
+<a id="pins,Ic74257"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#pins%2CIc74257"><span class="Identifier">pins</span></a><span class="Other">(</span><span class="Identifier">chip`gensym0</span><span class="Other">:</span> <a href="ic74257.html#Ic74257"><span class="Identifier">Ic74257</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="../components/pins.html#PinInfo"><span class="Identifier">PinInfo</span></a><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Returns a read-only view of the chip's pins.
 
 </dd>
 <a id="newIc74257"></a>
@@ -376,15 +388,14 @@ function main() {
 <dt><pre><span class="Keyword">iterator</span> <a href="#items.i%2CIc74257"><span class="Identifier">items</span></a><span class="Other">(</span><span class="Identifier">chip`gensym0</span><span class="Other">:</span> <a href="ic74257.html#Ic74257"><span class="Identifier">Ic74257</span></a><span class="Other">)</span><span class="Other">:</span> <a href="../components/link.html#Pin"><span class="Identifier">Pin</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-
+Iterates over the chip's pins, yielding them in order by pin number.
 
 </dd>
 <a id="pairs.i,Ic74257"></a>
-<dt><pre><span class="Keyword">iterator</span> <a href="#pairs.i%2CIc74257"><span class="Identifier">pairs</span></a><span class="Other">(</span><span class="Identifier">chip`gensym0</span><span class="Other">:</span> <a href="ic74257.html#Ic74257"><span class="Identifier">Ic74257</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">tuple</span><span class="Other">[</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">,</span> <span class="Identifier">b</span><span class="Other">:</span> <a href="../components/link.html#Pin"><span class="Identifier">Pin</span></a><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">iterator</span> <a href="#pairs.i%2CIc74257"><span class="Identifier">pairs</span></a><span class="Other">(</span><span class="Identifier">chip`gensym0</span><span class="Other">:</span> <a href="ic74257.html#Ic74257"><span class="Identifier">Ic74257</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Other">(</span><span class="Identifier">int</span><span class="Other">,</span> <a href="../components/link.html#Pin"><span class="Identifier">Pin</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-
+Iterates over the chip's pins, yielding both the pin number and the pin itself.
 
 </dd>
 
@@ -397,7 +408,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-08-06 09:41:17 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-08-08 11:46:13 UTC</small>
       </div>
     </div>
   </div>

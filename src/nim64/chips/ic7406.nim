@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https:##opensource.org/licenses/MIT
 
@@ -10,7 +10,7 @@
 ## is high, and vice versa.
 ##
 ## ======  ======
-##  An     Yn    
+##  An     Yn
 ## ======  ======
 ##  L      **H**
 ##  H      **L**
@@ -30,12 +30,28 @@
 ## ```
 ## GND and Vcc are ground and power supply pins respectively, and they are not emulated.
 ##
-## In the Commodore 64, U8 is a 7406. It's responsible for inverting logic signals that 
-## are expected in the inverse they're given, such as the 6567's AEC signal being turned 
+## In the Commodore 64, U8 is a 7406. It's responsible for inverting logic signals that
+## are expected in the inverse they're given, such as the 6567's AEC signal being turned
 ## into the inverse AEC signal for the 82S100.
 
 import strformat
 import ../components/[chip, link]
+
+const
+  A1*  = 1   ## The pin assignment for inverter 1's input pin.
+  Y1*  = 2   ## The pin assignment for inverter 1's output pin.
+  A2*  = 3   ## The pin assignment for inverter 2's input pin.
+  Y2*  = 4   ## The pin assignment for inverter 2's output pin.
+  A3*  = 5   ## The pin assignment for inverter 3's input pin.
+  Y3*  = 6   ## The pin assignment for inverter 3's output pin.
+  GND* = 7   ## The pin assignment for the ground pin.
+  Y4*  = 8   ## The pin assignment for inverter 4's output pin.
+  A4*  = 9   ## The pin assignment for inverter 4's input pin.
+  Y5*  = 10  ## The pin assignment for inverter 5's output pin.
+  A5*  = 11  ## The pin assignment for inverter 5's input pin.
+  Y6*  = 12  ## The pin assignment for inverter 6's output pin.
+  A6*  = 13  ## The pin assignment for inverter 6's input pin.
+  VCC* = 14  ## The pin assignment for the +5V power supply pin.
 
 chip Ic7406:
   pins:
@@ -49,7 +65,7 @@ chip Ic7406:
       A4: 9
       A5: 11
       A6: 13
-    
+
     output:
       # Output pins. Similarly, the TI data sheet refers to these as "1Y", "2Y", etc.
       Y1: 2
@@ -58,12 +74,12 @@ chip Ic7406:
       Y4: 8
       Y5: 10
       Y6: 12
-    
+
     unconnected:
       # Power supply and ground pins, not emulated
       VCC: 14
       GND: 7
-  
+
   init:
     proc data_listener(gate: int): proc (pin: Pin) =
       let ypin = pins[&"Y{gate}"]

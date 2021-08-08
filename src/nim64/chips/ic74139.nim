@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
@@ -16,7 +16,7 @@
 ## these pin names becomes the name of a constant, that scheme cannot be used here.
 ## Therefore each demultiplexer has two inputs starting with A and B, an active-low enable
 ## pin starting with G, and four inverted outputs whose names start with Y.
-## 
+##
 ## =====  =====  =====  =====  =====  =====  =====
 ## Gn     An     Bn     Y0n    Y1n    Y2n    Y3n
 ## =====  =====  =====  =====  =====  =====  =====
@@ -33,7 +33,7 @@
 ## demultiplexers only do work when IO is selected, which requires that the address be from
 ## $D000 - $DFFF, among other things. A more specific table for this setup can thus be
 ## created.
-## 
+##
 ## =====  =====  =====  =====  =====  ==============  ==============
 ## IO     A8     A9     A10    A11    Address         Active Output
 ## =====  =====  =====  =====  =====  ==============  ==============
@@ -81,6 +81,24 @@
 import strformat
 import ../components/[chip, link]
 
+const
+  G1*  = 1   ## The pin assignment for demultipelxer 1's enable pin.
+  A1*  = 2   ## The pin assignment for demultipelxer 1's first input pin.
+  B1*  = 3   ## The pin assignment for demultipelxer 1's second input pin.
+  Y01* = 4   ## The pin assignment for demultipelxer 1's first output pin.
+  Y11* = 5   ## The pin assignment for demultipelxer 1's second output pin.
+  Y21* = 6   ## The pin assignment for demultipelxer 1's third output pin.
+  Y31* = 7   ## The pin assignment for demultipelxer 1's fourth output pin.
+  GND* = 8   ## The pin assignment for the ground pin.
+  Y32* = 9   ## The pin assignment for demultiplexer 2's fourth output pin.
+  Y22* = 10  ## The pin assignment for demultiplexer 2's third output pin.
+  Y12* = 11  ## The pin assignment for demultiplexer 2's second output pin.
+  Y02* = 12  ## The pin assignment for demultiplexer 2's first output pin.
+  B2*  = 13  ## The pin assignment for demultiplexer 2's second input pin.
+  A2*  = 14  ## The pin assignment for demultiplexer 2's first input pin.
+  G2*  = 15  ## The pin assignment for demultiplexer 2's enable pin.
+  VCC* = 16  ## The pin assignment for the +5V power supply pin.
+
 chip Ic74139:
   pins:
     input:
@@ -93,7 +111,7 @@ chip Ic74139:
       G2: 15
       A2: 14
       B2: 13
-    
+
     output:
       # Demux 1 outputs
       Y01: 4
@@ -106,12 +124,12 @@ chip Ic74139:
       Y12: 11
       Y22: 10
       Y32: 9
-    
+
     unconnected:
       # Power supply and ground pins, not emulated.
       VCC: 16
       GND: 8
-  
+
   init:
     proc data_listener(demux: int): proc (pin: Pin) =
       let gpin = pins[&"G{demux}"]
@@ -127,7 +145,7 @@ chip Ic74139:
         if lowp(gpin) and highp(apin) and lowp(bpin): clear(y1pin) else: set(y1pin)
         if lowp(gpin) and lowp(apin) and highp(bpin): clear(y2pin) else: set(y2pin)
         if lowp(gpin) and highp(apin) and highp(bpin): clear(y3pin) else: set(y3pin)
-    
+
     for i in 1..2:
       let listener = data_listener(i)
       add_listener(pins[&"G{i}"], listener)

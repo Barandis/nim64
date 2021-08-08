@@ -5,8 +5,7 @@
 
 import math
 import ../../utils
-
-include ./constants
+import ./constants
 
 # Sample cutoff frequencies for different values of FCHI and FCLO.
 #

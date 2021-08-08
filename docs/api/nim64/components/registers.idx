@@ -1,0 +1,11 @@
+Registers	nim64/components/registers.html#Registers	registers: Registers	
+RegisterInfo	nim64/components/registers.html#RegisterInfo	registers: RegisterInfo	
+new_registers	nim64/components/registers.html#new_registers,varargs[string]	registers: new_registers(registers: varargs[string]): Registers	
+`[]`	nim64/components/registers.html#[],Registers,int	registers: `[]`(registers: Registers; index: int): uint8	
+`[]`	nim64/components/registers.html#[],Registers,string	registers: `[]`(registers: Registers; index: string): uint8	
+`[]=`	nim64/components/registers.html#[]=,Registers,int,uint8	registers: `[]=`(registers: Registers; index: int; value: uint8)	
+`[]=`	nim64/components/registers.html#[]=,Registers,string,uint8	registers: `[]=`(registers: Registers; index: string; value: uint8)	
+items	nim64/components/registers.html#items.i,Registers	registers: items(registers: Registers): uint8	
+pairs	nim64/components/registers.html#pairs.i,Registers	registers: pairs(registers: Registers): (int, uint8)	
+len	nim64/components/registers.html#len,Registers	registers: len(registers: Registers): int	
+info	nim64/components/registers.html#info,Registers	registers: info(registers: Registers): seq[RegisterInfo]	

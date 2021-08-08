@@ -102,47 +102,37 @@ function main() {
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#Ic2364"
     title="Ic2364 = ref object
-  pins: Ic2364Pins">Ic2364</a></li>
+  pins: Pins">Ic2364</a></li>
 
   </ul>
 </li>
 <li>
   <a class="reference reference-toplevel" href="#10" id="60">Consts</a>
   <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#A0"
-    title="A0 = 8">A0</a></li>
-  <li><a class="reference" href="#A1"
-    title="A1 = 7">A1</a></li>
-  <li><a class="reference" href="#A2"
-    title="A2 = 6">A2</a></li>
-  <li><a class="reference" href="#A3"
-    title="A3 = 5">A3</a></li>
-  <li><a class="reference" href="#A4"
-    title="A4 = 4">A4</a></li>
-  <li><a class="reference" href="#A5"
-    title="A5 = 3">A5</a></li>
+      <li><a class="reference" href="#A7"
+    title="A7 = 1">A7</a></li>
   <li><a class="reference" href="#A6"
     title="A6 = 2">A6</a></li>
-  <li><a class="reference" href="#A7"
-    title="A7 = 1">A7</a></li>
-  <li><a class="reference" href="#A8"
-    title="A8 = 23">A8</a></li>
-  <li><a class="reference" href="#A9"
-    title="A9 = 22">A9</a></li>
-  <li><a class="reference" href="#A10"
-    title="A10 = 19">A10</a></li>
-  <li><a class="reference" href="#A11"
-    title="A11 = 18">A11</a></li>
-  <li><a class="reference" href="#A12"
-    title="A12 = 21">A12</a></li>
-  <li><a class="reference" href="#CS"
-    title="CS = 20">CS</a></li>
+  <li><a class="reference" href="#A5"
+    title="A5 = 3">A5</a></li>
+  <li><a class="reference" href="#A4"
+    title="A4 = 4">A4</a></li>
+  <li><a class="reference" href="#A3"
+    title="A3 = 5">A3</a></li>
+  <li><a class="reference" href="#A2"
+    title="A2 = 6">A2</a></li>
+  <li><a class="reference" href="#A1"
+    title="A1 = 7">A1</a></li>
+  <li><a class="reference" href="#A0"
+    title="A0 = 8">A0</a></li>
   <li><a class="reference" href="#D0"
     title="D0 = 9">D0</a></li>
   <li><a class="reference" href="#D1"
     title="D1 = 10">D1</a></li>
   <li><a class="reference" href="#D2"
     title="D2 = 11">D2</a></li>
+  <li><a class="reference" href="#GND"
+    title="GND = 12">GND</a></li>
   <li><a class="reference" href="#D3"
     title="D3 = 13">D3</a></li>
   <li><a class="reference" href="#D4"
@@ -153,10 +143,20 @@ function main() {
     title="D6 = 16">D6</a></li>
   <li><a class="reference" href="#D7"
     title="D7 = 17">D7</a></li>
+  <li><a class="reference" href="#A11"
+    title="A11 = 18">A11</a></li>
+  <li><a class="reference" href="#A10"
+    title="A10 = 19">A10</a></li>
+  <li><a class="reference" href="#CS"
+    title="CS = 20">CS</a></li>
+  <li><a class="reference" href="#A12"
+    title="A12 = 21">A12</a></li>
+  <li><a class="reference" href="#A9"
+    title="A9 = 22">A9</a></li>
+  <li><a class="reference" href="#A8"
+    title="A8 = 23">A8</a></li>
   <li><a class="reference" href="#VCC"
     title="VCC = 24">VCC</a></li>
-  <li><a class="reference" href="#GND"
-    title="GND = 12">GND</a></li>
 
   </ul>
 </li>
@@ -166,6 +166,11 @@ function main() {
       <ul class="simple nested-toc-section">newIc2364
       <li><a class="reference" href="#newIc2364%2Carray%5B%2Cuint8%5D"
     title="newIc2364(memory: array[8192, uint8]): Ic2364">newIc2364,<wbr>array[,<wbr>uint8]</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">pins
+      <li><a class="reference" href="#pins%2CIc2364"
+    title="pins(chip`gensym0: Ic2364): seq[PinInfo]">pins,<wbr>Ic2364</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">[]
@@ -184,7 +189,7 @@ function main() {
       <li><a class="reference" href="#items.i%2CIc2364"
     title="items(chip`gensym0: Ic2364): Pin">items</a></li>
   <li><a class="reference" href="#pairs.i%2CIc2364"
-    title="pairs(chip`gensym0: Ic2364): tuple[a: int, b: Pin]">pairs</a></li>
+    title="pairs(chip`gensym0: Ic2364): (int, Pin)">pairs</a></li>
 
   </ul>
 </li>
@@ -245,14 +250,14 @@ function main() {
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
 <dl class="item">
-<a class="reference external" href="../utils.html">../utils</a>, <a class="reference external" href="../components/chip.html">../components/chip</a>, <a class="reference external" href="../components/link.html">../components/link</a>
+<a class="reference external" href="../utils.html">../utils</a>, <a class="reference external" href="../components/chip.html">../components/chip</a>, <a class="reference external" href="../components/link.html">../components/link</a>, <a class="reference external" href="../components/pins.html">../components/pins</a>
 </dl></div>
 <div class="section" id="7">
 <h1><a class="toc-backref" href="#7">Types</a></h1>
 <dl class="item">
 <a id="Ic2364"></a>
 <dt><pre><a href="ic2364.html#Ic2364"><span class="Identifier">Ic2364</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
-  <span class="Identifier">pins</span><span class="Other">:</span> <span class="Identifier">Ic2364Pins</span>
+  <span class="Identifier">pins</span><span class="Other">:</span> <a href="../components/pins.html#Pins"><span class="Identifier">Pins</span></a>
 </pre></dt>
 <dd>
 
@@ -264,172 +269,172 @@ function main() {
 <div class="section" id="10">
 <h1><a class="toc-backref" href="#10">Consts</a></h1>
 <dl class="item">
-<a id="A0"></a>
-<dt><pre><a href="ic2364.html#A0"><span class="Identifier">A0</span></a> <span class="Other">=</span> <span class="DecNumber">8</span></pre></dt>
+<a id="A7"></a>
+<dt><pre><a href="ic2364.html#A7"><span class="Identifier">A7</span></a> <span class="Other">=</span> <span class="DecNumber">1</span></pre></dt>
 <dd>
 
-
-
-</dd>
-<a id="A1"></a>
-<dt><pre><a href="ic2364.html#A1"><span class="Identifier">A1</span></a> <span class="Other">=</span> <span class="DecNumber">7</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="A2"></a>
-<dt><pre><a href="ic2364.html#A2"><span class="Identifier">A2</span></a> <span class="Other">=</span> <span class="DecNumber">6</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="A3"></a>
-<dt><pre><a href="ic2364.html#A3"><span class="Identifier">A3</span></a> <span class="Other">=</span> <span class="DecNumber">5</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="A4"></a>
-<dt><pre><a href="ic2364.html#A4"><span class="Identifier">A4</span></a> <span class="Other">=</span> <span class="DecNumber">4</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="A5"></a>
-<dt><pre><a href="ic2364.html#A5"><span class="Identifier">A5</span></a> <span class="Other">=</span> <span class="DecNumber">3</span></pre></dt>
-<dd>
-
-
+The pin assignment for address pin 7.
 
 </dd>
 <a id="A6"></a>
 <dt><pre><a href="ic2364.html#A6"><span class="Identifier">A6</span></a> <span class="Other">=</span> <span class="DecNumber">2</span></pre></dt>
 <dd>
 
-
-
-</dd>
-<a id="A7"></a>
-<dt><pre><a href="ic2364.html#A7"><span class="Identifier">A7</span></a> <span class="Other">=</span> <span class="DecNumber">1</span></pre></dt>
-<dd>
-
-
+The pin assignment for address pin 6.
 
 </dd>
-<a id="A8"></a>
-<dt><pre><a href="ic2364.html#A8"><span class="Identifier">A8</span></a> <span class="Other">=</span> <span class="DecNumber">23</span></pre></dt>
+<a id="A5"></a>
+<dt><pre><a href="ic2364.html#A5"><span class="Identifier">A5</span></a> <span class="Other">=</span> <span class="DecNumber">3</span></pre></dt>
 <dd>
 
-
+The pin assignment for address pin 5.
 
 </dd>
-<a id="A9"></a>
-<dt><pre><a href="ic2364.html#A9"><span class="Identifier">A9</span></a> <span class="Other">=</span> <span class="DecNumber">22</span></pre></dt>
+<a id="A4"></a>
+<dt><pre><a href="ic2364.html#A4"><span class="Identifier">A4</span></a> <span class="Other">=</span> <span class="DecNumber">4</span></pre></dt>
 <dd>
 
-
+The pin assignment for address pin 4.
 
 </dd>
-<a id="A10"></a>
-<dt><pre><a href="ic2364.html#A10"><span class="Identifier">A10</span></a> <span class="Other">=</span> <span class="DecNumber">19</span></pre></dt>
+<a id="A3"></a>
+<dt><pre><a href="ic2364.html#A3"><span class="Identifier">A3</span></a> <span class="Other">=</span> <span class="DecNumber">5</span></pre></dt>
 <dd>
 
-
+The pin assignment for address pin 3.
 
 </dd>
-<a id="A11"></a>
-<dt><pre><a href="ic2364.html#A11"><span class="Identifier">A11</span></a> <span class="Other">=</span> <span class="DecNumber">18</span></pre></dt>
+<a id="A2"></a>
+<dt><pre><a href="ic2364.html#A2"><span class="Identifier">A2</span></a> <span class="Other">=</span> <span class="DecNumber">6</span></pre></dt>
 <dd>
 
-
+The pin assignment for address pin 2.
 
 </dd>
-<a id="A12"></a>
-<dt><pre><a href="ic2364.html#A12"><span class="Identifier">A12</span></a> <span class="Other">=</span> <span class="DecNumber">21</span></pre></dt>
+<a id="A1"></a>
+<dt><pre><a href="ic2364.html#A1"><span class="Identifier">A1</span></a> <span class="Other">=</span> <span class="DecNumber">7</span></pre></dt>
 <dd>
 
-
+The pin assignment for address pin 1.
 
 </dd>
-<a id="CS"></a>
-<dt><pre><a href="ic2364.html#CS"><span class="Identifier">CS</span></a> <span class="Other">=</span> <span class="DecNumber">20</span></pre></dt>
+<a id="A0"></a>
+<dt><pre><a href="ic2364.html#A0"><span class="Identifier">A0</span></a> <span class="Other">=</span> <span class="DecNumber">8</span></pre></dt>
 <dd>
 
-
+The pin assignment for address pin 0.
 
 </dd>
 <a id="D0"></a>
 <dt><pre><a href="ic2364.html#D0"><span class="Identifier">D0</span></a> <span class="Other">=</span> <span class="DecNumber">9</span></pre></dt>
 <dd>
 
-
+The pin assignment for data pin 0.
 
 </dd>
 <a id="D1"></a>
 <dt><pre><a href="ic2364.html#D1"><span class="Identifier">D1</span></a> <span class="Other">=</span> <span class="DecNumber">10</span></pre></dt>
 <dd>
 
-
+The pin assignment for data pin 1.
 
 </dd>
 <a id="D2"></a>
 <dt><pre><a href="ic2364.html#D2"><span class="Identifier">D2</span></a> <span class="Other">=</span> <span class="DecNumber">11</span></pre></dt>
 <dd>
 
-
-
-</dd>
-<a id="D3"></a>
-<dt><pre><a href="ic2364.html#D3"><span class="Identifier">D3</span></a> <span class="Other">=</span> <span class="DecNumber">13</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="D4"></a>
-<dt><pre><a href="ic2364.html#D4"><span class="Identifier">D4</span></a> <span class="Other">=</span> <span class="DecNumber">14</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="D5"></a>
-<dt><pre><a href="ic2364.html#D5"><span class="Identifier">D5</span></a> <span class="Other">=</span> <span class="DecNumber">15</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="D6"></a>
-<dt><pre><a href="ic2364.html#D6"><span class="Identifier">D6</span></a> <span class="Other">=</span> <span class="DecNumber">16</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="D7"></a>
-<dt><pre><a href="ic2364.html#D7"><span class="Identifier">D7</span></a> <span class="Other">=</span> <span class="DecNumber">17</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="VCC"></a>
-<dt><pre><a href="ic2364.html#VCC"><span class="Identifier">VCC</span></a> <span class="Other">=</span> <span class="DecNumber">24</span></pre></dt>
-<dd>
-
-
+The pin assignment for data pin 2.
 
 </dd>
 <a id="GND"></a>
 <dt><pre><a href="ic2364.html#GND"><span class="Identifier">GND</span></a> <span class="Other">=</span> <span class="DecNumber">12</span></pre></dt>
 <dd>
 
+The pin assignment for the ground pin.
 
+</dd>
+<a id="D3"></a>
+<dt><pre><a href="ic2364.html#D3"><span class="Identifier">D3</span></a> <span class="Other">=</span> <span class="DecNumber">13</span></pre></dt>
+<dd>
+
+The pin assignment for data pin 3.
+
+</dd>
+<a id="D4"></a>
+<dt><pre><a href="ic2364.html#D4"><span class="Identifier">D4</span></a> <span class="Other">=</span> <span class="DecNumber">14</span></pre></dt>
+<dd>
+
+The pin assignment for data pin 4.
+
+</dd>
+<a id="D5"></a>
+<dt><pre><a href="ic2364.html#D5"><span class="Identifier">D5</span></a> <span class="Other">=</span> <span class="DecNumber">15</span></pre></dt>
+<dd>
+
+The pin assignment for data pin 5.
+
+</dd>
+<a id="D6"></a>
+<dt><pre><a href="ic2364.html#D6"><span class="Identifier">D6</span></a> <span class="Other">=</span> <span class="DecNumber">16</span></pre></dt>
+<dd>
+
+The pin assignment for data pin 6.
+
+</dd>
+<a id="D7"></a>
+<dt><pre><a href="ic2364.html#D7"><span class="Identifier">D7</span></a> <span class="Other">=</span> <span class="DecNumber">17</span></pre></dt>
+<dd>
+
+The pin assignment for data pin 7.
+
+</dd>
+<a id="A11"></a>
+<dt><pre><a href="ic2364.html#A11"><span class="Identifier">A11</span></a> <span class="Other">=</span> <span class="DecNumber">18</span></pre></dt>
+<dd>
+
+The pin assignment for address pin 11.
+
+</dd>
+<a id="A10"></a>
+<dt><pre><a href="ic2364.html#A10"><span class="Identifier">A10</span></a> <span class="Other">=</span> <span class="DecNumber">19</span></pre></dt>
+<dd>
+
+The pin assignment for address pin 10.
+
+</dd>
+<a id="CS"></a>
+<dt><pre><a href="ic2364.html#CS"><span class="Identifier">CS</span></a> <span class="Other">=</span> <span class="DecNumber">20</span></pre></dt>
+<dd>
+
+The pin assignment for the chip select pin.
+
+</dd>
+<a id="A12"></a>
+<dt><pre><a href="ic2364.html#A12"><span class="Identifier">A12</span></a> <span class="Other">=</span> <span class="DecNumber">21</span></pre></dt>
+<dd>
+
+The pin assignment for address pin 12.
+
+</dd>
+<a id="A9"></a>
+<dt><pre><a href="ic2364.html#A9"><span class="Identifier">A9</span></a> <span class="Other">=</span> <span class="DecNumber">22</span></pre></dt>
+<dd>
+
+The pin assignment for address pin 9.
+
+</dd>
+<a id="A8"></a>
+<dt><pre><a href="ic2364.html#A8"><span class="Identifier">A8</span></a> <span class="Other">=</span> <span class="DecNumber">23</span></pre></dt>
+<dd>
+
+The pin assignment for address pin 8.
+
+</dd>
+<a id="VCC"></a>
+<dt><pre><a href="ic2364.html#VCC"><span class="Identifier">VCC</span></a> <span class="Other">=</span> <span class="DecNumber">24</span></pre></dt>
+<dd>
+
+The pin assignment for the +5V power supply pin.
 
 </dd>
 
@@ -442,7 +447,7 @@ function main() {
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-
+Looks up a pin by the pin's number.
 
 </dd>
 <a id="[],Ic2364,string"></a>
@@ -450,7 +455,14 @@ function main() {
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
+Looks up a pin by the pin's name.
 
+</dd>
+<a id="pins,Ic2364"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#pins%2CIc2364"><span class="Identifier">pins</span></a><span class="Other">(</span><span class="Identifier">chip`gensym0</span><span class="Other">:</span> <a href="ic2364.html#Ic2364"><span class="Identifier">Ic2364</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="../components/pins.html#PinInfo"><span class="Identifier">PinInfo</span></a><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Returns a read-only view of the chip's pins.
 
 </dd>
 <a id="newIc2364,array[,uint8]"></a>
@@ -470,15 +482,14 @@ function main() {
 <dt><pre><span class="Keyword">iterator</span> <a href="#items.i%2CIc2364"><span class="Identifier">items</span></a><span class="Other">(</span><span class="Identifier">chip`gensym0</span><span class="Other">:</span> <a href="ic2364.html#Ic2364"><span class="Identifier">Ic2364</span></a><span class="Other">)</span><span class="Other">:</span> <a href="../components/link.html#Pin"><span class="Identifier">Pin</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-
+Iterates over the chip's pins, yielding them in order by pin number.
 
 </dd>
 <a id="pairs.i,Ic2364"></a>
-<dt><pre><span class="Keyword">iterator</span> <a href="#pairs.i%2CIc2364"><span class="Identifier">pairs</span></a><span class="Other">(</span><span class="Identifier">chip`gensym0</span><span class="Other">:</span> <a href="ic2364.html#Ic2364"><span class="Identifier">Ic2364</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">tuple</span><span class="Other">[</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">,</span> <span class="Identifier">b</span><span class="Other">:</span> <a href="../components/link.html#Pin"><span class="Identifier">Pin</span></a><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">iterator</span> <a href="#pairs.i%2CIc2364"><span class="Identifier">pairs</span></a><span class="Other">(</span><span class="Identifier">chip`gensym0</span><span class="Other">:</span> <a href="ic2364.html#Ic2364"><span class="Identifier">Ic2364</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Other">(</span><span class="Identifier">int</span><span class="Other">,</span> <a href="../components/link.html#Pin"><span class="Identifier">Pin</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-
+Iterates over the chip's pins, yielding both the pin number and the pin itself.
 
 </dd>
 
@@ -491,7 +502,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-08-06 09:41:16 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-08-08 11:46:13 UTC</small>
       </div>
     </div>
   </div>

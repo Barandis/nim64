@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
@@ -57,6 +57,22 @@ import sequtils
 import strformat
 import ../components/[chip, link]
 
+const
+  A1*  = 1   ## The pin assignment for switch 1's first I/O pin.
+  B1*  = 2   ## The pin assignment for switch 1's second I/O pin.
+  A2*  = 3   ## The pin assignment for switch 2's first I/O pin.
+  B2*  = 4   ## The pin assignment for switch 2's second I/O pin.
+  X2*  = 5   ## The pin assignment for switch 2's control pin.
+  X3*  = 6   ## The pin assignment for switch 3's control pin.
+  GND* = 7   ## The pin assignment for the ground pin.
+  B3*  = 8   ## The pin assignment for switch 3's second I/O pin.
+  A3*  = 9   ## The pin assignment for switch 3's first I/O pin.
+  B4*  = 10  ## The pin assignment for switch 4's second I/O pin.
+  A4*  = 11  ## The pin assignment for switch 4's first I/O pin.
+  X4*  = 12  ## The pin assignment for switch 4's control pin.
+  X1*  = 13  ## The pin assignment for switch 1's control pin.
+  VCC* = 14  ## The pin assignment for the +5V power supply pin.
+
 chip Ic4066:
   pins:
     input:
@@ -65,7 +81,7 @@ chip Ic4066:
       X2: 5
       X3: 6
       X4: 12
-    
+
     bidi:
       # I/O pins for each of the four switches
       A1: 1
@@ -76,12 +92,12 @@ chip Ic4066:
       B3: 8
       A4: 11
       B4: 10
-    
+
     unconnected:
       # Power supply and ground pins, not emulated
       VDD: 14
       GND: 7
-  
+
   init:
     var last = repeat(none(Pin), 4)
 
@@ -111,7 +127,7 @@ chip Ic4066:
           else:
             clear(apin)
             clear(bpin)
-    
+
     proc data_listener(gate: int): proc (_: Pin) =
       let xpin = pins[&"X{gate}"]
       let apin = pins[&"A{gate}"]
@@ -122,7 +138,7 @@ chip Ic4066:
         last[gate - 1] = some(pin)
         if lowp(xpin):
           set_level(out_pin, level(pin))
-    
+
     for i in 1..4:
       add_listener(pins[&"X{i}"], control_listener(i))
       let listener = data_listener i

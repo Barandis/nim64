@@ -1,5 +1,5 @@
 ## Copyright (c) 2021 Thomas J. Otterson
-## 
+##
 ## This software is released under the MIT License.
 ## https:#opensource.org/licenses/MIT
 
@@ -97,7 +97,7 @@
 ##
 ## * `F0`: `CASRAM`. This is the signal that ultimately enables RAM. The production of this
 ##   signal is very different from the others. For all other output, if one of their terms
-##   is selected, that output will be selected. For `CASRAM`, its terms are combined with 
+##   is selected, that output will be selected. For `CASRAM`, its terms are combined with
 ##   the terms from all other outputs (except for `GR_W`), and if any of the terms are
 ##   selected, then `CASRAM` will be *de*selected. (Even if all of those other outputs are
 ##   deselected, `CASRAM` will be deselected if `CAS` is high or if certain addresses are
@@ -181,7 +181,7 @@
 ## 26     I9      BA        Input pin 9, tied to the BA signal from the VIC.
 ## 27     I8      A12       Input pin 8, tied to line 12 of the address bus.
 ## 28     VCC               +5V power supply, not emulated.
-## 
+##
 ## It should be noted that among inputs, VA14 and AEC are inverted. VA14 comes that way from
 ## the CIA, and the regular AEC signal from the VIC is passed through an inverter before it
 ## reaches the PLA. There are other input signals that are inverted, but these two are the
@@ -201,30 +201,59 @@ import ../components/[chip, link]
 # for the input and output pins.
 
 const
-  CAS*    = 9
-  LORAM*  = 8
-  HIRAM*  = 7
-  CHAREN* = 6
-  VA14*   = 5
-  A15*    = 4
-  A14*    = 3
-  A13*    = 2
-  A12*    = 27
-  BA*     = 26
-  AEC*    = 25
-  R_W*    = 24
-  EXROM*  = 23
-  GAME*   = 22
-  VA13*   = 21
-  VA12*   = 20
-  CASRAM* = 18
-  BASIC*  = 17
-  KERNAL* = 16
-  CHAROM* = 15
-  GR_W*   = 13
-  IO*     = 12
-  ROML*   = 11
-  ROMH*   = 10
+  FE*     = 1   ## The pin assignment for the field programming pin.
+  I7*     = 2   ## The pin assignment for input pin 7.
+  I6*     = 3   ## The pin assignment for input pin 6.
+  I5*     = 4   ## The pin assignment for input pin 5.
+  I4*     = 5   ## The pin assignment for input pin 4.
+  I3*     = 6   ## The pin assignment for input pin 3.
+  I2*     = 7   ## The pin assignment for input pin 2.
+  I1*     = 8   ## The pin assignment for input pin 1.
+  I0*     = 9   ## The pin assignment for input pin 0.
+  F7*     = 10  ## The pin assignment for output pin 7.
+  F6*     = 11  ## The pin assignment for output pin 6.
+  F5*     = 12  ## The pin assignment for output pin 5.
+  F4*     = 13  ## The pin assignment for output pin 4.
+  GND*    = 14  ## The pin assignment for the ground pin.
+  F3*     = 15  ## The pin assignment for output pin 3.
+  F2*     = 16  ## The pin assignment for output pin 2.
+  F1*     = 17  ## The pin assignment for output pin 1.
+  F0*     = 18  ## The pin assignment for output pin 0.
+  OE*     = 19  ## The pin assignment for the output enable pin.
+  I15*    = 20  ## The pin assignment for input pin 15.
+  I14*    = 21  ## The pin assignment for input pin 14.
+  I13*    = 22  ## The pin assignment for input pin 13.
+  I12*    = 23  ## The pin assignment for input pin 12.
+  I11*    = 24  ## The pin assignment for input pin 11.
+  I10*    = 25  ## The pin assignment for input pin 10.
+  I9*     = 26  ## The pin assignment for input pin 9.
+  I8*     = 27  ## The pin assignment for input pin 15.
+  VCC*    = 28  ## The pin assignment for the +5V power supply pin.
+
+  CAS*    = I0  ## The pin assignment for the `CAS` input pin (alias for `I0`).
+  LORAM*  = I1  ## The pin assignment for the `LORAM` input pin (alias for `I1`).
+  HIRAM*  = I2  ## The pin assignment for the `HIRAM` input pin (alias for `I2`).
+  CHAREN* = I3  ## The pin assignment for the `CHAREN` input pin (alias for `I3`).
+  VA14*   = I4  ## The pin assignment for the `VA14` input pin (alias for `I4`).
+  A15*    = I5  ## The pin assignment for the `A15` input pin (alias for `I5`).
+  A14*    = I6  ## The pin assignment for the `A14` input pin (alias for `I6`).
+  A13*    = I7  ## The pin assignment for the `A13` input pin (alias for `I7`).
+  A12*    = I8  ## The pin assignment for the `A12` input pin (alias for `I8`).
+  BA*     = I9  ## The pin assignment for the `BA` input pin (alias for `I9`).
+  AEC*    = I10 ## The pin assignment for the `AEC` input pin (alias for `I10`).
+  R_W*    = I11 ## The pin assignment for the `R_W` input pin (alias for `I11`).
+  EXROM*  = I12 ## The pin assignment for the `EXROM` input pin (alias for `I12`).
+  GAME*   = I13 ## The pin assignment for the `GAME` input pin (alias for `I13`).
+  VA13*   = I14 ## The pin assignment for the `VA13` input pin (alias for `I14`).
+  VA12*   = I15 ## The pin assignment for the `VA12` input pin (alias for `I15`).
+  CASRAM* = F0  ## The pin assignment for the `CASRAM` output pin (alias for `F0`).
+  BASIC*  = F1  ## The pin assignment for the `BASIC` output pin (alias for `F1`).
+  KERNAL* = F2  ## The pin assignment for the `KERNAL` output pin (alias for `F2`).
+  CHAROM* = F3  ## The pin assignment for the `CHAROM` output pin (alias for `F3`).
+  GR_W*   = F4  ## The pin assignment for the `GR_W` output pin (alias for `F4`).
+  IO*     = F5  ## The pin assignment for the `IO` output pin (alias for `F5`).
+  ROML*   = F6  ## The pin assignment for the `ROML` output pin (alias for `F6`).
+  ROMH*   = F7  ## The pin assignment for the `ROMH` output pin (alias for `F7`).
 
 chip Ic82S100:
   pins:
@@ -251,7 +280,7 @@ chip Ic82S100:
       # Output enable, disables all outputs when set high. Tied to ground in the C64, so
       # it's never high.
       OE: 19
-    
+
     output:
       # Output pins. Similar to the input pins, these were named generically on the 82S100.
       F0: 18
@@ -262,7 +291,7 @@ chip Ic82S100:
       F5: 12
       F6: 11
       F7: 10
-    
+
     unconnected:
       #  Field programming pin, not used in mask programmed parts and not emulated.
       FE: 1
@@ -270,7 +299,7 @@ chip Ic82S100:
       # Power supply and ground pins, not emulated.
       VCC: 28
       GND: 14
-  
+
   init:
     proc one_listener(_: Pin) =
       if highp(pins[OE]):
@@ -354,7 +383,7 @@ chip Ic82S100:
         # HIRAM deselected, CHAREN selected
         # $D000 - $DFFF
         # CPU active, Read, 16k cartridge
-        let p5 = i2 and not i3 and i5 and i6 and not i7 and i8 and not i10 and i11 and not i12 and 
+        let p5 = i2 and not i3 and i5 and i6 and not i7 and i8 and not i10 and i11 and not i12 and
           not i13
 
         #
@@ -393,19 +422,19 @@ chip Ic82S100:
         # HIRAM deselected, CHAREN deselected
         # $D000 - $DFFF
         # CPU active, Bus available, Read, 16k cartridge
-        let p13 = i2 and i3 and i5 and i6 and not i7 and i8 and not i10 and i9 and i11 and 
+        let p13 = i2 and i3 and i5 and i6 and not i7 and i8 and not i10 and i9 and i11 and
           not i12 and not i13
 
         # HIRAM deselected, CHAREN deselected
         # $D000 - $DFFF
         # CPU active, Write, 16k cartridge
-        let p14 = i2 and i3 and i5 and i6 and not i7 and i8 and not i10 and not i11 and not i12 and 
+        let p14 = i2 and i3 and i5 and i6 and not i7 and i8 and not i10 and not i11 and not i12 and
           not i13
 
         # LORAM deselected, CHAREN deselected
         # $D000 - $DFFF
         # CPU active, Bus available, Read, 16k cartridge
-        let p15 = i1 and i3 and i5 and i6 and not i7 and i8 and not i10 and i9 and i11 and 
+        let p15 = i1 and i3 and i5 and i6 and not i7 and i8 and not i10 and i9 and i11 and
           not i12 and not i13
 
         # LORAM deselected, CHAREN deselected

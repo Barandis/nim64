@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
@@ -51,6 +51,24 @@ import sequtils
 import strformat
 import ../components/[chip, link]
 
+const
+  SEL* = 1   ## The pin assignment for the select pin.
+  A1*  = 2   ## The pin assignment for multiplexer 1's first input pin.
+  B1*  = 3   ## The pin assignment for multiplexer 1's second input pin.
+  Y1*  = 4   ## The pin assignment for multiplexer 1's output pin.
+  A2*  = 5   ## The pin assignment for multiplexer 2's first input pin.
+  B2*  = 6   ## The pin assignment for multiplexer 2's second input pin.
+  Y2*  = 7   ## The pin assignment for multiplexer 2's output pin.
+  GND* = 8   ## The pin assignment for the ground pin.
+  Y3*  = 9   ## The pin assignment for multiplexer 3's output pin.
+  B3*  = 10  ## The pin assignment for multiplexer 3's second input pin.
+  A3*  = 11  ## The pin assignment for multiplexer 3's first input pin.
+  Y4*  = 12  ## The pin assignment for multiplexer 4's output pin.
+  B4*  = 13  ## The pin assignment for multiplexer 4's second input pin.
+  A4*  = 14  ## The pin assignment for multiplexer 4's first input pin.
+  OE*  = 15  ## The pin assignment for the output enable pin.
+  VCC* = 16  ## The pin assignment for the +5V power supply pin.
+
 chip Ic74257:
   pins:
     input:
@@ -85,12 +103,12 @@ chip Ic74257:
       Y2: 7
       Y3: 9
       Y4: 12
-    
+
     unconnected:
       # Power supply and ground pins, not emulated.
       VCC: 16
       GND: 8
-  
+
   init:
     proc data_listener(mux: int): proc (_: Pin) =
       let apin = pins[&"A{mux}"]
@@ -105,12 +123,12 @@ chip Ic74257:
             if highp(bpin): set(ypin) elif lowp(bpin): clear(ypin)
           elif lowp(pins[SEL]):
             if highp(apin): set(ypin) elif lowp(apin): clear(ypin)
-    
+
     proc control_listener(): proc (_: Pin) =
       let listeners = map(@[1, 2, 3, 4], proc (i: int): proc (_: Pin) = data_listener(i))
       result = proc (pin: Pin) =
         for listener in listeners: listener(pin)
-    
+
     let listener = control_listener()
     add_listener(pins[SEL], listener)
     add_listener(pins[OE], listener)

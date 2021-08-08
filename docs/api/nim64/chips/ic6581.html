@@ -111,78 +111,27 @@ function main() {
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#Ic6581"
     title="Ic6581 = ref object
-  pins: Ic6581Pins">Ic6581</a></li>
-
-  </ul>
-</li>
-<li>
-  <a class="reference reference-toplevel" href="#10" id="60">Consts</a>
-  <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#A0"
-    title="A0 = 9">A0</a></li>
-  <li><a class="reference" href="#A1"
-    title="A1 = 10">A1</a></li>
-  <li><a class="reference" href="#A2"
-    title="A2 = 11">A2</a></li>
-  <li><a class="reference" href="#A3"
-    title="A3 = 12">A3</a></li>
-  <li><a class="reference" href="#A4"
-    title="A4 = 13">A4</a></li>
-  <li><a class="reference" href="#POTX"
-    title="POTX = 24">POTX</a></li>
-  <li><a class="reference" href="#POTY"
-    title="POTY = 23">POTY</a></li>
-  <li><a class="reference" href="#EXT"
-    title="EXT = 26">EXT</a></li>
-  <li><a class="reference" href="#PHI2"
-    title="PHI2 = 6">PHI2</a></li>
-  <li><a class="reference" href="#R_W"
-    title="R_W = 7">R_W</a></li>
-  <li><a class="reference" href="#CS"
-    title="CS = 8">CS</a></li>
-  <li><a class="reference" href="#RES"
-    title="RES = 5">RES</a></li>
-  <li><a class="reference" href="#D0"
-    title="D0 = 15">D0</a></li>
-  <li><a class="reference" href="#D1"
-    title="D1 = 16">D1</a></li>
-  <li><a class="reference" href="#D2"
-    title="D2 = 17">D2</a></li>
-  <li><a class="reference" href="#D3"
-    title="D3 = 18">D3</a></li>
-  <li><a class="reference" href="#D4"
-    title="D4 = 19">D4</a></li>
-  <li><a class="reference" href="#D5"
-    title="D5 = 20">D5</a></li>
-  <li><a class="reference" href="#D6"
-    title="D6 = 21">D6</a></li>
-  <li><a class="reference" href="#D7"
-    title="D7 = 22">D7</a></li>
-  <li><a class="reference" href="#AUDIO"
-    title="AUDIO = 27">AUDIO</a></li>
-  <li><a class="reference" href="#CAP1A"
-    title="CAP1A = 1">CAP1A</a></li>
-  <li><a class="reference" href="#CAP1B"
-    title="CAP1B = 2">CAP1B</a></li>
-  <li><a class="reference" href="#CAP2A"
-    title="CAP2A = 3">CAP2A</a></li>
-  <li><a class="reference" href="#CAP2B"
-    title="CAP2B = 4">CAP2B</a></li>
-  <li><a class="reference" href="#VDD"
-    title="VDD = 28">VDD</a></li>
-  <li><a class="reference" href="#VCC"
-    title="VCC = 25">VCC</a></li>
-  <li><a class="reference" href="#GND"
-    title="GND = 14">GND</a></li>
+  pins: Pins
+  registers: Registers">Ic6581</a></li>
 
   </ul>
 </li>
 <li>
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
-      <ul class="simple nested-toc-section">newIc6581
+      <ul class="simple nested-toc-section">registers
+      <li><a class="reference" href="#registers%2CIc6581"
+    title="registers(chip`gensym1: Ic6581): seq[RegisterInfo]">registers,<wbr>Ic6581</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">newIc6581
       <li><a class="reference" href="#newIc6581"
     title="newIc6581(): Ic6581">newIc6581</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">pins
+      <li><a class="reference" href="#pins%2CIc6581"
+    title="pins(chip`gensym0: Ic6581): seq[PinInfo]">pins,<wbr>Ic6581</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">[]
@@ -201,8 +150,14 @@ function main() {
       <li><a class="reference" href="#items.i%2CIc6581"
     title="items(chip`gensym0: Ic6581): Pin">items</a></li>
   <li><a class="reference" href="#pairs.i%2CIc6581"
-    title="pairs(chip`gensym0: Ic6581): tuple[a: int, b: Pin]">pairs</a></li>
+    title="pairs(chip`gensym0: Ic6581): (int, Pin)">pairs</a></li>
 
+  </ul>
+</li>
+<li>
+  <a class="reference reference-toplevel" href="#19" id="69">Exports</a>
+  <ul class="simple simple-toc-section">
+    
   </ul>
 </li>
 
@@ -377,216 +332,16 @@ function main() {
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
 <dl class="item">
-<a class="reference external" href="../utils.html">../utils</a>, <a class="reference external" href="../components/chip.html">../components/chip</a>, <a class="reference external" href="../components/link.html">../components/link</a>, <a class="reference external" href="ic6581/voice.html">ic6581/voice</a>, <a class="reference external" href="ic6581/filter.html">ic6581/filter</a>, <a class="reference external" href="ic6581/external.html">ic6581/external</a>
+<a class="reference external" href="../utils.html">../utils</a>, <a class="reference external" href="../components/chip.html">../components/chip</a>, <a class="reference external" href="../components/link.html">../components/link</a>, <a class="reference external" href="ic6581/voice.html">ic6581/voice</a>, <a class="reference external" href="ic6581/filter.html">ic6581/filter</a>, <a class="reference external" href="ic6581/external.html">ic6581/external</a>, <a class="reference external" href="ic6581/constants.html">ic6581/constants</a>, <a class="reference external" href="../components/pins.html">../components/pins</a>, <a class="reference external" href="../components/registers.html">../components/registers</a>
 </dl></div>
 <div class="section" id="7">
 <h1><a class="toc-backref" href="#7">Types</a></h1>
 <dl class="item">
 <a id="Ic6581"></a>
 <dt><pre><a href="ic6581.html#Ic6581"><span class="Identifier">Ic6581</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
-  <span class="Identifier">pins</span><span class="Other">:</span> <span class="Identifier">Ic6581Pins</span>
+  <span class="Identifier">pins</span><span class="Other">:</span> <a href="../components/pins.html#Pins"><span class="Identifier">Pins</span></a>
+  <span class="Identifier">registers</span><span class="Other">:</span> <a href="../components/registers.html#Registers"><span class="Identifier">Registers</span></a>
 </pre></dt>
-<dd>
-
-
-
-</dd>
-
-</dl></div>
-<div class="section" id="10">
-<h1><a class="toc-backref" href="#10">Consts</a></h1>
-<dl class="item">
-<a id="A0"></a>
-<dt><pre><a href="ic6581.html#A0"><span class="Identifier">A0</span></a> <span class="Other">=</span> <span class="DecNumber">9</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="A1"></a>
-<dt><pre><a href="ic6581.html#A1"><span class="Identifier">A1</span></a> <span class="Other">=</span> <span class="DecNumber">10</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="A2"></a>
-<dt><pre><a href="ic6581.html#A2"><span class="Identifier">A2</span></a> <span class="Other">=</span> <span class="DecNumber">11</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="A3"></a>
-<dt><pre><a href="ic6581.html#A3"><span class="Identifier">A3</span></a> <span class="Other">=</span> <span class="DecNumber">12</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="A4"></a>
-<dt><pre><a href="ic6581.html#A4"><span class="Identifier">A4</span></a> <span class="Other">=</span> <span class="DecNumber">13</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="POTX"></a>
-<dt><pre><a href="ic6581.html#POTX"><span class="Identifier">POTX</span></a> <span class="Other">=</span> <span class="DecNumber">24</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="POTY"></a>
-<dt><pre><a href="ic6581.html#POTY"><span class="Identifier">POTY</span></a> <span class="Other">=</span> <span class="DecNumber">23</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="EXT"></a>
-<dt><pre><a href="ic6581.html#EXT"><span class="Identifier">EXT</span></a> <span class="Other">=</span> <span class="DecNumber">26</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="PHI2"></a>
-<dt><pre><a href="ic6581.html#PHI2"><span class="Identifier">PHI2</span></a> <span class="Other">=</span> <span class="DecNumber">6</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="R_W"></a>
-<dt><pre><a href="ic6581.html#R_W"><span class="Identifier">R_W</span></a> <span class="Other">=</span> <span class="DecNumber">7</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="CS"></a>
-<dt><pre><a href="ic6581.html#CS"><span class="Identifier">CS</span></a> <span class="Other">=</span> <span class="DecNumber">8</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="RES"></a>
-<dt><pre><a href="ic6581.html#RES"><span class="Identifier">RES</span></a> <span class="Other">=</span> <span class="DecNumber">5</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="D0"></a>
-<dt><pre><a href="ic6581.html#D0"><span class="Identifier">D0</span></a> <span class="Other">=</span> <span class="DecNumber">15</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="D1"></a>
-<dt><pre><a href="ic6581.html#D1"><span class="Identifier">D1</span></a> <span class="Other">=</span> <span class="DecNumber">16</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="D2"></a>
-<dt><pre><a href="ic6581.html#D2"><span class="Identifier">D2</span></a> <span class="Other">=</span> <span class="DecNumber">17</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="D3"></a>
-<dt><pre><a href="ic6581.html#D3"><span class="Identifier">D3</span></a> <span class="Other">=</span> <span class="DecNumber">18</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="D4"></a>
-<dt><pre><a href="ic6581.html#D4"><span class="Identifier">D4</span></a> <span class="Other">=</span> <span class="DecNumber">19</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="D5"></a>
-<dt><pre><a href="ic6581.html#D5"><span class="Identifier">D5</span></a> <span class="Other">=</span> <span class="DecNumber">20</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="D6"></a>
-<dt><pre><a href="ic6581.html#D6"><span class="Identifier">D6</span></a> <span class="Other">=</span> <span class="DecNumber">21</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="D7"></a>
-<dt><pre><a href="ic6581.html#D7"><span class="Identifier">D7</span></a> <span class="Other">=</span> <span class="DecNumber">22</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="AUDIO"></a>
-<dt><pre><a href="ic6581.html#AUDIO"><span class="Identifier">AUDIO</span></a> <span class="Other">=</span> <span class="DecNumber">27</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="CAP1A"></a>
-<dt><pre><a href="ic6581.html#CAP1A"><span class="Identifier">CAP1A</span></a> <span class="Other">=</span> <span class="DecNumber">1</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="CAP1B"></a>
-<dt><pre><a href="ic6581.html#CAP1B"><span class="Identifier">CAP1B</span></a> <span class="Other">=</span> <span class="DecNumber">2</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="CAP2A"></a>
-<dt><pre><a href="ic6581.html#CAP2A"><span class="Identifier">CAP2A</span></a> <span class="Other">=</span> <span class="DecNumber">3</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="CAP2B"></a>
-<dt><pre><a href="ic6581.html#CAP2B"><span class="Identifier">CAP2B</span></a> <span class="Other">=</span> <span class="DecNumber">4</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="VDD"></a>
-<dt><pre><a href="ic6581.html#VDD"><span class="Identifier">VDD</span></a> <span class="Other">=</span> <span class="DecNumber">28</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="VCC"></a>
-<dt><pre><a href="ic6581.html#VCC"><span class="Identifier">VCC</span></a> <span class="Other">=</span> <span class="DecNumber">25</span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="GND"></a>
-<dt><pre><a href="ic6581.html#GND"><span class="Identifier">GND</span></a> <span class="Other">=</span> <span class="DecNumber">14</span></pre></dt>
 <dd>
 
 
@@ -597,12 +352,19 @@ function main() {
 <div class="section" id="12">
 <h1><a class="toc-backref" href="#12">Procs</a></h1>
 <dl class="item">
+<a id="registers,Ic6581"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#registers%2CIc6581"><span class="Identifier">registers</span></a><span class="Other">(</span><span class="Identifier">chip`gensym1</span><span class="Other">:</span> <a href="ic6581.html#Ic6581"><span class="Identifier">Ic6581</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="../components/registers.html#RegisterInfo"><span class="Identifier">RegisterInfo</span></a><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Returns a read-only view of the chip's registers.
+
+</dd>
 <a id="[],Ic6581,int"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CIc6581%2Cint"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">chip`gensym0</span><span class="Other">:</span> <a href="ic6581.html#Ic6581"><span class="Identifier">Ic6581</span></a><span class="Other">;</span> <span class="Identifier">index`gensym0</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="../components/link.html#Pin"><span class="Identifier">Pin</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-
+Looks up a pin by the pin's number.
 
 </dd>
 <a id="[],Ic6581,string"></a>
@@ -610,7 +372,14 @@ function main() {
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
+Looks up a pin by the pin's name.
 
+</dd>
+<a id="pins,Ic6581"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#pins%2CIc6581"><span class="Identifier">pins</span></a><span class="Other">(</span><span class="Identifier">chip`gensym0</span><span class="Other">:</span> <a href="ic6581.html#Ic6581"><span class="Identifier">Ic6581</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="../components/pins.html#PinInfo"><span class="Identifier">PinInfo</span></a><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Returns a read-only view of the chip's pins.
 
 </dd>
 <a id="newIc6581"></a>
@@ -630,18 +399,22 @@ function main() {
 <dt><pre><span class="Keyword">iterator</span> <a href="#items.i%2CIc6581"><span class="Identifier">items</span></a><span class="Other">(</span><span class="Identifier">chip`gensym0</span><span class="Other">:</span> <a href="ic6581.html#Ic6581"><span class="Identifier">Ic6581</span></a><span class="Other">)</span><span class="Other">:</span> <a href="../components/link.html#Pin"><span class="Identifier">Pin</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-
+Iterates over the chip's pins, yielding them in order by pin number.
 
 </dd>
 <a id="pairs.i,Ic6581"></a>
-<dt><pre><span class="Keyword">iterator</span> <a href="#pairs.i%2CIc6581"><span class="Identifier">pairs</span></a><span class="Other">(</span><span class="Identifier">chip`gensym0</span><span class="Other">:</span> <a href="ic6581.html#Ic6581"><span class="Identifier">Ic6581</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">tuple</span><span class="Other">[</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">,</span> <span class="Identifier">b</span><span class="Other">:</span> <a href="../components/link.html#Pin"><span class="Identifier">Pin</span></a><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">iterator</span> <a href="#pairs.i%2CIc6581"><span class="Identifier">pairs</span></a><span class="Other">(</span><span class="Identifier">chip`gensym0</span><span class="Other">:</span> <a href="ic6581.html#Ic6581"><span class="Identifier">Ic6581</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Other">(</span><span class="Identifier">int</span><span class="Other">,</span> <a href="../components/link.html#Pin"><span class="Identifier">Pin</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-
+Iterates over the chip's pins, yielding both the pin number and the pin itself.
 
 </dd>
 
+</dl></div>
+<div class="section" id="19">
+<h1><a class="toc-backref" href="#19">Exports</a></h1>
+<dl class="item">
+<a href="ic6581/constants.html#D5"><span class="Identifier">D5</span></a>, <a href="ic6581/constants.html#CUTHI"><span class="Identifier">CUTHI</span></a>, <a href="ic6581/constants.html#D2"><span class="Identifier">D2</span></a>, <a href="ic6581/constants.html#VDD"><span class="Identifier">VDD</span></a>, <a href="ic6581/constants.html#VCREG1"><span class="Identifier">VCREG1</span></a>, <a href="ic6581/constants.html#GATE"><span class="Identifier">GATE</span></a>, <a href="ic6581/constants.html#A2"><span class="Identifier">A2</span></a>, <a href="ic6581/constants.html#FREHI3"><span class="Identifier">FREHI3</span></a>, <a href="ic6581/constants.html#SIGVOL"><span class="Identifier">SIGVOL</span></a>, <a href="ic6581/constants.html#ATDCY1"><span class="Identifier">ATDCY1</span></a>, <a href="ic6581/constants.html#R_W"><span class="Identifier">R_W</span></a>, <a href="ic6581/constants.html#D1"><span class="Identifier">D1</span></a>, <a href="ic6581/constants.html#VCC"><span class="Identifier">VCC</span></a>, <a href="ic6581/constants.html#D0"><span class="Identifier">D0</span></a>, <a href="ic6581/constants.html#FREHI1"><span class="Identifier">FREHI1</span></a>, <a href="ic6581/constants.html#POTYR"><span class="Identifier">POTYR</span></a>, <a href="ic6581/constants.html#D3"><span class="Identifier">D3</span></a>, <a href="ic6581/constants.html#ATDCY2"><span class="Identifier">ATDCY2</span></a>, <a href="ic6581/constants.html#CS"><span class="Identifier">CS</span></a>, <a href="ic6581/constants.html#DSCNV3"><span class="Identifier">DSCNV3</span></a>, <a href="ic6581/constants.html#SYNC"><span class="Identifier">SYNC</span></a>, <a href="ic6581/constants.html#PWLO1"><span class="Identifier">PWLO1</span></a>, <a href="ic6581/constants.html#VCREG2"><span class="Identifier">VCREG2</span></a>, <a href="ic6581/constants.html#POTX"><span class="Identifier">POTX</span></a>, <a href="ic6581/constants.html#FILTBP"><span class="Identifier">FILTBP</span></a>, <a href="ic6581/constants.html#FILTV2"><span class="Identifier">FILTV2</span></a>, <a href="ic6581/constants.html#PWLO2"><span class="Identifier">PWLO2</span></a>, <a href="ic6581/constants.html#AUDIO"><span class="Identifier">AUDIO</span></a>, <a href="ic6581/constants.html#RESON"><span class="Identifier">RESON</span></a>, <a href="ic6581/constants.html#SAWTOOTH"><span class="Identifier">SAWTOOTH</span></a>, <a href="ic6581/constants.html#A1"><span class="Identifier">A1</span></a>, <a href="ic6581/constants.html#FRELO2"><span class="Identifier">FRELO2</span></a>, <a href="ic6581/constants.html#D4"><span class="Identifier">D4</span></a>, <a href="ic6581/constants.html#FILTV1"><span class="Identifier">FILTV1</span></a>, <a href="ic6581/constants.html#ATDCY3"><span class="Identifier">ATDCY3</span></a>, <a href="ic6581/constants.html#POTY"><span class="Identifier">POTY</span></a>, <a href="ic6581/constants.html#PWLO3"><span class="Identifier">PWLO3</span></a>, <a href="ic6581/constants.html#FILTLP"><span class="Identifier">FILTLP</span></a>, <a href="ic6581/constants.html#FILTV3"><span class="Identifier">FILTV3</span></a>, <a href="ic6581/constants.html#CAP1B"><span class="Identifier">CAP1B</span></a>, <a href="ic6581/constants.html#TEST"><span class="Identifier">TEST</span></a>, <a href="ic6581/constants.html#A0"><span class="Identifier">A0</span></a>, <a href="ic6581/constants.html#CAP2B"><span class="Identifier">CAP2B</span></a>, <a href="ic6581/constants.html#A3"><span class="Identifier">A3</span></a>, <a href="ic6581/constants.html#UNUSED3"><span class="Identifier">UNUSED3</span></a>, <a href="ic6581/constants.html#RES"><span class="Identifier">RES</span></a>, <a href="ic6581/constants.html#FILTHP"><span class="Identifier">FILTHP</span></a>, <a href="ic6581/constants.html#PWHI3"><span class="Identifier">PWHI3</span></a>, <a href="ic6581/constants.html#TRIANGLE"><span class="Identifier">TRIANGLE</span></a>, <a href="ic6581/constants.html#PHI2"><span class="Identifier">PHI2</span></a>, <a href="ic6581/constants.html#FILTEXT"><span class="Identifier">FILTEXT</span></a>, <a href="ic6581/constants.html#EXT"><span class="Identifier">EXT</span></a>, <a href="ic6581/constants.html#PWHI1"><span class="Identifier">PWHI1</span></a>, <a href="ic6581/constants.html#CAP2A"><span class="Identifier">CAP2A</span></a>, <a href="ic6581/constants.html#RING"><span class="Identifier">RING</span></a>, <a href="ic6581/constants.html#PWHI2"><span class="Identifier">PWHI2</span></a>, <a href="ic6581/constants.html#UNUSED1"><span class="Identifier">UNUSED1</span></a>, <a href="ic6581/constants.html#D7"><span class="Identifier">D7</span></a>, <a href="ic6581/constants.html#SUREL2"><span class="Identifier">SUREL2</span></a>, <a href="ic6581/constants.html#VCREG3"><span class="Identifier">VCREG3</span></a>, <a href="ic6581/constants.html#OSC3"><span class="Identifier">OSC3</span></a>, <a href="ic6581/constants.html#D6"><span class="Identifier">D6</span></a>, <a href="ic6581/constants.html#CUTLO"><span class="Identifier">CUTLO</span></a>, <a href="ic6581/constants.html#GND"><span class="Identifier">GND</span></a>, <a href="ic6581/constants.html#FRELO1"><span class="Identifier">FRELO1</span></a>, <a href="ic6581/constants.html#ENV3"><span class="Identifier">ENV3</span></a>, <a href="ic6581/constants.html#FRELO3"><span class="Identifier">FRELO3</span></a>, <a href="ic6581/constants.html#FREHI2"><span class="Identifier">FREHI2</span></a>, <a href="ic6581/constants.html#SUREL1"><span class="Identifier">SUREL1</span></a>, <a href="ic6581/constants.html#CAP1A"><span class="Identifier">CAP1A</span></a>, <a href="ic6581/constants.html#NOISE"><span class="Identifier">NOISE</span></a>, <a href="ic6581/constants.html#SUREL3"><span class="Identifier">SUREL3</span></a>, <a href="ic6581/constants.html#A4"><span class="Identifier">A4</span></a>, <a href="ic6581/constants.html#POTXR"><span class="Identifier">POTXR</span></a>, <a href="ic6581/constants.html#UNUSED2"><span class="Identifier">UNUSED2</span></a>, <a href="ic6581/constants.html#PULSE"><span class="Identifier">PULSE</span></a>
 </dl></div>
 
   </div>
@@ -651,7 +424,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-08-06 09:41:17 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-08-08 11:46:13 UTC</small>
       </div>
     </div>
   </div>

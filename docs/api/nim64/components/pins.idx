@@ -1,0 +1,9 @@
+Pins	nim64/components/pins.html#Pins	pins: Pins	
+PinInfo	nim64/components/pins.html#PinInfo	pins: PinInfo	
+new_pins	nim64/components/pins.html#new_pins,varargs[Pin]	pins: new_pins(pins: varargs[Pin]): Pins	
+`[]`	nim64/components/pins.html#[],Pins,int	pins: `[]`(pins: Pins; index: int): Pin	
+`[]`	nim64/components/pins.html#[],Pins,string	pins: `[]`(pins: Pins; index: string): Pin	
+items	nim64/components/pins.html#items.i,Pins	pins: items(pins: Pins): Pin	
+pairs	nim64/components/pins.html#pairs.i,Pins	pins: pairs(pins: Pins): (int, Pin)	
+len	nim64/components/pins.html#len,Pins	pins: len(pins: Pins): int	
+info	nim64/components/pins.html#info,Pins	pins: info(pins: Pins): seq[PinInfo]	

@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
@@ -70,6 +70,32 @@ import sugar
 import ../utils
 import ../components/[chip, link]
 
+const
+  A7*  = 1   ## The pin assignment for address pin 7.
+  A6*  = 2   ## The pin assignment for address pin 6.
+  A5*  = 3   ## The pin assignment for address pin 5.
+  A4*  = 4   ## The pin assignment for address pin 4.
+  A3*  = 5   ## The pin assignment for address pin 3.
+  A2*  = 6   ## The pin assignment for address pin 2.
+  A1*  = 7   ## The pin assignment for address pin 1.
+  A0*  = 8   ## The pin assignment for address pin 0.
+  D0*  = 9   ## The pin assignment for data pin 0.
+  D1*  = 10  ## The pin assignment for data pin 1.
+  D2*  = 11  ## The pin assignment for data pin 2.
+  GND* = 12  ## The pin assignment for the ground pin.
+  D3*  = 13  ## The pin assignment for data pin 3.
+  D4*  = 14  ## The pin assignment for data pin 4.
+  D5*  = 15  ## The pin assignment for data pin 5.
+  D6*  = 16  ## The pin assignment for data pin 6.
+  D7*  = 17  ## The pin assignment for data pin 7.
+  A11* = 18  ## The pin assignment for address pin 11.
+  A10* = 19  ## The pin assignment for address pin 10.
+  CS*  = 20  ## The pin assignment for the chip select pin.
+  A12* = 21  ## The pin assignment for address pin 12.
+  A9*  = 22  ## The pin assignment for address pin 9.
+  A8*  = 23  ## The pin assignment for address pin 8.
+  VCC* = 24  ## The pin assignment for the +5V power supply pin.
+
 chip Ic2364(memory: array[8192, uint8]):
   pins:
     input:
@@ -103,12 +129,12 @@ chip Ic2364(memory: array[8192, uint8]):
       D5: 15
       D6: 16
       D7: 17
-    
+
     unconnected:
       # Power supply and ground pins, not emulated
       VCC: 24
       GND: 12
-  
+
   init:
     let addr_pins = map(to_seq(0..12), i => pins[&"A{i}"])
     let data_pins = map(to_seq(0..7), i => pins[&"D{i}"])
@@ -116,11 +142,11 @@ chip Ic2364(memory: array[8192, uint8]):
     # Reads the 8-bit value at the location indicated by the address pins and puts that value
     # on the data pins.
     proc read = value_to_pins(memory[pins_to_value(addr_pins)], data_pins)
-    
+
     proc enable_listener(pin: Pin) =
       if lowp(pin):
         read()
       elif highp(pin):
         tri_pins(data_pins)
-    
+
     add_listener(pins[CS], enable_listener)

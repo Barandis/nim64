@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https:#opensource.org/licenses/MIT
 
@@ -94,7 +94,7 @@ proc write_ddrb(value: uint8) =
   registers[DDRB] = value
   for bit in 0..7:
     if not (
-      (bit == 6 and bit_set(registers[CRA], PBON)) or 
+      (bit == 6 and bit_set(registers[CRA], PBON)) or
       (bit == 7 and bit_set(registers[CRB], PBON))):
         set_mode(pins[&"PB{bit}"], if bit_set(value, uint(bit)): Output else: Input)
 

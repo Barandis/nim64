@@ -1,20 +1,21 @@
-Ic4066	nim64/chips/ic4066.html#Ic4066	ic4066: Ic4066	
-`[]`	nim64/chips/ic4066.html#[],Ic4066,int	ic4066: `[]`(chip`gensym0: Ic4066; index`gensym0: int): Pin	
-`[]`	nim64/chips/ic4066.html#[],Ic4066,string	ic4066: `[]`(chip`gensym0: Ic4066; index`gensym0: string): Pin	
-items	nim64/chips/ic4066.html#items.i,Ic4066	ic4066: items(chip`gensym0: Ic4066): Pin	
-pairs	nim64/chips/ic4066.html#pairs.i,Ic4066	ic4066: pairs(chip`gensym0: Ic4066): tuple[a: int, b: Pin]	
-X1	nim64/chips/ic4066.html#X1	ic4066: X1	
-X2	nim64/chips/ic4066.html#X2	ic4066: X2	
-X3	nim64/chips/ic4066.html#X3	ic4066: X3	
-X4	nim64/chips/ic4066.html#X4	ic4066: X4	
 A1	nim64/chips/ic4066.html#A1	ic4066: A1	
 B1	nim64/chips/ic4066.html#B1	ic4066: B1	
 A2	nim64/chips/ic4066.html#A2	ic4066: A2	
 B2	nim64/chips/ic4066.html#B2	ic4066: B2	
-A3	nim64/chips/ic4066.html#A3	ic4066: A3	
-B3	nim64/chips/ic4066.html#B3	ic4066: B3	
-A4	nim64/chips/ic4066.html#A4	ic4066: A4	
-B4	nim64/chips/ic4066.html#B4	ic4066: B4	
-VDD	nim64/chips/ic4066.html#VDD	ic4066: VDD	
+X2	nim64/chips/ic4066.html#X2	ic4066: X2	
+X3	nim64/chips/ic4066.html#X3	ic4066: X3	
 GND	nim64/chips/ic4066.html#GND	ic4066: GND	
+B3	nim64/chips/ic4066.html#B3	ic4066: B3	
+A3	nim64/chips/ic4066.html#A3	ic4066: A3	
+B4	nim64/chips/ic4066.html#B4	ic4066: B4	
+A4	nim64/chips/ic4066.html#A4	ic4066: A4	
+X4	nim64/chips/ic4066.html#X4	ic4066: X4	
+X1	nim64/chips/ic4066.html#X1	ic4066: X1	
+VCC	nim64/chips/ic4066.html#VCC	ic4066: VCC	
+Ic4066	nim64/chips/ic4066.html#Ic4066	ic4066: Ic4066	
+`[]`	nim64/chips/ic4066.html#[],Ic4066,int	ic4066: `[]`(chip`gensym0: Ic4066; index`gensym0: int): Pin	
+`[]`	nim64/chips/ic4066.html#[],Ic4066,string	ic4066: `[]`(chip`gensym0: Ic4066; index`gensym0: string): Pin	
+items	nim64/chips/ic4066.html#items.i,Ic4066	ic4066: items(chip`gensym0: Ic4066): Pin	
+pairs	nim64/chips/ic4066.html#pairs.i,Ic4066	ic4066: pairs(chip`gensym0: Ic4066): (int, Pin)	
+pins	nim64/chips/ic4066.html#pins,Ic4066	ic4066: pins(chip`gensym0: Ic4066): seq[PinInfo]	
 newIc4066	nim64/chips/ic4066.html#newIc4066	ic4066: newIc4066(): Ic4066	

@@ -1,28 +1,28 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
 ## An emulation of the 7408 quad two-input AND gate.
 ##
-## The 7408 is one of the 7400-series TTL logic circuits, consisting of four dual-input 
-## AND gates. An AND gate's output is high as long as all of its outputs are high; 
+## The 7408 is one of the 7400-series TTL logic circuits, consisting of four dual-input
+## AND gates. An AND gate's output is high as long as all of its outputs are high;
 ## otherwise the output is low.
 ##
 ## The A and B pins are inputs while the Y pins are the outputs.
-## 
+##
 ## ======  ======  ======
-##  An     Bn      Yn    
+##  An     Bn      Yn
 ## ======  ======  ======
 ##  L      L       **L**
 ##  L      H       **L**
 ##  H      L       **L**
 ##  H      H       **H**
 ## ======  ======  ======
-## 
+##
 ##
 ## The chip comes in a 14-pin dual in-line package with the following pin assignments.
-## ``` 
+## ```
 ##         +---+--+---+
 ##      A1 |1  +--+ 14| Vcc
 ##      B1 |2       13| B4
@@ -42,6 +42,22 @@
 
 import strformat
 import ../components/[chip, link]
+
+const
+  A1*  = 1   ## The pin assignment for gate 1's first input pin.
+  B1*  = 2   ## The pin assignment for gate 1's second input pin.
+  Y1*  = 3   ## The pin assignment for gate 1's output pin.
+  A2*  = 4   ## The pin assignment for gate 2's first input pin.
+  B2*  = 5   ## The pin assignment for gate 2's second input pin.
+  Y2*  = 6   ## The pin assignment for gate 2's output pin.
+  GND* = 7   ## The pin assignment for the ground pin.
+  Y3*  = 8   ## The pin assignment for gate 3's output pin.
+  A3*  = 9   ## The pin assignment for gate 3's first input pin.
+  B3*  = 10  ## The pin assignment for gate 3's second input pin.
+  Y4*  = 11  ## The pin assignment for gate 4's output pin.
+  A4*  = 12  ## The pin assignment for gate 4's first input pin.
+  B4*  = 13  ## The pin assignment for gate 4's second input pin.
+  VCC* = 14  ## The pin assignment for the +5V power supply pin.
 
 chip Ic7408:
   pins:
@@ -64,11 +80,11 @@ chip Ic7408:
       Y2: 6
       Y3: 8
       Y4: 11
-    
+
     unconnected:
       VCC: 14
       GND: 7
-  
+
   init:
     proc data_listener(gate: int): proc (pin: Pin) =
       let apin = pins[&"A{gate}"]
@@ -80,7 +96,7 @@ chip Ic7408:
         elif highp(apin) and lowp(bpin): clear(ypin)
         elif lowp(apin) and highp(bpin): clear(ypin)
         elif lowp(apin) and lowp(bpin): clear(ypin)
-    
+
     for i in 1..4:
       let listener = data_listener(i)
       add_listener(pins[&"A{i}"], listener)

@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
@@ -17,7 +17,7 @@
 ##
 ## The chip has an active-low output enable pin, OE. When this is high, all outputs are set
 ## to a high impedance state.
-## 
+##
 ## =====  =====  =====  ======
 ## OE     LE     Dn     Qn
 ## =====  =====  =====  ======
@@ -58,6 +58,28 @@ import sequtils
 import strformat
 import ../components/[chip, link]
 
+const
+  OE*  = 1   ## The pin assignment for the output enable pin.
+  Q0*  = 2   ## The pin assignment for data output pin 0.
+  D0*  = 3   ## The pin assignment for data input pin 0.
+  D1*  = 4   ## The pin assignment for data input pin 1.
+  Q1*  = 5   ## The pin assignment for data output pin 1.
+  Q2*  = 6   ## The pin assignment for data output pin 2.
+  D2*  = 7   ## The pin assignment for data input pin 2.
+  D3*  = 8   ## The pin assignment for data input pin 3.
+  Q3*  = 9   ## The pin assignment for data output pin 3.
+  GND* = 10  ## The pin assignment for the ground pin.
+  LE*  = 11  ## The pin assignment for the latch enable pin.
+  Q4*  = 12  ## The pin assignment for data output pin 4.
+  D4*  = 13  ## The pin assignment for data input pin 4.
+  D5*  = 14  ## The pin assignment for data input pin 5.
+  Q5*  = 15  ## The pin assignment for data output pin 5.
+  Q6*  = 16  ## The pin assignment for data output pin 6.
+  D6*  = 17  ## The pin assignment for data input pin 6.
+  D7*  = 18  ## The pin assignment for data input pin 7.
+  Q7*  = 19  ## The pin assignment for data output pin 7.
+  VCC* = 20  ## The pin assignment for the +5V power supply pin.
+
 chip Ic74373:
   pins:
     input:
@@ -90,12 +112,12 @@ chip Ic74373:
       Q5: 15
       Q6: 16
       Q7: 19
-    
+
     unconnected:
       # Power supply and ground pins, not emulated.
       VCC: 20
       GND: 10
-  
+
   init:
     var latches = repeat(none(bool), 8)
 
@@ -104,7 +126,7 @@ chip Ic74373:
       result = proc (pin: Pin) =
         if highp(pins[LE]) and lowp(pins[OE]):
           if highp(pin): set(qpin) elif lowp(pin): clear(qpin)
-    
+
     proc latch_listener(pin: Pin) =
       if highp(pin):
         for i in 0..7:
@@ -115,7 +137,7 @@ chip Ic74373:
       elif lowp(pin):
         for i in 0..7:
           latches[i] = some(highp(pins[&"D{i}"]))
-    
+
     proc enable_listener(pin: Pin) =
       if highp(pin):
         for i in 0..7:
@@ -130,7 +152,7 @@ chip Ic74373:
           else:
             let dpin = pins[&"D{i}"]
             if highp(dpin): set(qpin) elif lowp(dpin): clear(qpin)
-    
+
     for i in 0..7: add_listener(pins[&"D{i}"], data_listener(i))
     add_listener(pins[LE], latch_listener)
     add_listener(pins[OE], enable_listener)
