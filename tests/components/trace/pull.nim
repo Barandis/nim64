@@ -7,12 +7,12 @@ import ../../../src/nim64/components/link
 import unittest
 
 proc up_initial* =
-  let t = pull_up(new_trace())
+  let t = set_pull(new_trace(), Up)
   check highp(t)
 
 proc up_input =
   let p = new_pin(1, "A", Output)
-  let t = pull_up(new_trace(p))
+  let t = set_pull(new_trace(p), Up)
 
   clear(p)
   check lowp(t)
@@ -21,34 +21,34 @@ proc up_input =
 
 proc up_no_output =
   let p = new_pin(1, "A", Input)
-  let t = pull_up(new_trace(p))
+  let t = set_pull(new_trace(p), Up)
   check highp(t)
 
 proc up_high_output =
   let p1 = set(new_pin(1, "A", Output))
   let p2 = clear(new_pin(2, "B", Output))
-  let t = pull_up(new_trace(p1, p2))
+  let t = set_pull(new_trace(p1, p2), Up)
   check highp(t)
 
 proc up_low_output =
   let p1 = clear(new_pin(1, "A", Output))
   let p2 = clear(new_pin(2, "B", Output))
-  let t = pull_up(new_trace(p1, p2))
+  let t = set_pull(new_trace(p1, p2), Up)
   check lowp(t)
 
 proc up_tri_output =
   let p1 = tri(new_pin(1, "A", Output))
   let p2 = tri(new_pin(2, "B", Output))
-  let t = pull_up(new_trace(p1, p2))
+  let t = set_pull(new_trace(p1, p2), Up)
   check highp(t)
 
 proc down_initial =
-  let t = pull_down(new_trace())
+  let t = set_pull(new_trace(), Down)
   check lowp(t)
 
 proc down_input =
   let p = new_pin(1, "A", Output)
-  let t = pull_down(new_trace(p))
+  let t = set_pull(new_trace(p), Down)
 
   set(p)
   check highp(t)
@@ -57,34 +57,34 @@ proc down_input =
 
 proc down_no_output =
   let p = new_pin(1, "A", Input)
-  let t = pull_down(new_trace(p))
+  let t = set_pull(new_trace(p), Down)
   check lowp(t)
 
 proc down_high_output =
   let p1 = set(new_pin(1, "A", Output))
   let p2 = clear(new_pin(2, "B", Output))
-  let t = pull_down(new_trace(p1, p2))
+  let t = set_pull(new_trace(p1, p2), Down)
   check highp(t)
 
 proc down_low_output =
   let p1 = clear(new_pin(1, "A", Output))
   let p2 = clear(new_pin(2, "B", Output))
-  let t = pull_down(new_trace(p1, p2))
+  let t = set_pull(new_trace(p1, p2), Down)
   check lowp(t)
 
 proc down_tri_output =
   let p1 = tri(new_pin(1, "A", Output))
   let p2 = tri(new_pin(2, "B", Output))
-  let t = pull_down(new_trace(p1, p2))
+  let t = set_pull(new_trace(p1, p2), Down)
   check lowp(t)
 
 proc off_initial =
-  let t = pull_off(new_trace())
+  let t = set_pull(new_trace(), Off)
   check trip(t)
 
 proc off_input =
   let p = new_pin(1, "A", Output)
-  let t = pull_off(new_trace(p))
+  let t = set_pull(new_trace(p), Off)
 
   set(p)
   check highp(t)
@@ -93,25 +93,25 @@ proc off_input =
 
 proc off_no_output =
   let p = new_pin(1, "A", Input)
-  let t = pull_off(new_trace(p))
+  let t = set_pull(new_trace(p), Off)
   check trip(t)
 
 proc off_high_output =
   let p1 = set(new_pin(1, "A", Output))
   let p2 = clear(new_pin(2, "B", Output))
-  let t = pull_off(new_trace(p1, p2))
+  let t = set_pull(new_trace(p1, p2), Off)
   check highp(t)
 
 proc off_low_output =
   let p1 = clear(new_pin(1, "A", Output))
   let p2 = clear(new_pin(2, "B", Output))
-  let t = pull_off(new_trace(p1, p2))
+  let t = set_pull(new_trace(p1, p2), Off)
   check lowp(t)
 
 proc off_tri_output =
   let p1 = tri(new_pin(1, "A", Output))
   let p2 = tri(new_pin(2, "B", Output))
-  let t = pull_off(new_trace(p1, p2))
+  let t = set_pull(new_trace(p1, p2), Off)
   check trip(t)
 
 proc allTests* =

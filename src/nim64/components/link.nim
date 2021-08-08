@@ -19,18 +19,12 @@
 ## and putting the two types together allow each of them to call updating functions that do
 ## not then have to be exported.
 ##
-## Since this is the first file written in this project, there is some additional
-## flexibilty mixed in. Each pin or trace can be set or cleared with the function syntax
-## (`set(pin)`), the method syntax (`pin.set` or `pin.set()`), or an operator syntax
-## (`+pin`). Which syntax will be used in the rest of the project is unknown at the time of
-## writing.
-##
 ## Every exported mutation function in this module is chainable (they all return a `Pin` or
 ## a `Trace` as appropriate, and all of them are discardable). This is meant to make it more
 ## concise to set up a new instance; you can do something like this to create a new `Pin`
 ## with all of its properties already set.
 ## ```
-## let pin = newPin(1, "A", Output).set().pullUp().addListener(listener)
+## let pin = newPin(1, "A", Output).set().setPull(Up).addListener(listener)
 ## ```
 ## For the sake of completeness, chaining was even added to `name=` functions and operators,
 ## so you *could* do `(pin.mode = Output).set()` if you really wanted to. But if you need to
@@ -421,55 +415,37 @@ proc remove_listener*(pin: Pin, listener: Pin -> void): Pin {.discardable.} =
   result = pin
   keep_if(pin.listeners, l => l != listener)
 
+proc set_pull*(pin: Pin, pull: Pull): Pin {.discardable, inline.} =
+  ## Sets the pull type of the pin. This also potentially updates the pin's value based on
+  ## the new pull type.
+  result = pin
+  pin.pull = pull
+  pin.level = normalize(pin, pin.level)
+
 proc pull*(pin: Pin): Pull {.inline.} =
   ## Returns the current pull setting for the pin.
   pin.pull
 
-proc pull_up*(pin: Pin): Pin {.discardable.} =
-  ## Sets the pin to be pulled up. This pin will then take on a level of 1 any time its
-  ## level is set to `NaN`.
-  result = pin
-  pin.pull = Up
-  pin.level = normalize(pin, pin.level)
+proc `pull=`*(pin: Pin, pull: Pull): Pin {.discardable, inline.} =
+  ## Sets the pull type of the pin. This also potentially updates the pin's value based on
+  ## the new pull type.
+  set_pull(pin, pull)
 
-proc pull_down*(pin: Pin): Pin {.discardable.} =
-  ## Sets the pin to be pulled down. This pin will then take on a level of 0 any time its
-  ## level is set to `NaN`.
-  result = pin
-  pin.pull = Down
-  pin.level = normalize(pin, pin.level)
-
-proc pull_off*(pin: Pin): Pin {.discardable.} =
-  ## Removes any pull status from the pin. The pin will then take on a level of `NaN` if
-  ## it is set to that level.
-  result = pin
-  pin.pull = Off
-  pin.level = normalize(pin, pin.level)
+proc set_pull*(trace: Trace, pull: Pull): Trace {.discardable, inline.} =
+  ## Sets the pull type of the trace. This also potentially updates the trace's value based
+  ## on the new pull type.
+  result = trace
+  trace.pull = pull
+  update(trace, trace.level)
 
 proc pull*(trace: Trace): Pull {.inline.} =
   ## Returns the current pull setting for the trace.
   trace.pull
 
-proc pull_up*(trace: Trace): Trace {.discardable.} =
-  ## Sets the trace to be pulled up. This trace will then take on a level of 1 any time its
-  ## level is set to `NaN`.
-  result = trace
-  trace.pull = Up
-  update(trace, trace.level)
-
-proc pull_down*(trace: Trace): Trace {.discardable.} =
-  ## Sets the trace to be pulled down. This trace will then take on a level of 0 any time
-  ## its level is set to `NaN`.
-  result = trace
-  trace.pull = Down
-  update(trace, trace.level)
-
-proc pull_off*(trace: Trace): Trace {.discardable.} =
-  ## Removes any pull status from the trace. The trace will then take on a level of `NaN` if
-  ## it is set to that level.
-  result = trace
-  trace.pull = Off
-  update(trace, trace.level)
+proc `pull=`*(trace: Trace, pull: Pull): Trace {.discardable, inline.} =
+  ## Sets the pull type of the trace. This also potentially updates the trace's value based
+  ## on the new pull type.
+  set_pull(trace, pull)
 
 proc set_trace(pin: Pin, trace: Trace) =
   ## Assigns the trace to the pin. This can only be done once; after a trace is set, that

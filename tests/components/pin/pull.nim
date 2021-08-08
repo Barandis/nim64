@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
@@ -7,18 +7,18 @@ import ../../../src/nim64/components/link
 import unittest
 
 proc up_initial =
-  let p = pull_up(new_pin(1, "A", Output))
+  let p = set_pull(new_pin(1, "A", Output), Up)
   check highp(p)
 
 proc up_unconnected =
-  let p = pull_up(new_pin(1, "A", Unconnected))
+  let p = set_pull(new_pin(1, "A", Unconnected), Up)
   clear(p)
   check lowp(p)
   tri(p)
   check highp(p)
 
 proc up_input =
-  let p = pull_up(new_pin(1, "A", Input))
+  let p = set_pull(new_pin(1, "A", Input), Up)
   let t = new_trace(p)
 
   clear(t)
@@ -27,7 +27,7 @@ proc up_input =
   check highp(p)
 
 proc up_output =
-  let p = pull_up(new_pin(1, "A", Output))
+  let p = set_pull(new_pin(1, "A", Output), Up)
   let t = new_trace(p)
 
   clear(p)
@@ -36,7 +36,7 @@ proc up_output =
   check highp(t)
 
 proc up_bidi =
-  let p = pull_up(new_pin(1, "A", Bidi))
+  let p = set_pull(new_pin(1, "A", Bidi), Up)
   let t = new_trace(p)
 
   clear(p)
@@ -47,22 +47,22 @@ proc up_bidi =
 proc up_after =
   let p = new_pin(1, "A")
   check trip(p)
-  pull_up(p)
+  p.pull = Up
   check highp(p)
 
 proc down_initial =
-  let p = pull_down(new_pin(1, "A", Output))
+  let p = set_pull(new_pin(1, "A", Output), Down)
   check lowp(p)
 
 proc down_unconnected =
-  let p = pull_down(new_pin(1, "A", Unconnected))
+  let p = set_pull(new_pin(1, "A", Unconnected), Down)
   set(p)
   check highp(p)
   tri(p)
   check lowp(p)
 
 proc down_input =
-  let p = pull_down(new_pin(1, "A", Input))
+  let p = set_pull(new_pin(1, "A", Input), Down)
   let t = new_trace(p)
 
   set(t)
@@ -71,7 +71,7 @@ proc down_input =
   check lowp(p)
 
 proc down_output =
-  let p = pull_down(new_pin(1, "A", Output))
+  let p = set_pull(new_pin(1, "A", Output), Down)
   let t = new_trace(p)
 
   set(p)
@@ -80,7 +80,7 @@ proc down_output =
   check lowp(t)
 
 proc down_bidi =
-  let p = pull_down(new_pin(1, "A", Bidi))
+  let p = set_pull(new_pin(1, "A", Bidi), Down)
   let t = new_trace(p)
 
   set(p)
@@ -91,29 +91,29 @@ proc down_bidi =
 proc down_after =
   let p = new_pin(1, "A")
   check trip(p)
-  pull_down(p)
+  p.pull = Down
   check lowp(p)
 
 proc off_initial =
-  let p = pull_off(new_pin(1, "A"))
+  let p = set_pull(new_pin(1, "A"), Off)
   check trip(p)
 
 proc off_after_up =
-  let p = pull_up(new_pin(1, "A"))
+  let p = set_pull(new_pin(1, "A"), Up)
   tri(p)
   check highp(p)
 
-  pull_off(p)
+  p.pull = Off
   tri(p)
   check trip(p)
 
 
 proc off_after_down =
-  let p = pull_down(new_pin(1, "A"))
+  let p = set_pull(new_pin(1, "A"), Down)
   tri(p)
   check lowp(p)
 
-  pull_off(p)
+  p.pull = Off
   tri(p)
   check trip(p)
 

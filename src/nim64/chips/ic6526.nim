@@ -535,7 +535,7 @@ chip Ic6526:
       # Interrupt request output. When low, this signals an interrupt to the CPU. There can
       # be several sources of interrupts connected to the same CPU, so this pin will be
       # tri-stated if there is no interrupt and `0` if there is. Setting the trace that
-      # connects these interrupts to pull_up will cause the trace to be high unless one or
+      # connects these interrupts to pull Up will cause the trace to be high unless one or
       # more IRQ pins lower it.
       IRQ: 21
 
@@ -565,8 +565,8 @@ chip Ic6526:
   init:
     pins[PC].set
     for i in 0..7:
-      pins[&"PA{i}"].pull_up
-      pins[&"PB{i}"].pull_up
+      set_pull(pins[&"PA{i}"], Up)
+      set_pull(pins[&"PB{i}"], Up)
 
     let addr_pins = map(to_seq(0..3), i => pins[&"A{i}"])
     let data_pins = map(to_seq(0..7), i => pins[&"D{i}"])

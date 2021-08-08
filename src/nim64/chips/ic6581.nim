@@ -574,8 +574,8 @@ chip Ic6581:
   init:
     # Pulling these down so that if they're unconnected (level NaN), they'll put 0 in their
     # registers
-    pull_down(pins[POTX])
-    pull_down(pins[POTY])
+    set_pull(pins[POTX], Down)
+    set_pull(pins[POTY], Down)
 
     let addr_pins = map(to_seq 0..4, proc (i: int): Pin = pins[&"A{i}"])
     let data_pins = map(to_seq 0..7, proc (i: int): Pin = pins[&"D{i}"])
