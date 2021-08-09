@@ -30,9 +30,9 @@
 ## so you *could* do `(pin.mode = Output).set()` if you really wanted to. But if you need to
 ## do that, just use `setMode(pin, Output).set()`.
 
-from math import classify, fcNaN
-from sequtils import filter, keep_if
-from sugar import `->`, `=>`
+import math
+import sequtils
+import sugar
 
 type
   Mode* = enum
@@ -237,19 +237,14 @@ proc calculate(trace: Trace, level: float): float =
   ## highest of those levels will be chosen instead. Otherwise, if the trace has a pull,
   ## that value will become the new value. Only if neither of these situations are true will
   ## the provided level actually take effect.
-  let outputs = filter(trace.pins, pin => pin.mode == Output)
-  if outputs.len > 0:
-    var max = -Inf
-    for output in outputs:
-      if output.level > max:
-        max = output.level
-    if max > -Inf:
-      return max
+  var max = -Inf
+  for pin in trace.pins:
+    if pin.mode == Output and pin.level > max:
+      max = pin.level
 
-  if level.nanp:
-    return to_level(trace.pull)
-
-  return level
+  if max > -Inf: max
+  elif nanp(level): to_level(trace.pull)
+  else: level
 
 proc update(trace: Trace, level: float) =
   ## Updates the level of the trace to the provided level. This function currently
@@ -258,7 +253,7 @@ proc update(trace: Trace, level: float) =
   ## if there were other output pins connected to it that had higher levels) and because I
   ## want to keep it here if I find that the new way (highest output pin level wins) doesn't
   ## work for some reason.
-  #trace.level = if level.isNaN: trace.calculate(level) else: level
+  # trace.level = if level.isNaN: trace.calculate(level) else: level
   trace.level = calculate(trace, level)
   for pin in trace.pins: update(pin)
 

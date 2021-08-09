@@ -178,3 +178,16 @@ const
   # The cycle on a raster line in which each mob has its pointer read.
   MOB_PTR_CYCLES* =
     [60u, 62u, 64u, 1u, 3u, 5u, 7u, 9u]  ## Cycle number when each mob reads its pointer.
+
+  # The cycles on a raster line where a mob being enabled means BA needs to be low for that
+  # cycle. It's precalculated because this is checked very cycle.
+  MOB_BA_CYCLES* = [
+    [57u, 58u, 59u, 60u, 61u],
+    [59u, 60u, 61u, 62u, 63u],
+    [61u, 62u, 63u, 64u, 65u],
+    [63u, 64u, 65u, 1u, 2u],
+    [65u, 1u, 2u, 3u, 4u],
+    [2u, 3u, 4u, 5u, 6u],
+    [4u, 5u, 6u, 7u, 8u],
+    [6u, 7u, 8u, 9u, 10u],
+  ]

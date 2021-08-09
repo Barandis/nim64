@@ -16,6 +16,10 @@ import ./vcrc
 
 type MemoryController* = ref object
   pins: Pins
+  addr_mux_pins: seq[Pin]
+  addr_pins: seq[Pin]
+  data_12_pins: seq[Pin]
+  data_8_pins: seq[Pin]
   registers: Registers
   counter: RasterCounter
   char_ptrs: seq[uint]
@@ -29,8 +33,19 @@ proc new_memory_controller*(
   pins: Pins,
   registers: Registers
 ): MemoryController =
+  # These pin subsets are included directly in the type because that's how we make sure this
+  # code doesn't need to be run more than once.
+  let addr_mux_pins = map(to_seq(24..29), proc (i: int): Pin = pins[i])
+  let addr_pins = concat(addr_mux_pins, map(to_seq(6..11), proc (i: int): Pin = pins[&"A{i}"]))
+  let data_12_pins = map(to_seq(0..11), proc (i: int): Pin = pins[&"D{i}"])
+  let data_8_pins = map(to_seq(0..7), proc (i: int): Pin = pins[&"D{i}"])
+
   MemoryController(
     pins: pins,
+    addr_mux_pins: addr_mux_pins,
+    addr_pins: addr_pins,
+    data_12_pins: data_12_pins,
+    data_8_pins: data_8_pins,
     registers: registers,
     counter: counter,
     char_ptrs: new_seq[uint](40),
@@ -39,22 +54,6 @@ proc new_memory_controller*(
     vcrc: new_vc_rc(),
     mcs: map(to_seq(0u..7u), proc(x: uint): Mc = new_mc(x, counter, registers)),
   )
-
-proc addr_mux_pins(pins: Pins): seq[Pin] =
-  ## Returns a sequence of all of the multiplexed address pins.
-  @[pins[A0_A8], pins[A1_A9], pins[A2_A10], pins[A3_A11], pins[A4_A12], pins[A5_A13]]
-
-proc addr_pins(pins: Pins): seq[Pin] =
-  ## Returns a sequence of all of the address pins.
-  concat(addr_mux_pins(pins), map(to_seq(6..11), proc (i: int): Pin = pins[&"A{i}"]))
-
-proc data_12_pins(pins: Pins): seq[Pin] =
-  ## Returns a sequence of all 12 of the data pins.
-  map(to_seq(0..11), proc (i: int): Pin = pins[&"D{i}"])
-
-proc data_8_pins(pins: Pins): seq[Pin] =
-  ## Returns a sequence of only the bottom 8 data pins, `D0`-`D7`.
-  map(to_seq(0..7), proc (i: int): Pin = pins[&"D{i}"])
 
 proc access_type(memory: MemoryController): AccessType =
   ## Determines the access type of the next memory read. The access type determines how an
@@ -274,12 +273,8 @@ proc ba_level(memory: MemoryController): float =
   #    incremented by one after each s-access.
   #
   # Not mentioned here is that BA needs to go low three cycles before the p-access is done.
-  for num, ptr_cycle in MOB_PTR_CYCLES:
-    let cycles = map([-3, -2, -1, 0, 1], proc (n: int): uint =
-      var c = int(ptr_cycle) + n
-      if c <= 0: c += int(CYCLES_PER_LINE)
-      uint(c))
-    if dma(memory.mcs[num]) and cycle in cycles:
+  for num, ba_cycles in MOB_BA_CYCLES:
+    if dma(memory.mcs[num]) and cycle in ba_cycles:
       return 0.0
 
   return 1.0
@@ -317,32 +312,33 @@ proc aec_level(memory: MemoryController): float =
   return float(phase - 1)
 
 proc pre_read*(memory: MemoryController) =
+  let counter = memory.counter
   ## Performs functions that need to happen before a memory read. This is largely updating
   ## the internal graphics registers, though it also includes setting the levels of BA and
   ## AEC and ensuring that all address pins are set to output mode.
-  if memory.counter.raster == 0 and memory.counter.cycle == 1 and memory.counter.phase == 1:
+  if raster(counter) == 0 and cycle(counter) == 1 and phase(counter) == 1:
     memory.refresh = 0xffu
 
-  pre_read(memory.vcrc, memory.counter)
+  pre_read(memory.vcrc, counter)
   for mc in memory.mcs: pre_read(mc)
 
   set_level(memory.pins[BA], ba_level(memory))
   set_level(memory.pins[AEC], aec_level(memory))
 
-  mode_to_pins(Output, addr_mux_pins(memory.pins))
+  mode_to_pins(Output, memory.addr_mux_pins)
 
 proc low_to_pins*(memory: MemoryController, address: uint) =
   ## Sets the levels of the address pins to the next address to be read. This actually sets
   ## *all* address pins; it's called `low_to_pins` because the multiplexed pins take on the
   ## value of the low address bits.
   let low = address and 0xfff
-  value_to_pins(low, addr_pins(memory.pins))
+  value_to_pins(low, memory.addr_pins)
 
 proc high_to_pins*(memory: MemoryController, address: uint) =
   ## Sets the levels of the multiplexed pins to the high address values. This does not
   ## change the levels of any unmultiplexed pins.
   let high = (address shr 8) and 0x3f
-  value_to_pins(high, addr_mux_pins(memory.pins))
+  value_to_pins(high, memory.addr_mux_pins)
 
 proc read*(memory: MemoryController, access: AccessType): uint =
   ## Performs an actual memory read, which in the end is the entire point of this module.
@@ -351,22 +347,16 @@ proc read*(memory: MemoryController, access: AccessType): uint =
   ## the read. This includes setting multiplexed address pins back to input mode,
   ## tri-stating other address pins, and updating some of the graphics and mob registers.
 
-  let data_8_pins = data_8_pins(memory.pins)
-  let data_12_pins = data_12_pins(memory.pins)
-
-  let addr_mux_pins = addr_mux_pins(memory.pins)
-  let addr_pins = addr_pins(memory.pins)
-
   # D8 to D11 are always Input anyway, so we don't set them again
-  mode_to_pins(Input, data_8_pins)
+  mode_to_pins(Input, memory.data_8_pins)
 
   if access == VmColor:
-    result = pins_to_value(data_12_pins)
+    result = pins_to_value(memory.data_12_pins)
   else:
-    result = pins_to_value(data_8_pins)
+    result = pins_to_value(memory.data_8_pins)
 
-  mode_to_pins(Output, data_8_pins)
-  tri_pins(data_8_pins)
+  mode_to_pins(Output, memory.data_8_pins)
+  tri_pins(memory.data_8_pins)
 
   if access == VmColor:
     memory.char_ptrs[cycle(memory.counter) - 15] = result
@@ -374,10 +364,10 @@ proc read*(memory: MemoryController, access: AccessType): uint =
     memory.mob_ptr = result
   # Don't do anything for other accesses; we care only about persisting pointer information
 
-  mode_to_pins(Input, addr_mux_pins)
+  mode_to_pins(Input, memory.addr_mux_pins)
   # While we're setting all address pins here to Z, input pins cannot be set directly and so
   # those pins are ignored by this statement.
-  tri_pins(addr_pins)
+  tri_pins(memory.addr_pins)
 
   post_read(memory.vcrc, access)
   for mc in memory.mcs: post_read(mc, access)

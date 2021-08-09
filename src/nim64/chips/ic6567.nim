@@ -17,7 +17,8 @@ export constants except
   RASTER_LINES_PER_FRAME,
   RASTER_MAX_VISIBLE,
   RASTER_MIN_VISIBLE,
-  MOB_PTR_CYCLES
+  MOB_PTR_CYCLES,
+  MOB_BA_CYCLES
 
 # Assumed frequency of the clock pulses coming in through the PHIIN pin, in MHz. This is
 # divided by the appropriate number to produce a 1Mhz clock for PHI0. The physical C64 uses
@@ -185,12 +186,18 @@ chip Ic6567:
 
   debug_properties:
     counter: RasterCounter
+    memory: MemoryController
 
   debug_procs:
     proc counter*(chip: Ic6567): RasterCounter =
       ## Returns the chip's raster counter. **This proc, along with the counter property,
       ## are only available in non-release mode.**
       chip.counter
+
+    proc memory*(chip: Ic6567): MemoryController =
+      ## Returns the chip's memory controller. **This proc, along with the memory property,
+      ## are only available in non-release mode.**
+      chip.memory
 
   init:
     set(pins[RAS])
@@ -205,7 +212,9 @@ chip Ic6567:
     let counter = new_raster_counter(pins, registers)
     let memory = new_memory_controller(counter, pins, registers)
 
-    when not defined(release): result.counter = counter
+    when not defined(release):
+      result.counter = counter
+      result.memory = memory
 
     update(counter)
 
@@ -252,6 +261,23 @@ chip Ic6567:
         set_raster_latch_msb(counter, bit_value(value, RST8))
         registers[CTRL1] = (registers[CTRL1] and 0x80) or (value and 0x7f)
       elif index < UNUSED1 and index != MMCOL and index != MDCOL:
+        # Unused registers and mob collision registers are not writable at all.
+
+        if index == MOBYEX:
+          # The memory module needs to know specifically as soon as a Y-expansion bit is
+          # cleared. This affects the way that the rest of a sprite is read, if the clearing
+          # is done in a specific phase (either cycle 16 phase 1 or cycle 15 phase 2,
+          # depending on the desired effect), so this information needs to be conveyed to
+          # the memory module immediately.
+          let old_value = registers[MOBYEX]
+          # The XOR results in 1-bits for any bit whose value is different between the old
+          # value and the new, and the AND then zeroes out any of those bits that were 0 in
+          # the old value. The result is a number whose bits are 1 if they were 1 in the old
+          # value and changed (i.e., were cleared) in the new value, and 0 for anything
+          # else.
+          let cleared = (old_value xor value) and old_value
+          clear_yexp(memory, cleared)
+
         registers[index] = value or register_masks[index]
 
       # Reset the IRQ pin if the IR register is zeroed
