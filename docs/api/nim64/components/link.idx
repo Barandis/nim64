@@ -42,14 +42,12 @@ inputp	nim64/components/link.html#inputp,Pin	link: inputp(pin: Pin): bool
 outputp	nim64/components/link.html#outputp,Pin	link: outputp(pin: Pin): bool	
 add_listener	nim64/components/link.html#add_listener,Pin,	link: add_listener(pin: Pin; listener: Pin -&gt; void): Pin	
 remove_listener	nim64/components/link.html#remove_listener,Pin,	link: remove_listener(pin: Pin; listener: Pin -&gt; void): Pin	
+set_pull	nim64/components/link.html#set_pull,Pin,Pull	link: set_pull(pin: Pin; pull: Pull): Pin	
 pull	nim64/components/link.html#pull,Pin	link: pull(pin: Pin): Pull	
-pull_up	nim64/components/link.html#pull_up,Pin	link: pull_up(pin: Pin): Pin	
-pull_down	nim64/components/link.html#pull_down,Pin	link: pull_down(pin: Pin): Pin	
-pull_off	nim64/components/link.html#pull_off,Pin	link: pull_off(pin: Pin): Pin	
+pull=	nim64/components/link.html#pull=,Pin,Pull	link: pull=(pin: Pin; pull: Pull): Pin	
+set_pull	nim64/components/link.html#set_pull,Trace,Pull	link: set_pull(trace: Trace; pull: Pull): Trace	
 pull	nim64/components/link.html#pull,Trace	link: pull(trace: Trace): Pull	
-pull_up	nim64/components/link.html#pull_up,Trace	link: pull_up(trace: Trace): Trace	
-pull_down	nim64/components/link.html#pull_down,Trace	link: pull_down(trace: Trace): Trace	
-pull_off	nim64/components/link.html#pull_off,Trace	link: pull_off(trace: Trace): Trace	
+pull=	nim64/components/link.html#pull=,Trace,Pull	link: pull=(trace: Trace; pull: Pull): Trace	
 add_pin	nim64/components/link.html#add_pin,Trace,Pin	link: add_pin(trace: Trace; pin: Pin): Trace	
 add_pins	nim64/components/link.html#add_pins,Trace,varargs[Pin]	link: add_pins(trace: Trace; pins: varargs[Pin]): Trace	
 new_pin	nim64/components/link.html#new_pin,int,string,Mode	link: new_pin(number: int; name: string; mode: Mode = Unconnected): Pin	

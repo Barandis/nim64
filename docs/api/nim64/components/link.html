@@ -163,25 +163,11 @@ function main() {
     title="pull(trace: Trace): Pull">pull,<wbr>Trace</a></li>
 
   </ul>
-  <ul class="simple nested-toc-section">pull_off
-      <li><a class="reference" href="#pull_off%2CPin"
-    title="pull_off(pin: Pin): Pin">pull_off,<wbr>Pin</a></li>
-  <li><a class="reference" href="#pull_off%2CTrace"
-    title="pull_off(trace: Trace): Trace">pull_off,<wbr>Trace</a></li>
-
-  </ul>
   <ul class="simple nested-toc-section">level=
       <li><a class="reference" href="#level%3D%2CPin%2Cfloat"
     title="level=(pin: Pin; level: float): Pin">level=,<wbr>Pin,<wbr>float</a></li>
   <li><a class="reference" href="#level%3D%2CTrace%2Cfloat"
     title="level=(trace: Trace; level: float): Trace">level=,<wbr>Trace,<wbr>float</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">pull_up
-      <li><a class="reference" href="#pull_up%2CPin"
-    title="pull_up(pin: Pin): Pin">pull_up,<wbr>Pin</a></li>
-  <li><a class="reference" href="#pull_up%2CTrace"
-    title="pull_up(trace: Trace): Trace">pull_up,<wbr>Trace</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">new_pin
@@ -192,6 +178,13 @@ function main() {
   <ul class="simple nested-toc-section">mode
       <li><a class="reference" href="#mode%2CPin"
     title="mode(pin: Pin): Mode">mode,<wbr>Pin</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">set_pull
+      <li><a class="reference" href="#set_pull%2CPin%2CPull"
+    title="set_pull(pin: Pin; pull: Pull): Pin">set_pull,<wbr>Pin,<wbr>Pull</a></li>
+  <li><a class="reference" href="#set_pull%2CTrace%2CPull"
+    title="set_pull(trace: Trace; pull: Pull): Trace">set_pull,<wbr>Trace,<wbr>Pull</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">level
@@ -216,13 +209,6 @@ function main() {
     title="number(pin: Pin): int">number,<wbr>Pin</a></li>
 
   </ul>
-  <ul class="simple nested-toc-section">pull_down
-      <li><a class="reference" href="#pull_down%2CPin"
-    title="pull_down(pin: Pin): Pin">pull_down,<wbr>Pin</a></li>
-  <li><a class="reference" href="#pull_down%2CTrace"
-    title="pull_down(trace: Trace): Trace">pull_down,<wbr>Trace</a></li>
-
-  </ul>
   <ul class="simple nested-toc-section">new_trace
       <li><a class="reference" href="#new_trace%2Cvarargs%5BPin%5D"
     title="new_trace(pins: varargs[Pin]): Trace">new_trace,<wbr>varargs[Pin]</a></li>
@@ -231,6 +217,13 @@ function main() {
   <ul class="simple nested-toc-section">remove_listener
       <li><a class="reference" href="#remove_listener%2CPin%2C"
     title="remove_listener(pin: Pin; listener: Pin -&gt; void): Pin">remove_listener,<wbr>Pin,<wbr></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">pull=
+      <li><a class="reference" href="#pull%3D%2CPin%2CPull"
+    title="pull=(pin: Pin; pull: Pull): Pin">pull=,<wbr>Pin,<wbr>Pull</a></li>
+  <li><a class="reference" href="#pull%3D%2CTrace%2CPull"
+    title="pull=(trace: Trace; pull: Pull): Trace">pull=,<wbr>Trace,<wbr>Pull</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">outputp
@@ -329,10 +322,9 @@ function main() {
   <p class="module-desc"><p>Implementations of pins and traces, which represent the entities that chips in a computer use to communicate with each other. The pins represent the sole interface of a chip or a port with the world outside, while the traces represent the printed copper lines on a circuit board that connect pins of one device to another.</p>
 <p>The module takes its name from the fact that these two components are used to link chips and ports. &quot;Interface&quot; would have been preferred but that's a reserved Nim keyword. (Today I learned.)</p>
 <p>These two types are implemented in the same file because the two of them are intimately linked. For one, they're mutually recursive; a <tt class="docutils literal"><span class="pre">Pin</span></tt> has a reference to a <tt class="docutils literal"><span class="pre">Trace</span></tt>, while a <tt class="docutils literal"><span class="pre">Trace</span></tt> has references to all of the <tt class="docutils literal"><span class="pre">Pin</span></tt>s that have references to it. Additionally, traces and pins are updated slightly differently if its a connected pin/trace doing it, and putting the two types together allow each of them to call updating functions that do not then have to be exported.</p>
-<p>Since this is the first file written in this project, there is some additional flexibilty mixed in. Each pin or trace can be set or cleared with the function syntax (<tt class="docutils literal"><span class="pre">set(pin)</span></tt>), the method syntax (<tt class="docutils literal"><span class="pre">pin.set</span></tt> or <tt class="docutils literal"><span class="pre">pin.set()</span></tt>), or an operator syntax (<tt class="docutils literal"><span class="pre">+pin</span></tt>). Which syntax will be used in the rest of the project is unknown at the time of writing.</p>
 <p>Every exported mutation function in this module is chainable (they all return a <tt class="docutils literal"><span class="pre">Pin</span></tt> or a <tt class="docutils literal"><span class="pre">Trace</span></tt> as appropriate, and all of them are discardable). This is meant to make it more concise to set up a new instance; you can do something like this to create a new <tt class="docutils literal"><span class="pre">Pin</span></tt> with all of its properties already set.</p>
 <p><pre class="listing">
-let pin = newPin(1, &quot;A&quot;, Output).set().pullUp().addListener(listener)
+let pin = newPin(1, &quot;A&quot;, Output).set().setPull(Up).addListener(listener)
 </pre> For the sake of completeness, chaining was even added to <tt class="docutils literal"><span class="pre">name=</span></tt> functions and operators, so you <em>could</em> do <tt class="docutils literal"><span class="pre">(pin.mode = Output).set()</span></tt> if you really wanted to. But if you need to do that, just use <tt class="docutils literal"><span class="pre">setMode(pin, Output).set()</span></tt>.</p>
 </p>
   <div class="section" id="7">
@@ -578,7 +570,9 @@ Toggles the pin's level. This will treat that level as digital; if it is &quot;h
                             <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-Toggles the pin's level twice. This is useful for clocking; often an entire clock cycle is desired, and this is more convenient than calling <tt class="docutils literal"><span class="pre">toggle</span></tt> twice.
+<p>Toggles the pin's level twice (almost). This is useful for clocking; often an entire clock cycle is desired, and this is more convenient than calling <tt class="docutils literal"><span class="pre">toggle</span></tt> twice.</p>
+<p>This function will work even if the pin has a level of <tt class="docutils literal"><span class="pre">NaN</span></tt> (unlike <tt class="docutils literal"><span class="pre">toggle</span></tt>). In that case, the pin will first be set and then cleared.</p>
+
 
 </dd>
 <a id="set,Trace"></a>
@@ -618,7 +612,9 @@ Toggles the pin's level. This will treat that level as digital; if it is &quot;h
                                   <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-Toggles the trace's level twice. This is useful for clocking; often an entire clock cycle is desired, and this is more convenient than calling <tt class="docutils literal"><span class="pre">toggle</span></tt> twice.
+<p>Toggles the trace's level twice (sort of). This is useful for clocking; often an entire clock cycle is desired, and this is more convenient than calling <tt class="docutils literal"><span class="pre">toggle</span></tt> twice.</p>
+<p>This function will work even if the trace has a level of <tt class="docutils literal"><span class="pre">NaN</span></tt> (unlike <tt class="docutils literal"><span class="pre">toggle</span></tt>). In that case, the trace will first be set and then cleared.</p>
+
 
 </dd>
 <a id="set_mode,Pin,Mode"></a>
@@ -674,6 +670,14 @@ Adds a new listener function to the list of listeners that the pin will call whe
 Removes the provided listener function from the list of listeners that the pin will call when its trace updates it. If the listener is already not in this list, this function will do noting.
 
 </dd>
+<a id="set_pull,Pin,Pull"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#set_pull%2CPin%2CPull"><span class="Identifier">set_pull</span></a><span class="Other">(</span><span class="Identifier">pin</span><span class="Other">:</span> <a href="link.html#Pin"><span class="Identifier">Pin</span></a><span class="Other">;</span> <span class="Identifier">pull</span><span class="Other">:</span> <a href="link.html#Pull"><span class="Identifier">Pull</span></a><span class="Other">)</span><span class="Other">:</span> <a href="link.html#Pin"><span class="Identifier">Pin</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">discardable</span><span class="Other">,</span> <span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Sets the pull type of the pin. This also potentially updates the pin's value based on the new pull type.
+
+</dd>
 <a id="pull,Pin"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#pull%2CPin"><span class="Identifier">pull</span></a><span class="Other">(</span><span class="Identifier">pin</span><span class="Other">:</span> <a href="link.html#Pin"><span class="Identifier">Pin</span></a><span class="Other">)</span><span class="Other">:</span> <a href="link.html#Pull"><span class="Identifier">Pull</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
@@ -681,25 +685,20 @@ Removes the provided listener function from the list of listeners that the pin w
 Returns the current pull setting for the pin.
 
 </dd>
-<a id="pull_up,Pin"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#pull_up%2CPin"><span class="Identifier">pull_up</span></a><span class="Other">(</span><span class="Identifier">pin</span><span class="Other">:</span> <a href="link.html#Pin"><span class="Identifier">Pin</span></a><span class="Other">)</span><span class="Other">:</span> <a href="link.html#Pin"><span class="Identifier">Pin</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">discardable</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="pull=,Pin,Pull"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#pull%3D%2CPin%2CPull"><span class="Identifier">pull=</span></a><span class="Other">(</span><span class="Identifier">pin</span><span class="Other">:</span> <a href="link.html#Pin"><span class="Identifier">Pin</span></a><span class="Other">;</span> <span class="Identifier">pull</span><span class="Other">:</span> <a href="link.html#Pull"><span class="Identifier">Pull</span></a><span class="Other">)</span><span class="Other">:</span> <a href="link.html#Pin"><span class="Identifier">Pin</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">discardable</span><span class="Other">,</span> <span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+                                        <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-Sets the pin to be pulled up. This pin will then take on a level of 1 any time its level is set to <tt class="docutils literal"><span class="pre">NaN</span></tt>.
+Sets the pull type of the pin. This also potentially updates the pin's value based on the new pull type.
 
 </dd>
-<a id="pull_down,Pin"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#pull_down%2CPin"><span class="Identifier">pull_down</span></a><span class="Other">(</span><span class="Identifier">pin</span><span class="Other">:</span> <a href="link.html#Pin"><span class="Identifier">Pin</span></a><span class="Other">)</span><span class="Other">:</span> <a href="link.html#Pin"><span class="Identifier">Pin</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">discardable</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="set_pull,Trace,Pull"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#set_pull%2CTrace%2CPull"><span class="Identifier">set_pull</span></a><span class="Other">(</span><span class="Identifier">trace</span><span class="Other">:</span> <a href="link.html#Trace"><span class="Identifier">Trace</span></a><span class="Other">;</span> <span class="Identifier">pull</span><span class="Other">:</span> <a href="link.html#Pull"><span class="Identifier">Pull</span></a><span class="Other">)</span><span class="Other">:</span> <a href="link.html#Trace"><span class="Identifier">Trace</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">discardable</span><span class="Other">,</span> <span class="Identifier">inline</span><span class="Other">,</span>
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-Sets the pin to be pulled down. This pin will then take on a level of 0 any time its level is set to <tt class="docutils literal"><span class="pre">NaN</span></tt>.
-
-</dd>
-<a id="pull_off,Pin"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#pull_off%2CPin"><span class="Identifier">pull_off</span></a><span class="Other">(</span><span class="Identifier">pin</span><span class="Other">:</span> <a href="link.html#Pin"><span class="Identifier">Pin</span></a><span class="Other">)</span><span class="Other">:</span> <a href="link.html#Pin"><span class="Identifier">Pin</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">discardable</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-Removes any pull status from the pin. The pin will then take on a level of <tt class="docutils literal"><span class="pre">NaN</span></tt> if it is set to that level.
+Sets the pull type of the trace. This also potentially updates the trace's value based on the new pull type.
 
 </dd>
 <a id="pull,Trace"></a>
@@ -709,28 +708,12 @@ Removes any pull status from the pin. The pin will then take on a level of <tt c
 Returns the current pull setting for the trace.
 
 </dd>
-<a id="pull_up,Trace"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#pull_up%2CTrace"><span class="Identifier">pull_up</span></a><span class="Other">(</span><span class="Identifier">trace</span><span class="Other">:</span> <a href="link.html#Trace"><span class="Identifier">Trace</span></a><span class="Other">)</span><span class="Other">:</span> <a href="link.html#Trace"><span class="Identifier">Trace</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">discardable</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
-                                    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="pull=,Trace,Pull"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#pull%3D%2CTrace%2CPull"><span class="Identifier">pull=</span></a><span class="Other">(</span><span class="Identifier">trace</span><span class="Other">:</span> <a href="link.html#Trace"><span class="Identifier">Trace</span></a><span class="Other">;</span> <span class="Identifier">pull</span><span class="Other">:</span> <a href="link.html#Pull"><span class="Identifier">Pull</span></a><span class="Other">)</span><span class="Other">:</span> <a href="link.html#Trace"><span class="Identifier">Trace</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">discardable</span><span class="Other">,</span> <span class="Identifier">inline</span><span class="Other">,</span>
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-Sets the trace to be pulled up. This trace will then take on a level of 1 any time its level is set to <tt class="docutils literal"><span class="pre">NaN</span></tt>.
-
-</dd>
-<a id="pull_down,Trace"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#pull_down%2CTrace"><span class="Identifier">pull_down</span></a><span class="Other">(</span><span class="Identifier">trace</span><span class="Other">:</span> <a href="link.html#Trace"><span class="Identifier">Trace</span></a><span class="Other">)</span><span class="Other">:</span> <a href="link.html#Trace"><span class="Identifier">Trace</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">discardable</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
-                                      <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-Sets the trace to be pulled down. This trace will then take on a level of 0 any time its level is set to <tt class="docutils literal"><span class="pre">NaN</span></tt>.
-
-</dd>
-<a id="pull_off,Trace"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#pull_off%2CTrace"><span class="Identifier">pull_off</span></a><span class="Other">(</span><span class="Identifier">trace</span><span class="Other">:</span> <a href="link.html#Trace"><span class="Identifier">Trace</span></a><span class="Other">)</span><span class="Other">:</span> <a href="link.html#Trace"><span class="Identifier">Trace</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">discardable</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
-                                     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-Removes any pull status from the trace. The trace will then take on a level of <tt class="docutils literal"><span class="pre">NaN</span></tt> if it is set to that level.
+Sets the pull type of the trace. This also potentially updates the trace's value based on the new pull type.
 
 </dd>
 <a id="add_pin,Trace,Pin"></a>
@@ -775,7 +758,7 @@ Creates a new <tt class="docutils literal"><span class="pre">Trace</span></tt> f
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-08-08 11:46:13 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-08-09 08:35:32 UTC</small>
       </div>
     </div>
   </div>

@@ -1,0 +1,8 @@
+Mc	nim64/chips/ic6567/mc.html#Mc	mc: Mc	
+new_mc	nim64/chips/ic6567/mc.html#new_mc,uint,RasterCounter,Registers	mc: new_mc(num: uint; counter: RasterCounter; registers: Registers): Mc	
+pre_read	nim64/chips/ic6567/mc.html#pre_read,Mc	mc: pre_read(mc: Mc)	
+post_read	nim64/chips/ic6567/mc.html#post_read,Mc,AccessType	mc: post_read(mc: Mc; access: AccessType)	
+clear_yexp	nim64/chips/ic6567/mc.html#clear_yexp,Mc	mc: clear_yexp(mc: Mc)	
+mc	nim64/chips/ic6567/mc.html#mc,Mc	mc: mc(mc: Mc): uint	
+dma	nim64/chips/ic6567/mc.html#dma,Mc	mc: dma(mc: Mc): bool	
+display	nim64/chips/ic6567/mc.html#display,Mc	mc: display(mc: Mc): bool	

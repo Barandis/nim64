@@ -111,7 +111,13 @@ proc parse_registers(regs_tree: NimNode): seq[RegisterNodeInfo] =
     let (number, name) = parse_pin_or_register(stmt_node)
     add(result, (number, name))
 
-proc prelude(chip_type: NimNode; num_pins, num_regs: int): NimNode =
+proc parse_properties(prop_tree: NimNode): seq[(NimNode, NimNode)] =
+  for stmt_node in children(prop_tree):
+    let prop_name = ident(str_val(stmt_node[0]))
+    let prop_type = ident(str_val(stmt_node[1][0]))
+    add(result, (prop_name, prop_type))
+
+proc prelude(chip_type, proc_tree: NimNode; num_pins, num_regs: int; prop_info: seq[(NimNode, NimNode)]): NimNode =
   ## Produces the AST for the first part of the macro output. This includes types and the
   ## procs that are attached to those types (indexing and iterators).
 
@@ -149,6 +155,10 @@ proc prelude(chip_type: NimNode; num_pins, num_regs: int): NimNode =
       ## Returns a read-only view of the chip's pins.
       chip.pins.info()
 
+  for prop in prop_info:
+    let prop_def = new_ident_defs(prop[0], prop[1], new_empty_node())
+    add(result[1][0][2][0][2], prop_def)
+
   if num_regs > 0:
     let reg_info_sym = bind_sym("RegisterInfo")
     let regs_type = bind_sym("Registers")
@@ -165,6 +175,8 @@ proc prelude(chip_type: NimNode; num_pins, num_regs: int): NimNode =
         chip.registers.info()
 
     insert(result, 2, reg_procs)
+
+  add(result, proc_tree)
 
 proc init(
   chip_type, params_tree, init_tree: NimNode;
@@ -268,7 +280,7 @@ macro chip*(header, body: untyped): untyped =
   ## chip Ic2364(memory: array[8192, uint8]):
   ## ```
   ##
-  ## Inside this `chip` block there can be one to three other blocks.
+  ## Inside this `chip` block there can be one to five other blocks.
   ##
   ## ## `pins`
   ##
@@ -349,7 +361,7 @@ macro chip*(header, body: untyped): untyped =
   ##
   ## ## `init`
   ##
-  ## The final possible block is also optional: the `init` block. This simply contains code
+  ## The next possible block is also optional: the `init` block. This simply contains code
   ## that runs when a new instance of the chip is created. This code runs after the pins and
   ## registers (if any) are created, and it has access to those pins via the `pins` variable
   ## and those registers via the `registers` variable. It's used for whatever initialization
@@ -377,21 +389,68 @@ macro chip*(header, body: untyped): untyped =
   ## for the 2364 shows that parameter.
   ##
   ## (Any symbol other than `pins` and `memory` in this code comes either from a local
-  ## definition or from an import.)
+  ## definition [`addr_pins`, `data_pins`, `read`, `enable_listener`] or from an import
+  ## [`map`, `to_seq`, `Pin`, `value_to_pins`, `pins_to_value`, `lowp`, `highp`, `tri_pins`,
+  ## `add_listener`].)
   ##
   ## ```nim
   ## init:
-  ##   let addr_pins = map(to_seq 0..12, proc (i: int): Pin = pins[&"A{i}"])
-  ##   let data_pins = map(to_seq 0..7, proc (i: int): Pin = pins[&"D{i}"])
+  ##   let addr_pins = map(to_seq(0..12), proc (i: int): Pin = pins[&"A{i}"])
+  ##   let data_pins = map(to_seq(0..7), proc (i: int): Pin = pins[&"D{i}"])
   ##
   ##   proc read =
-  ##     value_to_pins memory[pins_to_value addr_pins], data_pins
+  ##     value_to_pins(memory[pins_to_value(addr_pins)], data_pins)
   ##
   ##   proc enable_listener(pin: Pin) =
-  ##     if lowp pin: read() elif highp pin: tri_pins data_pins
+  ##     if lowp(pin): read() elif highp(pin): tri_pins(data_pins)
   ##
-  ##   add_listener pins[CS], enable_listener
+  ##   add_listener(pins[CS], enable_listener)
   ## ```
+  ##
+  ## ## `debug_properties`
+  ##
+  ## This block is simply a list of names to types, separated by colons in much the same
+  ## way as the `pins` or `registers` blocks. These names and types will be added as
+  ## properties to the generated chip type, but *only if release mode is not enabled*. This
+  ## is intended as a way to expose certin internal chip properties for testing, but to not
+  ## leave them exposed in production.
+  ##
+  ## ## `debug_procs`
+  ##
+  ## Like `debug_properties`, this section only applies when release mode is not enabled. It
+  ## can contain any code and is injected after the definitions of the basic procs available
+  ## to the chip, and it's best used for adding additional procs that are available only for
+  ## testing.
+  ##
+  ## What follows is a sample `debug_properties` and `debug_procs` block, taken from the
+  ## early stages of 6567 development.
+  ##
+  ## ```nim
+  ## debug_properties:
+  ##   counter: RasterCounter
+  ##
+  ## debug_procs:
+  ##   proc counter*(chip: Ic6567): RasterCounter =
+  ##     chip.counter
+  ## ```
+  ##
+  ## This creates a new property, `counter`, on the `Ic6567` generated type, and it provides
+  ## a proc to return its value. Note that there's nothing in this code that will actually
+  ## initially set the value of that new `counter` property, so these lines also appear in
+  ## the `init` block:
+  ##
+  ## ```nim
+  ## let counter = new_raster_counter()
+  ## when not defined(release): result.counter = counter
+  ## ```
+  ##
+  ## (In the `init` block, the chip itself is available as `result`.)
+  ##
+  ## The `debug_properties` and `debug_procs` block, along with the `when not
+  ## defined(release)` statement, will only be included in the generated code when it's not
+  ## compiled in release mode. In debug mode, however, they are all available. This provides
+  ## a way to access the chip's raster counter, which wouldn't normally be available, for
+  ## testing.
   ##
   ## With all of that for input, this macro provides quite a lot.
   ##
@@ -410,11 +469,13 @@ macro chip*(header, body: untyped): untyped =
   ## * A `pins` variable is made available in the `init` block. This variable has `[]` (for
   ##   both name and number) and `len` procs attached to it, along with `items` and `pairs`
   ##   iterators.
+  ## * Any parameters included after the chip name will also be made available in the `init`
+  ##   block.
   ##
   ## If a `registers` block is present in the chip definition, the macro does a few
   ## additional things.
   ##
-  ## * The chip type has an additional property called `registers`, which returns a sequence
+  ## * The chip type has an additional proc called `registers`, which returns a sequence
   ##   of two-element tuples containing names and values of each register (the index of the
   ##   register is equal to its index in the sequence).
   ## * A `registers` variable becomes available in the `init` block. This has the same `[]`
@@ -430,6 +491,8 @@ macro chip*(header, body: untyped): untyped =
   var pins_tree = none(NimNode)
   var regs_tree = none(NimNode)
   var init_tree = none(NimNode)
+  var prop_tree = none(NimNode)
+  var proc_tree = none(NimNode)
 
   for node in children(body):
     if kind(node) == nnk_call and str_val(node[0]) == "pins":
@@ -438,11 +501,17 @@ macro chip*(header, body: untyped): untyped =
       regs_tree = some(node[1])
     elif kind(node) == nnk_call and str_val(node[0]) == "init":
       init_tree = some(node[1])
+    elif kind(node) == nnk_call and str_val(node[0]) == "debug_properties":
+      prop_tree = some(node[1])
+    elif kind(node) == nnk_call and str_val(node[0]) == "debug_procs":
+      proc_tree = some(node[1])
     else: error("Unknown section: " & str_val(node[0]))
 
   if is_none(pins_tree): error("`chip` requires a `pins` section.")
   if is_none(regs_tree): regs_tree = some(new_empty_node())
   if is_none(init_tree): init_tree = some(new_empty_node())
+  if is_none(prop_tree) or defined(release): prop_tree = some(new_empty_node())
+  if is_none(proc_tree) or defined(release): proc_tree = some(new_empty_node())
 
   let pin_info = parse_pins(get(pins_tree))
   let num_pins = len(pin_info)
@@ -450,5 +519,7 @@ macro chip*(header, body: untyped): untyped =
   let reg_info = parse_registers(get(regs_tree))
   let num_regs = len(reg_info)
 
-  result = prelude(chip_type, num_pins, num_regs)
+  let prop_info = parse_properties(get(prop_tree))
+
+  result = prelude(chip_type, get(proc_tree), num_pins, num_regs, prop_info)
   add(result, init(chip_type, params_tree, get(init_tree), pin_info, reg_info))

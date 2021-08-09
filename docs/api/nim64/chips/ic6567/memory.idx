@@ -1,0 +1,8 @@
+MemoryController	nim64/chips/ic6567/memory.html#MemoryController	memory: MemoryController	
+new_memory_controller	nim64/chips/ic6567/memory.html#new_memory_controller,RasterCounter,Pins,Registers	memory: new_memory_controller(counter: RasterCounter; pins: Pins; registers: Registers): MemoryController	
+generate_address	nim64/chips/ic6567/memory.html#generate_address,MemoryController	memory: generate_address(memory: MemoryController): (AccessType, uint)	
+pre_read	nim64/chips/ic6567/memory.html#pre_read,MemoryController	memory: pre_read(memory: MemoryController)	
+low_to_pins	nim64/chips/ic6567/memory.html#low_to_pins,MemoryController,uint	memory: low_to_pins(memory: MemoryController; address: uint)	
+high_to_pins	nim64/chips/ic6567/memory.html#high_to_pins,MemoryController,uint	memory: high_to_pins(memory: MemoryController; address: uint)	
+read	nim64/chips/ic6567/memory.html#read,MemoryController,AccessType	memory: read(memory: MemoryController; access: AccessType): uint	
+clear_yexp	nim64/chips/ic6567/memory.html#clear_yexp,MemoryController,uint	memory: clear_yexp(memory: MemoryController; cleared: uint)	

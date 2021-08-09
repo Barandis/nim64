@@ -1,5 +1,5 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
@@ -10,7 +10,7 @@ type
   Traces* = ref object
     by_number: seq[Trace]
     by_name: TableRef[string, Trace]
-  
+
   Device* = concept x
     x.items() is Pin
 

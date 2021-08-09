@@ -1,0 +1,9 @@
+Ic6567	nim64/chips/ic6567.html#Ic6567	ic6567: Ic6567	
+registers	nim64/chips/ic6567.html#registers,Ic6567	ic6567: registers(chip`gensym1: Ic6567): seq[RegisterInfo]	
+`[]`	nim64/chips/ic6567.html#[],Ic6567,int	ic6567: `[]`(chip`gensym0: Ic6567; index`gensym0: int): Pin	
+`[]`	nim64/chips/ic6567.html#[],Ic6567,string	ic6567: `[]`(chip`gensym0: Ic6567; index`gensym0: string): Pin	
+items	nim64/chips/ic6567.html#items.i,Ic6567	ic6567: items(chip`gensym0: Ic6567): Pin	
+pairs	nim64/chips/ic6567.html#pairs.i,Ic6567	ic6567: pairs(chip`gensym0: Ic6567): (int, Pin)	
+pins	nim64/chips/ic6567.html#pins,Ic6567	ic6567: pins(chip`gensym0: Ic6567): seq[PinInfo]	
+counter	nim64/chips/ic6567.html#counter,Ic6567	ic6567: counter(chip: Ic6567): RasterCounter	
+newIc6567	nim64/chips/ic6567.html#newIc6567	ic6567: newIc6567(): Ic6567	

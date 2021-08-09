@@ -328,10 +328,13 @@ proc toggle*(pin: Pin): Pin {.discardable, inline.} =
   if highp(pin): clear(pin) elif lowp(pin): set(pin)
 
 proc cycle*(pin: Pin): Pin {.discardable, inline.} =
-  ## Toggles the pin's level twice. This is useful for clocking; often an entire clock cycle
-  ## is desired, and this is more convenient than calling `toggle` twice.
+  ## Toggles the pin's level twice (almost). This is useful for clocking; often an entire
+  ## clock cycle is desired, and this is more convenient than calling `toggle` twice.
+  ##
+  ## This function will work even if the pin has a level of `NaN` (unlike `toggle`). In that
+  ## case, the pin will first be set and then cleared.
   result = pin
-  if highp(pin): set(clear(pin)) elif lowp(pin): clear(set(pin))
+  if highp(pin): set(clear(pin)) else: clear(set(pin))
 
 proc set*(trace: Trace): Trace {.discardable, inline.} =
   ## Sets the trace's value to 1. This will only have an effect if no higher-leveled output
@@ -359,10 +362,13 @@ proc toggle*(trace: Trace): Trace {.discardable, inline.} =
   if highp(trace): clear(trace) elif lowp(trace): set(trace)
 
 proc cycle*(trace: Trace): Trace {.discardable, inline.} =
-  ## Toggles the trace's level twice. This is useful for clocking; often an entire clock cycle
-  ## is desired, and this is more convenient than calling `toggle` twice.
+  ## Toggles the trace's level twice (sort of). This is useful for clocking; often an entire
+  ## clock cycle is desired, and this is more convenient than calling `toggle` twice.
+  ##
+  ## This function will work even if the trace has a level of `NaN` (unlike `toggle`). In
+  ## that case, the trace will first be set and then cleared.
   result = trace
-  if highp(trace): set(clear(trace)) elif lowp(trace): clear(set(trace))
+  if highp(trace): set(clear(trace)) else: clear(set(trace))
 
 proc set_mode*(pin: Pin, mode: Mode): Pin {.discardable.} =
   ## Sets the pin's mode. This will also account for the values that the pin and its
@@ -502,6 +508,7 @@ proc new_trace*(pins: varargs[Pin]): Trace =
   result = Trace(
     pins: @[],
     pull: Off,
+    level: NaN,
   )
 
   # Not using add_pins here because doesn't consistently update; we still have to update

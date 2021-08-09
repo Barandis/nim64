@@ -1,0 +1,8 @@
+Ic6510	nim64/chips/ic6510.html#Ic6510	ic6510: Ic6510	
+registers	nim64/chips/ic6510.html#registers,Ic6510	ic6510: registers(chip`gensym1: Ic6510): seq[RegisterInfo]	
+`[]`	nim64/chips/ic6510.html#[],Ic6510,int	ic6510: `[]`(chip`gensym0: Ic6510; index`gensym0: int): Pin	
+`[]`	nim64/chips/ic6510.html#[],Ic6510,string	ic6510: `[]`(chip`gensym0: Ic6510; index`gensym0: string): Pin	
+items	nim64/chips/ic6510.html#items.i,Ic6510	ic6510: items(chip`gensym0: Ic6510): Pin	
+pairs	nim64/chips/ic6510.html#pairs.i,Ic6510	ic6510: pairs(chip`gensym0: Ic6510): (int, Pin)	
+pins	nim64/chips/ic6510.html#pins,Ic6510	ic6510: pins(chip`gensym0: Ic6510): seq[PinInfo]	
+newIc6510	nim64/chips/ic6510.html#newIc6510	ic6510: newIc6510(): Ic6510	

@@ -1,0 +1,9 @@
+RasterCounter	nim64/chips/ic6567/raster.html#RasterCounter	raster: RasterCounter	
+new_raster_counter	nim64/chips/ic6567/raster.html#new_raster_counter,Pins,Registers	raster: new_raster_counter(pins: Pins; registers: Registers): RasterCounter	
+update	nim64/chips/ic6567/raster.html#update,RasterCounter	raster: update(counter: RasterCounter)	
+set_raster_latch_low8	nim64/chips/ic6567/raster.html#set_raster_latch_low8,RasterCounter,uint	raster: set_raster_latch_low8(counter: RasterCounter; value: uint)	
+set_raster_latch_msb	nim64/chips/ic6567/raster.html#set_raster_latch_msb,RasterCounter,uint	raster: set_raster_latch_msb(counter: RasterCounter; value: uint)	
+raster	nim64/chips/ic6567/raster.html#raster,RasterCounter	raster: raster(counter: RasterCounter): uint	
+cycle	nim64/chips/ic6567/raster.html#cycle,RasterCounter	raster: cycle(counter: RasterCounter): uint	
+phase	nim64/chips/ic6567/raster.html#phase,RasterCounter	raster: phase(counter: RasterCounter): uint	
+bad_line	nim64/chips/ic6567/raster.html#bad_line,RasterCounter	raster: bad_line(counter: RasterCounter): bool	

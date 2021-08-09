@@ -1,0 +1,8 @@
+VmColor	nim64/chips/ic6567/access.html#VmColor	AccessType.VmColor	
+BmChar	nim64/chips/ic6567/access.html#BmChar	AccessType.BmChar	
+MobPtr	nim64/chips/ic6567/access.html#MobPtr	AccessType.MobPtr	
+MobData	nim64/chips/ic6567/access.html#MobData	AccessType.MobData	
+Refresh	nim64/chips/ic6567/access.html#Refresh	AccessType.Refresh	
+Idle	nim64/chips/ic6567/access.html#Idle	AccessType.Idle	
+Cpu	nim64/chips/ic6567/access.html#Cpu	AccessType.Cpu	
+AccessType	nim64/chips/ic6567/access.html#AccessType	access: AccessType	

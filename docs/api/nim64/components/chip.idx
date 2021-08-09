@@ -1,4 +1,6 @@
 pins	nim64/components/chip.html#pins	  <tt class="docutils literal"><span class="pre">pins</span></tt>	
 registers	nim64/components/chip.html#registers	  <tt class="docutils literal"><span class="pre">registers</span></tt>	
 init	nim64/components/chip.html#init	  <tt class="docutils literal"><span class="pre">init</span></tt>	
+debug_properties	nim64/components/chip.html#debug-properties	  <tt class="docutils literal"><span class="pre">debug_properties</span></tt>	
+debug_procs	nim64/components/chip.html#debug-procs	  <tt class="docutils literal"><span class="pre">debug_procs</span></tt>	
 chip	nim64/components/chip.html#chip.m,untyped,untyped	chip: chip(header, body: untyped): untyped	

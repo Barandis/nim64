@@ -1,0 +1,8 @@
+VcRc	nim64/chips/ic6567/vcrc.html#VcRc	vcrc: VcRc	
+new_vc_rc	nim64/chips/ic6567/vcrc.html#new_vc_rc	vcrc: new_vc_rc(): VcRc	
+pre_read	nim64/chips/ic6567/vcrc.html#pre_read,VcRc,RasterCounter	vcrc: pre_read(vcrc: VcRc; counter: RasterCounter)	
+post_read	nim64/chips/ic6567/vcrc.html#post_read,VcRc,AccessType	vcrc: post_read(vcrc: VcRc; access: AccessType)	
+vc	nim64/chips/ic6567/vcrc.html#vc,VcRc	vcrc: vc(vcrc: VcRc): uint	
+rc	nim64/chips/ic6567/vcrc.html#rc,VcRc	vcrc: rc(vcrc: VcRc): uint	
+vmli	nim64/chips/ic6567/vcrc.html#vmli,VcRc	vcrc: vmli(vcrc: VcRc): uint	
+idle	nim64/chips/ic6567/vcrc.html#idle,VcRc	vcrc: idle(vcrc: VcRc): bool	
