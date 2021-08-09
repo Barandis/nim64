@@ -137,3 +137,4 @@ RASTER_LINES_PER_FRAME	nim64/chips/ic6567/constants.html#RASTER_LINES_PER_FRAME	
 RASTER_MIN_VISIBLE	nim64/chips/ic6567/constants.html#RASTER_MIN_VISIBLE	constants: RASTER_MIN_VISIBLE	
 RASTER_MAX_VISIBLE	nim64/chips/ic6567/constants.html#RASTER_MAX_VISIBLE	constants: RASTER_MAX_VISIBLE	
 MOB_PTR_CYCLES	nim64/chips/ic6567/constants.html#MOB_PTR_CYCLES	constants: MOB_PTR_CYCLES	
+MOB_BA_CYCLES	nim64/chips/ic6567/constants.html#MOB_BA_CYCLES	constants: MOB_BA_CYCLES	

@@ -103,6 +103,10 @@ function main() {
       <li><a class="reference" href="#MemoryController"
     title="MemoryController = ref object
   pins: Pins
+  addr_mux_pins: seq[Pin]
+  addr_pins: seq[Pin]
+  data_12_pins: seq[Pin]
+  data_8_pins: seq[Pin]
   registers: Registers
   counter: RasterCounter
   char_ptrs: seq[uint]
@@ -173,6 +177,10 @@ function main() {
 <a id="MemoryController"></a>
 <dt><pre><a href="memory.html#MemoryController"><span class="Identifier">MemoryController</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
   <span class="Identifier">pins</span><span class="Other">:</span> <a href="../../components/pins.html#Pins"><span class="Identifier">Pins</span></a>
+  <span class="Identifier">addr_mux_pins</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="../../components/link.html#Pin"><span class="Identifier">Pin</span></a><span class="Other">]</span>
+  <span class="Identifier">addr_pins</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="../../components/link.html#Pin"><span class="Identifier">Pin</span></a><span class="Other">]</span>
+  <span class="Identifier">data_12_pins</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="../../components/link.html#Pin"><span class="Identifier">Pin</span></a><span class="Other">]</span>
+  <span class="Identifier">data_8_pins</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="../../components/link.html#Pin"><span class="Identifier">Pin</span></a><span class="Other">]</span>
   <span class="Identifier">registers</span><span class="Other">:</span> <a href="../../components/registers.html#Registers"><span class="Identifier">Registers</span></a>
   <span class="Identifier">counter</span><span class="Other">:</span> <a href="raster.html#RasterCounter"><span class="Identifier">RasterCounter</span></a>
   <span class="Identifier">char_ptrs</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">uint</span><span class="Other">]</span>
@@ -193,8 +201,8 @@ function main() {
 <dl class="item">
 <a id="new_memory_controller,RasterCounter,Pins,Registers"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#new_memory_controller%2CRasterCounter%2CPins%2CRegisters"><span class="Identifier">new_memory_controller</span></a><span class="Other">(</span><span class="Identifier">counter</span><span class="Other">:</span> <a href="raster.html#RasterCounter"><span class="Identifier">RasterCounter</span></a><span class="Other">;</span> <span class="Identifier">pins</span><span class="Other">:</span> <a href="../../components/pins.html#Pins"><span class="Identifier">Pins</span></a><span class="Other">;</span>
-                           <span class="Identifier">registers</span><span class="Other">:</span> <a href="../../components/registers.html#Registers"><span class="Identifier">Registers</span></a><span class="Other">)</span><span class="Other">:</span> <a href="memory.html#MemoryController"><span class="Identifier">MemoryController</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+                           <span class="Identifier">registers</span><span class="Other">:</span> <a href="../../components/registers.html#Registers"><span class="Identifier">Registers</span></a><span class="Other">)</span><span class="Other">:</span> <a href="memory.html#MemoryController"><span class="Identifier">MemoryController</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -213,12 +221,12 @@ Generates the next read address. Which is used depends on the current state of t
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-Performs functions that need to happen before a memory read. This is largely updating the internal graphics registers, though it also includes setting the levels of BA and AEC and ensuring that all address pins are set to output mode.
+
 
 </dd>
 <a id="low_to_pins,MemoryController,uint"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#low_to_pins%2CMemoryController%2Cuint"><span class="Identifier">low_to_pins</span></a><span class="Other">(</span><span class="Identifier">memory</span><span class="Other">:</span> <a href="memory.html#MemoryController"><span class="Identifier">MemoryController</span></a><span class="Other">;</span> <span class="Identifier">address</span><span class="Other">:</span> <span class="Identifier">uint</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#low_to_pins%2CMemoryController%2Cuint"><span class="Identifier">low_to_pins</span></a><span class="Other">(</span><span class="Identifier">memory</span><span class="Other">:</span> <a href="memory.html#MemoryController"><span class="Identifier">MemoryController</span></a><span class="Other">;</span> <span class="Identifier">address</span><span class="Other">:</span> <span class="Identifier">uint</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Sets the levels of the address pins to the next address to be read. This actually sets <em>all</em> address pins; it's called <tt class="docutils literal"><span class="pre">low_to_pins</span></tt> because the multiplexed pins take on the value of the low address bits.
@@ -234,7 +242,7 @@ Sets the levels of the multiplexed pins to the high address values. This does no
 </dd>
 <a id="read,MemoryController,AccessType"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#read%2CMemoryController%2CAccessType"><span class="Identifier">read</span></a><span class="Other">(</span><span class="Identifier">memory</span><span class="Other">:</span> <a href="memory.html#MemoryController"><span class="Identifier">MemoryController</span></a><span class="Other">;</span> <span class="Identifier">access</span><span class="Other">:</span> <a href="access.html#AccessType"><span class="Identifier">AccessType</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Performs an actual memory read, which in the end is the entire point of this module. The number of bits in the read value depends on the type of access; this type is also used to determine which read values to remember for future reads. Cleanup is done after the read. This includes setting multiplexed address pins back to input mode, tri-stating other address pins, and updating some of the graphics and mob registers.
@@ -259,7 +267,7 @@ Performs an actual memory read, which in the end is the entire point of this mod
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-08-09 08:35:33 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-08-09 13:37:42 UTC</small>
       </div>
     </div>
   </div>

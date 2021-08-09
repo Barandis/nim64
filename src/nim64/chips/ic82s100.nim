@@ -1,7 +1,7 @@
 ## Copyright (c) 2021 Thomas J. Otterson
 ##
 ## This software is released under the MIT License.
-## https:#opensource.org/licenses/MIT
+## https://opensource.org/licenses/MIT
 
 ## An emulation of the 82S100 Programmable Logic Array, as it was programmed for early
 ## Commodore 64s.
@@ -87,7 +87,7 @@
 ##   if both are high (the normal state), there is no cartridge; and if `EXROM` is high and
 ##   `GAME` is low, there is an Ultimax cartridge. Further mapping to cartridge ROM depends
 ##   not only on these two signals but also on `LORAM`, `HIRAM`, and `CHAREN` there is a
-##   nice table at https:#www.c64-wiki.com/wiki/Bank_Switching#Mode_Table.
+##   nice table at https://www.c64-wiki.com/wiki/Bank_Switching#Mode_Table.
 ##
 ## ### Output pin assignments
 ##

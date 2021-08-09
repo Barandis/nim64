@@ -1,7 +1,7 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
-# https:#opensource.org/licenses/MIT
+# https://opensource.org/licenses/MIT
 
 import ./envelope
 import ./waveform
@@ -27,7 +27,7 @@ type Voice* = ref object
   ## (in the `output` proc).
   ##
   ## This is a pretty straightforward class, consisting largely of procs that delegate to
-  ## the underlying waveform and envelope generators. The amplitude modulator is fashioned 
+  ## the underlying waveform and envelope generators. The amplitude modulator is fashioned
   ## by simply multiplying the outputs of the generators, adjusting the output value with
   ## the DC offsets that have been found in the actual chip.
   waveform: Waveform ## This voice's waveform generator.

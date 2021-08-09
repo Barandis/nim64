@@ -1,7 +1,7 @@
 # Copyright (c) 2021 Thomas J. Otterson
 #
 # This software is released under the MIT License.
-# https:#opensource.org/licenses/MIT
+# https://opensource.org/licenses/MIT
 
 type SpState = tuple
   # The shift register from which the value is sent out over the SP pin bit-by-bit. This is

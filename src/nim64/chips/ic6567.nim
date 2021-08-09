@@ -1,7 +1,7 @@
 # Copyright (c) 2021 Thomas J. Otterson
 #
 # This software is released under the MIT License.
-# https:#opensource.org/licenses/MIT
+# https://opensource.org/licenses/MIT
 
 import sequtils
 import strformat
@@ -50,12 +50,6 @@ chip Ic6567:
       A3_A11: 27
       A4_A12: 28
       A5_A13: 29
-      A6: 30
-      A7: 31
-      A8: 32
-      A9: 33
-      A10: 34
-      A11: 23
 
       # Data bus pins. There are 12 of these because the upper 4 are used to access the
       # 4-bit-wide color RAM. This means that, since the VIC does not write to memory and
@@ -97,6 +91,15 @@ chip Ic6567:
       R_W: 11
 
     output:
+      # Unmultiplexed address pins. These are output pins and never change away from that as
+      # they are not used for register addressing.
+      A6: 30
+      A7: 31
+      A8: 32
+      A9: 33
+      A10: 34
+      A11: 23
+
       # Video outputs. These are analog signals, one for sync/luminance and one for color.
       S_LUM: 15
       COLOR: 14

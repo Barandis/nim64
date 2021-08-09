@@ -1,7 +1,7 @@
 # Copyright (c) 2021 Thomas J. Otterson
 #
 # This software is released under the MIT License.
-# https:##opensource.org/licenses/MIT
+# https://#opensource.org/licenses/MIT
 
 import math
 import sequtils
@@ -125,7 +125,7 @@ proc c_address(memory: MemoryController): uint =
   #  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+
   #  |VM13|VM12|VM11|VM10| VC9| VC8| VC7| VC6| VC5| VC4| VC3| VC2| VC1| VC0|
   #  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+
-  let matrix = hi4(memory.registers[MEMPTR])
+  let matrix = uint(hi4(memory.registers[MEMPTR]))
   (matrix shl 10) or memory.vcrc.vc
 
 proc g_address(memory: MemoryController): uint =
@@ -155,7 +155,7 @@ proc g_address(memory: MemoryController): uint =
         #  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+
         #  |CB13|CB12|CB11| D7 | D6 | D5 | D4 | D3 | D2 | D1 | D0 | RC2| RC1| RC0|
         #  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+
-        let cb = lo4(registers[MEMPTR]) shr 1
+        let cb = uint(lo4(registers[MEMPTR])) shr 1
         let data = memory.char_ptrs[cycle(memory.counter) - 16]
         (cb shl 11) or (data shl 3) or memory.vcrc.rc
 
@@ -167,7 +167,7 @@ proc g_address(memory: MemoryController): uint =
         #  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+
         #  |CB13| VC9| VC8| VC7| VC6| VC5| VC4| VC3| VC2| VC1| VC0| RC2| RC1| RC0|
         #  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+
-        let cb = bit_value(registers[MEMPTR], CB13)
+        let cb = uint(bit_value(registers[MEMPTR], CB13))
         let data = memory.vcrc.vc
         (cb shl 13) or (data shl 3) or memory.vcrc.rc
 
@@ -179,7 +179,7 @@ proc g_address(memory: MemoryController): uint =
         #  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+
         #  |CB13|CB12|CB11|  0 |  0 | D5 | D4 | D3 | D2 | D1 | D0 | RC2| RC1| RC0|
         #  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+
-        let cb = lo4(registers[MEMPTR]) shr 1
+        let cb = uint(lo4(registers[MEMPTR])) shr 1
         let data = memory.char_ptrs[cycle(memory.counter) - 16] and 0x3f
         (cb shl 11) or (data shl 3) or memory.vcrc.rc
 
@@ -191,7 +191,7 @@ proc g_address(memory: MemoryController): uint =
         #  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+
         #  |CB13| VC9| VC8|  0 |  0 | VC5| VC4| VC3| VC2| VC1| VC0| RC2| RC1| RC0|
         #  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+
-        let cb = bit_value(registers[MEMPTR], CB13)
+        let cb = uint(bit_value(registers[MEMPTR], CB13))
         let data = memory.vcrc.vc and 0b1100111111
         (cb shl 13) or (data shl 3) or memory.vcrc.rc
 
@@ -211,7 +211,7 @@ proc p_address(memory: MemoryController, num: uint): uint =
   #  +----+----+----+----+----+----+----+----+----+----+----+----+----+----+
   #  |VM13|VM12|VM11|VM10|  1 |  1 |  1 |  1 |  1 |  1 |  1 |  Mob number  |
   #  +----+----+----+----+----+----+----+----+----+----+----+--------------+
-  let vm = hi4(memory.registers[MEMPTR])
+  let vm = uint(hi4(memory.registers[MEMPTR]))
   (vm shl 10) or 0b1111111000 or num
 
 proc s_address(memory: MemoryController, num: int): uint =

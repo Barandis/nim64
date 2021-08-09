@@ -1,7 +1,7 @@
 # Copyright (c) 2021 Thomas J. Otterson
 #
 # This software is released under the MIT License.
-# https:##opensource.org/licenses/MIT
+# https://#opensource.org/licenses/MIT
 
 # A single tone oscillator/waveform generator used in the 6581 SID.
 #

@@ -1,7 +1,7 @@
 # Copyright (c) 2021 Thomas J. Otterson
-# 
+#
 # This software is released under the MIT License.
-# https:#opensource.org/licenses/MIT
+# https://opensource.org/licenses/MIT
 
 # -------------------------------------------------------------------
 # Time-of-day clock
@@ -29,7 +29,7 @@ proc bcd_inc(value: uint8): uint8 =
   if digit0 == 0x0a:
     digit0 = 0
     digit1 += 1
-  
+
   (digit1 shl 4) or digit0
 
 # Tests a BCD number to see if it's greater than or equal to a decimal number.
@@ -176,7 +176,7 @@ add_listener pins[TOD], proc (pin: Pin) =
         registers[TODSEC] = tod.seconds
         registers[TODMIN] = tod.minutes
         registers[TODHR] = tod.hours
-      
+
       # If we've reached the alarm time, fire an interrupt if the ICR says so
       if (
         tod.tenths == latches[TOD10TH] and

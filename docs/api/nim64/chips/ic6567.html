@@ -104,7 +104,8 @@ function main() {
     title="Ic6567 = ref object
   pins: Pins
   registers: Registers
-  counter: RasterCounter">Ic6567</a></li>
+  counter: RasterCounter
+  memory: MemoryController">Ic6567</a></li>
 
   </ul>
 </li>
@@ -124,6 +125,11 @@ function main() {
   <ul class="simple nested-toc-section">registers
       <li><a class="reference" href="#registers%2CIc6567"
     title="registers(chip`gensym1: Ic6567): seq[RegisterInfo]">registers,<wbr>Ic6567</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">memory
+      <li><a class="reference" href="#memory%2CIc6567"
+    title="memory(chip: Ic6567): MemoryController">memory,<wbr>Ic6567</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">pins
@@ -178,6 +184,7 @@ function main() {
   <span class="Identifier">pins</span><span class="Other">:</span> <a href="../components/pins.html#Pins"><span class="Identifier">Pins</span></a>
   <span class="Identifier">registers</span><span class="Other">:</span> <a href="../components/registers.html#Registers"><span class="Identifier">Registers</span></a>
   <span class="Identifier">counter</span><span class="Other">:</span> <a href="ic6567/raster.html#RasterCounter"><span class="Identifier">RasterCounter</span></a>
+  <span class="Identifier">memory</span><span class="Other">:</span> <a href="ic6567/memory.html#MemoryController"><span class="Identifier">MemoryController</span></a>
 </pre></dt>
 <dd>
 
@@ -226,6 +233,13 @@ Returns a read-only view of the chip's pins.
 Returns the chip's raster counter. <strong>This proc, along with the counter property, are only available in non-release mode.</strong>
 
 </dd>
+<a id="memory,Ic6567"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#memory%2CIc6567"><span class="Identifier">memory</span></a><span class="Other">(</span><span class="Identifier">chip</span><span class="Other">:</span> <a href="ic6567.html#Ic6567"><span class="Identifier">Ic6567</span></a><span class="Other">)</span><span class="Other">:</span> <a href="ic6567/memory.html#MemoryController"><span class="Identifier">MemoryController</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Returns the chip's memory controller. <strong>This proc, along with the memory property, are only available in non-release mode.</strong>
+
+</dd>
 <a id="newIc6567"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#newIc6567"><span class="Identifier">newIc6567</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="ic6567.html#Ic6567"><span class="Identifier">Ic6567</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
                            <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
@@ -268,7 +282,7 @@ Iterates over the chip's pins, yielding both the pin number and the pin itself.
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-08-09 08:35:33 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-08-09 13:37:42 UTC</small>
       </div>
     </div>
   </div>

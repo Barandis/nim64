@@ -1,7 +1,7 @@
 # Copyright (c) 2021 Thomas J. Otterson
 #
 # This software is released under the MIT License.
-# https:#opensource.org/licenses/MIT
+# https://opensource.org/licenses/MIT
 
 ## Implementations of pins and traces, which represent the entities that chips in a computer
 ## use to communicate with each other. The pins represent the sole interface of a chip or a

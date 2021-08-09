@@ -19,4 +19,4 @@ The JS is currently being ported over to Nim. Once that's done, all that'll have
 
 ## Current Status
 
-I'm beginning work on the VIC now. Everything else from the JS version has been completed (and, for the most part, with better tests) except for ports, because I'm considering doing them differently from the JS version and haven't decided yet. Those are trivial bits of programming though.
+I've just reached the same point in the VIC where I was in the old JS implementation. After finishing that, it's on to the CPU, and then...well, we'll see when we get there.

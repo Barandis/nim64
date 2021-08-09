@@ -11,13 +11,14 @@ import ../../utils as test_utils
 
 var chip: Ic6567
 var traces: Traces
-var addr_traces, data_traces: seq[Trace]
+var addr_traces, addr_mux_traces, data_traces: seq[Trace]
 
 proc setup =
   chip = new_ic6567()
   traces = device_traces(chip)
 
-  addr_traces = map(to_seq(24..30), proc (i: int): Trace = traces[i])
+  addr_mux_traces = map(to_seq(24..29), proc (i: int): Trace = traces[i])
+  addr_traces = concat(addr_mux_traces, map(to_seq(6..11), proc (i: int): Trace = traces[&"A{i}"]))
   data_traces = map(to_seq(0..7), proc (i: int): Trace = traces[&"D{i}"])
 
   set(traces[R_W])
